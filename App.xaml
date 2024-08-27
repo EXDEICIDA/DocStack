@@ -1,0 +1,21 @@
+﻿<Application
+    x:Class="DocStack.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:DocStack"
+    xmlns:view="clr-namespace:DocStack.MVVM.View"
+    xmlns:viewModel="clr-namespace:DocStack.MVVM.ViewModel"
+    StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Theme/MenuButtonTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!--  Data templates for binding the app views  -->
+            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
+                <view:HomeView />
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

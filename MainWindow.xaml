@@ -1,0 +1,77 @@
+﻿<Window
+    x:Class="DocStack.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:DocStack"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:DocStack.MVVM.ViewModel"
+    Width="1350"
+    Height="750"
+    MinWidth="650"
+    MinHeight="700"
+    AllowsTransparency="True"
+    Background="Transparent"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="None"
+    mc:Ignorable="d">
+
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+
+    <Border Background="#272537" CornerRadius="10">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="75" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Image
+                Width="50"
+                Height="50"
+                Margin="10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Source="pack://application:,,,/Resources/AppLogo/Pyramid-remove.png" />
+            <TextBlock
+                Margin="10,10,35,10"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                FontFamily="pack://application:,,,/Fonts/#Roboto"
+                FontSize="24"
+                Foreground="#F8F8F8"
+                Text="DocStack" />
+
+            <StackPanel Grid.Row="1">
+                <RadioButton
+                    Height="50"
+                    Content="Home"
+                    FontSize="18"
+                    Foreground="#f8f8f8"
+                    Style="{StaticResource MenuButtonTheme}" 
+                    Command="{Binding }"/>
+                <RadioButton
+                    Height="50"
+                    Content="My Papers"
+                    FontSize="18"
+                    Foreground="#f8f8f8"
+                    Style="{StaticResource MenuButtonTheme}" />
+                <RadioButton
+                    Height="50"
+                    Content="Recent"
+                    FontSize="18"
+                    Foreground="#f8f8f8"
+                    Style="{StaticResource MenuButtonTheme}" />
+            </StackPanel>
+
+            <ContentControl Grid.Row="1" Grid.Column="1" Margin="10" Content="{Binding CurrentView}">
+                
+            </ContentControl>
+        </Grid>
+    </Border>
+</Window>
