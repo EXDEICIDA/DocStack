@@ -17,7 +17,7 @@
     mc:Ignorable="d">
 
     <Window.DataContext>
-        <viewModel:MainViewModel/>
+        <viewModel:MainViewModel />
     </Window.DataContext>
 
     <Border Background="#272537" CornerRadius="10">
@@ -50,28 +50,40 @@
             <StackPanel Grid.Row="1">
                 <RadioButton
                     Height="50"
+                    Command="{Binding}"
                     Content="Home"
-                    FontSize="18"
-                    Foreground="#f8f8f8"
-                    Style="{StaticResource MenuButtonTheme}" 
-                    Command="{Binding }"/>
-                <RadioButton
-                    Height="50"
-                    Content="My Papers"
+                    FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
                     Style="{StaticResource MenuButtonTheme}" />
                 <RadioButton
                     Height="50"
-                    Content="Recent"
+                    Content="Search"
+                    FontFamily="pack://application:,,,/Fonts/#Roboto"
+                    FontSize="18"
+                    Foreground="#f8f8f8"
+                    Style="{StaticResource MenuButtonTheme}" />
+                <RadioButton
+                    Height="50"
+                    Content="Favorites"
+                    FontFamily="pack://application:,,,/Fonts/#Roboto"
+                    FontSize="18"
+                    Foreground="#f8f8f8"
+                    Style="{StaticResource MenuButtonTheme}" />
+                <RadioButton
+                    Height="50"
+                    Content="My Papers"
+                    FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
                     Style="{StaticResource MenuButtonTheme}" />
             </StackPanel>
 
-            <ContentControl Grid.Row="1" Grid.Column="1" Margin="10" Content="{Binding CurrentView}">
-                
-            </ContentControl>
+            <ContentControl
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="10"
+                Content="{Binding CurrentView}" />
         </Grid>
     </Border>
 </Window>

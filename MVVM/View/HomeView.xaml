@@ -66,9 +66,11 @@
                         <Button
                             Width="50"
                             HorizontalAlignment="Right"
-                            Background="Transparent"
+                         
                             BorderThickness="0"
-                            Content="🔍" />
+                             >
+                            <fa:FontAwesome Icon="Search"></fa:FontAwesome>
+                        </Button>
                     </Grid>
                    
                 </Border>
