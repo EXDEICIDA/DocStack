@@ -47,7 +47,88 @@
                 FontSize="24"
                 Foreground="#F8F8F8"
                 Text="DocStack" />
-
+            <Grid Grid.Column="2" Width="200" HorizontalAlignment="Left">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Menu
+        Grid.Column="0"
+        HorizontalAlignment="Center"
+        VerticalAlignment="Center"
+        Background="#272537"
+        Foreground="White">
+                    <Menu.Resources>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="Padding" Value="10,5" />
+                            <Setter Property="FontSize" Value="16" />
+                            <Setter Property="Background" Value="#272537" />
+                            <Setter Property="Foreground" Value="#F8F8F8" />
+                            <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Roboto" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderThickness="0">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut"/>
+                                                    <ColumnDefinition Width="13"/>
+                                                </Grid.ColumnDefinitions>
+                                                <ContentPresenter x:Name="Icon" Margin="6,0,6,0" VerticalAlignment="Center" ContentSource="Icon"/>
+                                                <ContentPresenter x:Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" />
+                                                <ContentPresenter x:Name="SubmenuItemsHost" Grid.Column="2" Margin="0,0,3,0" VerticalAlignment="Center" ContentSource="InputGestureText"/>
+                                                <Path x:Name="SubMenuPath" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          Data="M0,0 L0,7 L4,3.5 Z" Fill="{TemplateBinding Foreground}" />
+                                                <Popup x:Name="SubMenuPopup" AllowsTransparency="True" Focusable="False" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                                                    <Border x:Name="SubMenuBorder" Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" BorderThickness="1">
+                                                        <ScrollViewer x:Name="SubMenuScrollViewer" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
+                                                            <Grid RenderOptions.ClearTypeHint="Enabled">
+                                                                <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
+                                                                    <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=SubMenuBorder}" Height="{Binding ActualHeight, ElementName=SubMenuBorder}" Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>
+                                                                </Canvas>
+                                                                <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Cycle" Grid.IsSharedSizeScope="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" KeyboardNavigation.TabNavigation="Cycle"/>
+                                                            </Grid>
+                                                        </ScrollViewer>
+                                                    </Border>
+                                                </Popup>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsHighlighted" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#22202f"/>
+                                            </Trigger>
+                                            <Trigger Property="Role" Value="TopLevelHeader">
+                                                <Setter TargetName="SubMenuPath" Property="Visibility" Value="Collapsed"/>
+                                            </Trigger>
+                                            <Trigger Property="Role" Value="SubMenuHeader">
+                                                <Setter TargetName="SubMenuPath" Property="Visibility" Value="Visible"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSubmenuOpen" Value="True">
+                                                <Setter TargetName="SubMenuPath" Property="Fill" Value="#22202f"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Menu.Resources>
+                    <MenuItem Header="File">
+                        <MenuItem Header="Add File" />
+                        <MenuItem Header="Print" />
+                    </MenuItem>
+                    <MenuItem Header="Edit">
+                        <MenuItem Header="Select All" />
+                        <MenuItem Header="Copy" />
+                        <MenuItem Header="Paste" />
+                    </MenuItem>
+                    <MenuItem Header="View" >
+                        <MenuItem Header="Vertical" />
+                        <MenuItem Header="Horizontal" />
+                    </MenuItem>
+                </Menu>
+            </Grid>
             <StackPanel Grid.Row="1">
                 <RadioButton
                     Height="50"
@@ -56,35 +137,35 @@
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
-                    Style="{StaticResource MenuButtonTheme}" />
+                    Style="{StaticResource HomeViewButtonStyle}" />
                 <RadioButton
                     Height="50"
                     Content="Search"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
-                    Style="{StaticResource MenuButtonTheme}" />
+                    Style="{StaticResource SearchViewButtonStyle}" />
                 <RadioButton
                     Height="50"
                     Content="Favorites"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
-                    Style="{StaticResource MenuButtonTheme}" />
+                    Style="{StaticResource FavoriteViewButtonStyle}" />
                 <RadioButton
                     Height="50"
                     Content="My Papers"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
-                    Style="{StaticResource MenuButtonTheme}" />
+                    Style="{StaticResource MyPapersViewButtonStyle}" />
                 <RadioButton
                     Height="50"
                     Content="Settings"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
-                    Style="{StaticResource MenuButtonTheme}" />
+                    Style="{StaticResource SettingsViewButtonStyle}" />
             </StackPanel>
 
             <ContentControl

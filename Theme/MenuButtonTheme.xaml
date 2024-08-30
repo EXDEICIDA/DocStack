@@ -1,66 +1,192 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:fa="http://schemas.fontawesome.io/icons/">
-    <!-- This is an default mode-->
-    <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type RadioButton}" x:Key="MenuButtonTheme">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:fa="http://schemas.fontawesome.io/icons/">
+    <!--  This is an default mode  -->
+    <Style
+        x:Key="MenuButtonTheme"
+        BasedOn="{StaticResource {x:Type ToggleButton}}"
+        TargetType="{x:Type RadioButton}">
         <Style.Setters>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
-                        
-                            <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{TemplateBinding Background}">
-                                <TextBlock Text="{TemplateBinding Property=Content}" VerticalAlignment="Center" Margin="50,0,0,0">
-                                    
-                                </TextBlock>
-                            </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="BorderThickness" Value="0" />
 
-        </Style.Setters>
-        <Style.Triggers>
-            <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="#22202f"></Setter>
-            </Trigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style BasedOn="{StaticResource {x:Type ToggleButton}}" TargetType="{x:Type RadioButton}" x:Key="MenuButtonThemeforHome">
-        <Style.Setters>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{TemplateBinding Background}">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" 
-                                   FontFamily="pack://application:,,,/FontAwesome.WPF;component/Fonts/#FontAwesome"
-                                   Text="&#xf015;" 
-                                   FontSize="18" 
-                                   VerticalAlignment="Center" 
-                                   Margin="20,0,0,0"
-                                   Foreground="{TemplateBinding Foreground}"/>
-                            <TextBlock Grid.Column="1" 
-                                   Text="{TemplateBinding Property=Content}" 
-                                   VerticalAlignment="Center" 
-                                   Margin="10,0,0,0"
-                                   Foreground="{TemplateBinding Foreground}"/>
+                        <Grid
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="{TemplateBinding Background}">
+                            <TextBlock
+                                Margin="50,0,0,0"
+                                VerticalAlignment="Center"
+                                Text="{TemplateBinding Property=Content}" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
+
         </Style.Setters>
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
-                <Setter Property="Background" Value="#22202f"/>
+                <Setter Property="Background" Value="#22202f" />
             </Trigger>
         </Style.Triggers>
     </Style>
 
+    <Style
+        x:Key="HomeViewButtonStyle"
+        BasedOn="{StaticResource MenuButtonTheme}"
+        TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            Grid.Column="0"
+                            Width="20"
+                            Height="20"
+                            Margin="24,0,5,0"
+                            Source="pack://application:,,,/Resources/Button/house.png" />
+                        <TextBlock
+                            Grid.Column="3"
+                            VerticalAlignment="Center"
+                            Text="{TemplateBinding Content}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style
+        x:Key="SearchViewButtonStyle"
+        BasedOn="{StaticResource MenuButtonTheme}"
+        TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            Grid.Column="0"
+                            Width="20"
+                            Height="20"
+                            Margin="24,0,5,0"
+                            Source="pack://application:,,,/Resources/Button/search.png" />
+                        <TextBlock
+                            Grid.Column="3"
+                            VerticalAlignment="Center"
+                            Text="{TemplateBinding Content}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style
+        x:Key="FavoriteViewButtonStyle"
+        BasedOn="{StaticResource MenuButtonTheme}"
+        TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            Grid.Column="0"
+                            Width="20"
+                            Height="20"
+                            Margin="24,0,5,0"
+                            Source="pack://application:,,,/Resources/Button/star.png" />
+                        <TextBlock
+                            Grid.Column="3"
+                            VerticalAlignment="Center"
+                            Text="{TemplateBinding Content}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <Style
+        x:Key="MyPapersViewButtonStyle"
+        BasedOn="{StaticResource MenuButtonTheme}"
+        TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Stretch"
+                        Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            Grid.Column="0"
+                            Width="20"
+                            Height="20"
+                            Margin="24,0,5,0"
+                            Source="pack://application:,,,/Resources/Button/archive.png" />
+                        <TextBlock
+                            Grid.Column="3"
+                            VerticalAlignment="Center"
+                            Text="{TemplateBinding Content}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+     x:Key="SettingsViewButtonStyle"
+     BasedOn="{StaticResource MenuButtonTheme}"
+     TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                         Grid.Column="0"
+                         Width="20"
+                         Height="20"
+                         Margin="24,0,5,0"
+                         Source="pack://application:,,,/Resources/Button/settings.png" />
+                        <TextBlock
+                         Grid.Column="3"
+                         VerticalAlignment="Center"
+                         Text="{TemplateBinding Content}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

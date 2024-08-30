@@ -134,9 +134,15 @@
     <Resource Include="Resources\AppLogo\Cube-remove.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Button\archive.png" />
     <Resource Include="Resources\Button\house.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\Button\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Button\archive.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Resources\Button\settings.png" />
     <Resource Include="Resources\Button\star.png" />
   </ItemGroup>
