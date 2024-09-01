@@ -137,12 +137,14 @@
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
+                    
                     Style="{StaticResource HomeViewButtonStyle}" />
                 <RadioButton
                     Height="50"
                     Content="Search"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
+                    Command="{Binding SearchViewCommand}"
                     Foreground="#f8f8f8"
                     Style="{StaticResource SearchViewButtonStyle}" />
                 <RadioButton

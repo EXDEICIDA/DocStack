@@ -67,7 +67,7 @@
             <!--  Square section  -->
             <Border
             Height="350"
-            Margin="10"
+            Margin="6"
             Padding="10"
             Background="#333333"
             CornerRadius="10">

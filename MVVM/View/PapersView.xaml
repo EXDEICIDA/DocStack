@@ -72,12 +72,9 @@
                     </DataGridCheckBoxColumn.Header>
                 </DataGridCheckBoxColumn>
                 <DataGridTextColumn Header="Authors" Binding="{Binding Authors}" Width="*"/>
-                <DataGridTextColumn Header="Last Author" Binding="{Binding LastAuthor}" Width="*"/>
                 <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
                 <DataGridTextColumn Header="Journal" Binding="{Binding Journal}" Width="*"/>
-                <DataGridTextColumn Header="Year" Binding="{Binding Year}" Width="Auto"/>
-                <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
-                <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" Width="Auto"/>
+                <DataGridTextColumn Header="Year" Binding="{Binding Year}" Width="100"  />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
