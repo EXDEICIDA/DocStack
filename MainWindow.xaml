@@ -165,6 +165,7 @@
                     Content="Settings"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
+                    Command="{Binding SettingsViewCommand}"
                     Foreground="#f8f8f8"
                     Style="{StaticResource SettingsViewButtonStyle}" />
             </StackPanel>
