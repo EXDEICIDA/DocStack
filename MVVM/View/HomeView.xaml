@@ -10,6 +10,6 @@
     d:DesignWidth="1280"
     mc:Ignorable="d">
     <Grid Background="#272537">
-       
+        <TextBlock Text="Hello" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
     </Grid>
 </UserControl>

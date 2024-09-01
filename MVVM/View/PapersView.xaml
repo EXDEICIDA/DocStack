@@ -1,0 +1,84 @@
+﻿<UserControl
+    x:Class="DocStack.MVVM.View.PapersView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:DocStack.MVVM.ViewModel"
+    d:DesignHeight="720"
+    d:DesignWidth="1280"
+    mc:Ignorable="d">
+
+    <UserControl.DataContext>
+        <viewModel:PapersViewModel/>
+    </UserControl.DataContext>
+
+
+
+
+    <Grid Background="#272537">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10,10,10,5">
+                <Button Content="+" Width="20" Height="20" Background="Transparent" Foreground="White" BorderThickness="0" Padding="0" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <TextBlock Text="Add" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                <Border Background="#1F1C2E" CornerRadius="5">
+                    <TextBox Width="400" Background="Transparent" Foreground="#6E6A7C" BorderThickness="0" Padding="5,2" Text="Search within recently read..." VerticalContentAlignment="Center"/>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="10,10,10,5">
+                <Button Content="☰" Width="20" Height="20" Background="Transparent" Foreground="White" BorderThickness="0" Padding="0" VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="Filter"/>
+                <Button Content="⊞" Width="20" Height="20" Background="Transparent" Foreground="White" BorderThickness="0" Padding="0" VerticalAlignment="Center" Margin="0,0,10,0" ToolTip="Toggle View"/>
+            </StackPanel>
+        </Grid>
+
+        <DataGrid Grid.Row="1" AutoGenerateColumns="False" Background="Transparent" BorderThickness="0" 
+                  RowBackground="#1F1C2E" AlternatingRowBackground="#272537" 
+                  GridLinesVisibility="None" HeadersVisibility="Column" 
+                  CanUserAddRows="False" IsReadOnly="True" Margin="10,0,10,10">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="Padding" Value="5"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="DataGridColumnHeader">
+                                <Grid>
+                                    <Border Background="#2E2B3F" BorderThickness="0,0,0,1" BorderBrush="#3D3A52">
+                                        <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </Border>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Width="Auto">
+                    <DataGridCheckBoxColumn.Header>
+                        <CheckBox IsHitTestVisible="False" IsEnabled="False"/>
+                    </DataGridCheckBoxColumn.Header>
+                </DataGridCheckBoxColumn>
+                <DataGridTextColumn Header="Authors" Binding="{Binding Authors}" Width="*"/>
+                <DataGridTextColumn Header="Last Author" Binding="{Binding LastAuthor}" Width="*"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+                <DataGridTextColumn Header="Journal" Binding="{Binding Journal}" Width="*"/>
+                <DataGridTextColumn Header="Year" Binding="{Binding Year}" Width="Auto"/>
+                <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" Width="*"/>
+                <DataGridTextColumn Header="Rating" Binding="{Binding Rating}" Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

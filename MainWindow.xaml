@@ -132,7 +132,7 @@
             <StackPanel Grid.Row="1">
                 <RadioButton
                     Height="50"
-                    Command="{Binding}"
+                    Command="{Binding HomeViewCommand }"
                     Content="Home"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
@@ -158,6 +158,7 @@
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
+                    Command="{Binding PapersViewCommand}"
                     Style="{StaticResource MyPapersViewButtonStyle}" />
                 <RadioButton
                     Height="50"
