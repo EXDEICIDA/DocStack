@@ -13,6 +13,7 @@
     MinHeight="700"
     AllowsTransparency="True"
     Background="Transparent"
+    Icon="pack://application:,,,/Resources/AppLogo/Pyramid-remove.png"
     WindowStartupLocation="CenterScreen"
     WindowStyle="None"
     mc:Ignorable="d">
@@ -47,17 +48,53 @@
                 FontSize="24"
                 Foreground="#F8F8F8"
                 Text="DocStack" />
-            <Grid Grid.Column="2" Width="200" HorizontalAlignment="Left">
+            <Button
+                Grid.Column="2"
+                Width="30"
+                Height="30"
+                Margin="5,0,30,0"
+                Padding="5"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Background="Transparent"
+                BorderBrush="Transparent"
+                Click="CloseButton_Click"
+                Command="{Binding CloseCommand}">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" Background="Transparent">
+                            <fa:FontAwesome
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                FontSize="20"
+                                Foreground="#f8f8f8"
+                                Icon="Close" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#333333" />
+                            </Trigger>
+
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+
+
+            <Grid
+                Grid.Column="2"
+                Width="200"
+                HorizontalAlignment="Left">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Menu
-        Grid.Column="0"
-        HorizontalAlignment="Center"
-        VerticalAlignment="Center"
-        Background="#272537"
-        Foreground="White">
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Background="#272537"
+                    Foreground="White">
                     <Menu.Resources>
                         <Style TargetType="{x:Type MenuItem}">
                             <Setter Property="Padding" Value="10,5" />
@@ -68,27 +105,69 @@
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type MenuItem}">
-                                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderThickness="0">
+                                        <Border
+                                            x:Name="Border"
+                                            Background="{TemplateBinding Background}"
+                                            BorderThickness="0">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Icon" />
                                                     <ColumnDefinition Width="*" />
-                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut"/>
-                                                    <ColumnDefinition Width="13"/>
+                                                    <ColumnDefinition Width="Auto" SharedSizeGroup="Shortcut" />
+                                                    <ColumnDefinition Width="13" />
                                                 </Grid.ColumnDefinitions>
-                                                <ContentPresenter x:Name="Icon" Margin="6,0,6,0" VerticalAlignment="Center" ContentSource="Icon"/>
-                                                <ContentPresenter x:Name="HeaderHost" Grid.Column="1" ContentSource="Header" RecognizesAccessKey="True" />
-                                                <ContentPresenter x:Name="SubmenuItemsHost" Grid.Column="2" Margin="0,0,3,0" VerticalAlignment="Center" ContentSource="InputGestureText"/>
-                                                <Path x:Name="SubMenuPath" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                          Data="M0,0 L0,7 L4,3.5 Z" Fill="{TemplateBinding Foreground}" />
-                                                <Popup x:Name="SubMenuPopup" AllowsTransparency="True" Focusable="False" IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}">
-                                                    <Border x:Name="SubMenuBorder" Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}" BorderThickness="1">
+                                                <ContentPresenter
+                                                    x:Name="Icon"
+                                                    Margin="6,0,6,0"
+                                                    VerticalAlignment="Center"
+                                                    ContentSource="Icon" />
+                                                <ContentPresenter
+                                                    x:Name="HeaderHost"
+                                                    Grid.Column="1"
+                                                    ContentSource="Header"
+                                                    RecognizesAccessKey="True" />
+                                                <ContentPresenter
+                                                    x:Name="SubmenuItemsHost"
+                                                    Grid.Column="2"
+                                                    Margin="0,0,3,0"
+                                                    VerticalAlignment="Center"
+                                                    ContentSource="InputGestureText" />
+                                                <Path
+                                                    x:Name="SubMenuPath"
+                                                    Grid.Column="3"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Data="M0,0 L0,7 L4,3.5 Z"
+                                                    Fill="{TemplateBinding Foreground}" />
+                                                <Popup
+                                                    x:Name="SubMenuPopup"
+                                                    AllowsTransparency="True"
+                                                    Focusable="False"
+                                                    IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                                                    <Border
+                                                        x:Name="SubMenuBorder"
+                                                        Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}"
+                                                        BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type Menu}}}"
+                                                        BorderThickness="1">
                                                         <ScrollViewer x:Name="SubMenuScrollViewer" Style="{DynamicResource {ComponentResourceKey ResourceId=MenuScrollViewer, TypeInTargetAssembly={x:Type FrameworkElement}}}">
                                                             <Grid RenderOptions.ClearTypeHint="Enabled">
-                                                                <Canvas HorizontalAlignment="Left" Height="0" VerticalAlignment="Top" Width="0">
-                                                                    <Rectangle x:Name="OpaqueRect" Fill="{Binding Background, ElementName=SubMenuBorder}" Height="{Binding ActualHeight, ElementName=SubMenuBorder}" Width="{Binding ActualWidth, ElementName=SubMenuBorder}"/>
+                                                                <Canvas
+                                                                    Width="0"
+                                                                    Height="0"
+                                                                    HorizontalAlignment="Left"
+                                                                    VerticalAlignment="Top">
+                                                                    <Rectangle
+                                                                        x:Name="OpaqueRect"
+                                                                        Width="{Binding ActualWidth, ElementName=SubMenuBorder}"
+                                                                        Height="{Binding ActualHeight, ElementName=SubMenuBorder}"
+                                                                        Fill="{Binding Background, ElementName=SubMenuBorder}" />
                                                                 </Canvas>
-                                                                <ItemsPresenter x:Name="ItemsPresenter" KeyboardNavigation.DirectionalNavigation="Cycle" Grid.IsSharedSizeScope="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" KeyboardNavigation.TabNavigation="Cycle"/>
+                                                                <ItemsPresenter
+                                                                    x:Name="ItemsPresenter"
+                                                                    Grid.IsSharedSizeScope="True"
+                                                                    KeyboardNavigation.DirectionalNavigation="Cycle"
+                                                                    KeyboardNavigation.TabNavigation="Cycle"
+                                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                                                             </Grid>
                                                         </ScrollViewer>
                                                     </Border>
@@ -97,16 +176,16 @@
                                         </Border>
                                         <ControlTemplate.Triggers>
                                             <Trigger Property="IsHighlighted" Value="True">
-                                                <Setter TargetName="Border" Property="Background" Value="#22202f"/>
+                                                <Setter TargetName="Border" Property="Background" Value="#22202f" />
                                             </Trigger>
                                             <Trigger Property="Role" Value="TopLevelHeader">
-                                                <Setter TargetName="SubMenuPath" Property="Visibility" Value="Collapsed"/>
+                                                <Setter TargetName="SubMenuPath" Property="Visibility" Value="Collapsed" />
                                             </Trigger>
                                             <Trigger Property="Role" Value="SubMenuHeader">
-                                                <Setter TargetName="SubMenuPath" Property="Visibility" Value="Visible"/>
+                                                <Setter TargetName="SubMenuPath" Property="Visibility" Value="Visible" />
                                             </Trigger>
                                             <Trigger Property="IsSubmenuOpen" Value="True">
-                                                <Setter TargetName="SubMenuPath" Property="Fill" Value="#22202f"/>
+                                                <Setter TargetName="SubMenuPath" Property="Fill" Value="#22202f" />
                                             </Trigger>
                                         </ControlTemplate.Triggers>
                                     </ControlTemplate>
@@ -123,8 +202,9 @@
                         <MenuItem Header="Copy" />
                         <MenuItem Header="Paste" />
                     </MenuItem>
-                    <MenuItem Header="View" >
+                    <MenuItem Header="View">
                         <MenuItem Header="Vertical" />
+
                         <MenuItem Header="Horizontal" />
                     </MenuItem>
                 </Menu>
@@ -132,19 +212,18 @@
             <StackPanel Grid.Row="1">
                 <RadioButton
                     Height="50"
-                    Command="{Binding HomeViewCommand }"
+                    Command="{Binding HomeViewCommand}"
                     Content="Home"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
-                    
                     Style="{StaticResource HomeViewButtonStyle}" />
                 <RadioButton
                     Height="50"
+                    Command="{Binding SearchViewCommand}"
                     Content="Search"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
-                    Command="{Binding SearchViewCommand}"
                     Foreground="#f8f8f8"
                     Style="{StaticResource SearchViewButtonStyle}" />
                 <RadioButton
@@ -156,18 +235,18 @@
                     Style="{StaticResource FavoriteViewButtonStyle}" />
                 <RadioButton
                     Height="50"
+                    Command="{Binding PapersViewCommand}"
                     Content="My Papers"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
                     Foreground="#f8f8f8"
-                    Command="{Binding PapersViewCommand}"
                     Style="{StaticResource MyPapersViewButtonStyle}" />
                 <RadioButton
                     Height="50"
+                    Command="{Binding SettingsViewCommand}"
                     Content="Settings"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
-                    Command="{Binding SettingsViewCommand}"
                     Foreground="#f8f8f8"
                     Style="{StaticResource SettingsViewButtonStyle}" />
             </StackPanel>
