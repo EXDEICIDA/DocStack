@@ -115,6 +115,7 @@
     <Compile Include="MVVM\ViewModel\PapersViewModel.cs" />
     <Compile Include="MVVM\ViewModel\SearchViewModel.cs" />
     <Compile Include="MVVM\ViewModel\SettingsViewModel.cs" />
+    <Compile Include="MVVM\ViewModel\BoolToColorConverter.cs" />
     <Compile Include="MVVM\View\FavoritesView.xaml.cs">
       <DependentUpon>FavoritesView.xaml</DependentUpon>
     </Compile>

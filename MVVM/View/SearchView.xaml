@@ -56,14 +56,14 @@
             BorderThickness="0,0,0,1">
             <DockPanel LastChildFill="True">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                    <Button Style="{StaticResource FlatButton}">
+                    <Button Style="{StaticResource FlatButton}" Width="20">
                         <fa:ImageAwesome
                             Width="16"
                             Height="16"
                             Foreground="#f8f8f8"
                             Icon="Table" />
                     </Button>
-                    <Button Style="{StaticResource FlatButton}">
+                    <Button Style="{StaticResource FlatButton}" Width="20">
                         <fa:ImageAwesome
                             Width="16"
                             Height="16"
