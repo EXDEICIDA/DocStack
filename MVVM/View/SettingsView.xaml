@@ -7,10 +7,9 @@
              xmlns:local="clr-namespace:DocStack.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="720"
- d:DesignWidth="1280">
+             d:DesignWidth="1280">
     <UserControl.DataContext>
         <viewModel:SettingsViewModel />
-        <!--  Corrected this line  -->
     </UserControl.DataContext>
 
     <Grid>
@@ -23,86 +22,80 @@
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
-        <!--  Settings header  -->
+        <!-- Settings header -->
         <TextBlock
-        Grid.ColumnSpan="2"
-        Margin="15,0,0,20"
-        FontSize="30"
-        Foreground="White"
-        Text="Settings" />
+            Grid.ColumnSpan="2"
+            Margin="15,0,0,20"
+            FontSize="30"
+            Foreground="White"
+            Text="Settings" />
 
-        <!--  Left side: one rectangle and one square  -->
-        <StackPanel
-        Grid.Row="1"
-        Grid.RowSpan="2"
-        Grid.Column="0"
-        Margin="10"
-        VerticalAlignment="Stretch">
-            <!--  Rectangle section  -->
+        <!-- Left side: responsive rectangles -->
+        <UniformGrid
+            Grid.Row="1"
+            Grid.RowSpan="2"
+            Grid.Column="0"
+            Margin="10"
+            VerticalAlignment="Stretch"
+            Columns="1">
+            <!-- Rectangle 1 -->
             <Border
-            Height="200"
+                Margin="5"
+                Padding="10"
+                Background="#333333"
+                CornerRadius="10">
+                <StackPanel>
+                    <TextBlock Text="Rectangle 1" Foreground="White" Margin="0,0,0,10"/>
+                    <!-- Additional content for Rectangle 1 -->
+                </StackPanel>
+            </Border>
+            <!-- Rectangle 2 -->
+            <Border
+                Margin="5"
+                Padding="10"
+                Background="#333333"
+                CornerRadius="10">
+                <StackPanel>
+                    <TextBlock Text="Rectangle 2" Foreground="White" Margin="0,0,0,10"/>
+                    <!-- Additional content for Rectangle 2 -->
+                </StackPanel>
+            </Border>
+            <!-- Rectangle 3 -->
+            <Border
+                Margin="5"
+                Padding="10"
+                Background="#333333"
+                CornerRadius="10">
+                <StackPanel>
+                    <TextBlock Text="Rectangle 3" Foreground="White" Margin="0,0,0,10"/>
+                    <!-- Additional content for Rectangle 3 -->
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <!-- Third section (Recommended settings) -->
+        <Border
+            Grid.Row="1"
+            Grid.Column="1"
             Margin="10"
             Padding="10"
             Background="#333333"
             CornerRadius="10">
-                <StackPanel>
-                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top">
-                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <!-- Add content here -->
+            </StackPanel>
+        </Border>
 
-                        
-
-                          
-                        </Grid>
-                    </StackPanel>
-                    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                       
-                    </StackPanel>
-                </StackPanel>
-            </Border>
-
-            <!--  Square section  -->
-            <Border
-            Height="350"
-            Margin="6"
+        <Border
+            Grid.Row="2"
+            Grid.Column="1"
+            Margin="10"
             Padding="10"
             Background="#333333"
             CornerRadius="10">
-                <StackPanel>
-                    <!--  Add content here  -->
-                </StackPanel>
-            </Border>
-        </StackPanel>
-
-        <!--  Third section (Recommended settings)  -->
-        <Border
-        Grid.Row="1"
-        Grid.Column="1"
-        Margin="10"
-        Padding="10"
-        Background="#333333"
-        CornerRadius="10">
             <StackPanel>
-                <!--  Add content here  -->
-            </StackPanel>
-        </Border>
-
-        <Border
-        Grid.Row="2"
-        Grid.Column="1"
-        Margin="10"
-        Padding="10"
-        Background="#333333"
-        CornerRadius="10">
-            <StackPanel>
-
-              
-               
+                <!-- Add content here -->
             </StackPanel>
         </Border>
     </Grid>
-
 </UserControl>
