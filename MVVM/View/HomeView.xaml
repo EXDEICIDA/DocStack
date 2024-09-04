@@ -43,7 +43,7 @@
                                 <TextBlock Margin="10,0" VerticalAlignment="Center" FontSize="18" Text="{Binding CurrentMonthYear}" />
                                 <Button Background="Transparent" BorderThickness="0" Command="{Binding NextMonthCommand}" Content="&#x203A;" FontSize="18" />
                             </StackPanel>
-                            <Button HorizontalAlignment="Right" Padding="10,5" Background="White" BorderBrush="#DDDDDD" BorderThickness="1" Command="{Binding TodayCommand}" Content="Today" FontSize="14" />
+                            <Button HorizontalAlignment="Right" Padding="10,5" Background="White" BorderBrush="#DDDDDD" BorderThickness="1" Command="{Binding TodayCommand}" Content="Today" FontSize="14" Style="{StaticResource ModernButton}" />
                         </Grid>
 
                         <!-- Calendar Grid -->
