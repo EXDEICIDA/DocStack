@@ -4,9 +4,148 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DocStack.MVVM.View"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+             d:DesignHeight="720" d:DesignWidth="1280">
+    <UserControl.Resources>
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#4C5BF7"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="15,10"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Roboto"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3A49D1"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Background="#272537">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <TextBlock Grid.Row="0" Text="Documents" FontSize="32" FontWeight="Bold" Margin="30,30,30,20" Foreground="#f8f8f8" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+
+            <!-- Controls -->
+            <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="30,0,30,30">
+                <Button Content="+ New" Style="{StaticResource ModernButton}" Padding="20,10" Margin="0,0,15,0" MinWidth="100"/>
+                <Button Style="{StaticResource ModernButton}" Background="#3A3A3A" Foreground="#f8f8f8" Margin="0,0,15,0" Padding="15,10">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Filter" Height="14" Foreground="#f8f8f8" Margin="0,0,8,0"/>
+                        <TextBlock Text="Filters"/>
+                    </StackPanel>
+                </Button>
+                <ComboBox SelectedIndex="0" MinWidth="150" BorderThickness="0" Background="#3A3A3A" Foreground="#f8f8f8" FontFamily="pack://application:,,,/Fonts/#Roboto">
+                    <ComboBoxItem Content="Sort By: Latest"/>
+                </ComboBox>
+            </StackPanel>
+
+           
+
+            <!-- Recent -->
+            <StackPanel Grid.Row="3" Margin="30,0,30,30">
+                <TextBlock Text="Recent" FontWeight="Bold" FontSize="24" Margin="0,0,0,20" Foreground="#f8f8f8" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+                <ItemsControl>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,0,0,10" Padding="15" Background="#3A3A3A" CornerRadius="8">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <fa:ImageAwesome Icon="File" Foreground="#4C5BF7" Height="24" Width="24" Margin="0,0,15,0"/>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="16" Foreground="#f8f8f8" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+                                        <TextBlock Text="{Binding Date}" Foreground="#AAAAAA" FontSize="12" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+                                    </StackPanel>
+                                    <TextBlock Grid.Column="2" Text="{Binding Size}" Foreground="#AAAAAA" FontSize="12" VerticalAlignment="Center" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+
+            <!-- All Files -->
+            <Grid Grid.Row="4" Margin="30,0,30,30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="All Files" FontWeight="Bold" FontSize="24" Margin="0,0,0,20" Foreground="#f8f8f8" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+                <ListView Grid.Row="1" BorderThickness="0" Background="Transparent" Foreground="#f8f8f8">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Name" Width="400">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <fa:ImageAwesome Icon="File" Foreground="#4C5BF7" Height="16" Margin="0,0,10,0"/>
+                                            <TextBlock Text="{Binding Name}" FontSize="14" Foreground="#f8f8f8" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="Upload By" Width="200">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Ellipse Width="24" Height="24" Margin="0,0,10,0">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush ImageSource="{Binding UserAvatar}"/>
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Text="{Binding UploadedBy}" VerticalAlignment="Center" Foreground="#f8f8f8" FontFamily="pack://application:,,,/Fonts/#Roboto"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Padding" Value="10,5"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                            <GridViewRowPresenter HorizontalAlignment="Stretch" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Width="Auto" Margin="0" Content="{TemplateBinding Content}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#3A3A3A"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

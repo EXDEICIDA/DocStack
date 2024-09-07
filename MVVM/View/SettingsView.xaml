@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModel="clr-namespace:DocStack.MVVM.ViewModel"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:local="clr-namespace:DocStack.MVVM.View"
              mc:Ignorable="d" 
              d:DesignHeight="720"
@@ -93,8 +94,34 @@
             Padding="10"
             Background="#333333"
             CornerRadius="10">
-            <StackPanel>
-                <!-- Add content here -->
+            <StackPanel Background="#FF2A2A2A">
+               
+
+                <Border CornerRadius="5" Margin="10" Padding="15,10" Background="#FF1E1E1E">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <fa:FontAwesome Icon="File"  Foreground="White" FontSize="20" VerticalAlignment="Center"/>
+                        <TextBlock Text="Documents" Foreground="White" FontSize="16" Margin="15,0,0,0" Grid.Column="1" VerticalAlignment="Center"/>
+                        <ToggleButton Grid.Column="2" Style="{StaticResource ToggleButtonStyle}" VerticalAlignment="Center"/>
+                    </Grid>
+                </Border>
+
+                <Border CornerRadius="5" Margin="10" Padding="15,10" Background="#FF1E1E1E">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Style="{StaticResource CheckBoxStyle}"></CheckBox>
+                    </Grid>
+                </Border>
             </StackPanel>
         </Border>
     </Grid>

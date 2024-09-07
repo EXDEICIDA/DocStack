@@ -261,6 +261,7 @@
                     Content="Favorites"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
+                    Command="{Binding FavoriteViewCommand}"
                     Foreground="#f8f8f8"
                     Style="{StaticResource FavoriteViewButtonStyle}" />
                 <RadioButton

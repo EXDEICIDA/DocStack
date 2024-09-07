@@ -145,10 +145,7 @@
                     Width="*"
                     Binding="{Binding Authors}"
                     Header="Authors" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding LastAuthor}"
-                    Header="Last Author" />
+               
                 <DataGridTextColumn
                     Width="*"
                     Binding="{Binding Journal}"

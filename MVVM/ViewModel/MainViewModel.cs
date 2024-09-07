@@ -18,6 +18,7 @@ namespace DocStack.MVVM.ViewModel
         public RelayCommand PapersViewCommand { get; set; }
         public RelayCommand SettingsViewCommand { get; set; }
         public RelayCommand SearchViewCommand { get; set; }
+        public RelayCommand FavoriteViewCommand { get; set; }
         
 
 
@@ -26,6 +27,8 @@ namespace DocStack.MVVM.ViewModel
         public PapersViewModel PapersVm { get; set; }
         public SettingsViewModel SettingsVm { get; set; }
         public SearchViewModel SearchVm { get; set; }
+        public FavoritesViewModel FavoritesVm { get; set; }
+
 
         private object _currentView;
 
@@ -46,11 +49,18 @@ namespace DocStack.MVVM.ViewModel
             PapersVm = new PapersViewModel();
             SettingsVm = new SettingsViewModel();
             SearchVm = new SearchViewModel();
+            FavoritesVm = new FavoritesViewModel();
 
             //initializations for other commands or properties
             HomeViewCommand = new RelayCommand(o =>
             {
                 CurrentView = HomeVm;
+            });
+
+            FavoriteViewCommand = new RelayCommand( o =>
+            {
+                CurrentView = FavoritesVm;
+                                
             });
 
 

@@ -17,6 +17,10 @@
                 <view:HomeView />
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewModel:FavoritesViewModel}">
+                <view:FavoritesView />
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type viewModel:PapersViewModel}">
                 <view:PapersView/>
             </DataTemplate>
