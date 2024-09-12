@@ -16,6 +16,8 @@
     </UserControl.DataContext>
 
     <UserControl.Resources>
+
+      
         <Style x:Key="FlatButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
@@ -63,7 +65,7 @@
                             Foreground="#f8f8f8"
                             Icon="Table" />
                     </Button>
-                    <Button Style="{StaticResource FlatButton}" Width="20">
+                    <Button Style="{StaticResource FlatButton}" Width="20" Command="{Binding SearchCommand}">
                         <fa:ImageAwesome
                             Width="16"
                             Height="16"
@@ -166,5 +168,7 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
         </DataGrid>
+
     </Grid>
+
 </UserControl>

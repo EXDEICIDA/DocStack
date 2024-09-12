@@ -48,6 +48,17 @@
                 <StackPanel>
                     <TextBlock Text="Rectangle 1" Foreground="White" Margin="0,0,0,10"/>
                     <!-- Additional content for Rectangle 1 -->
+                    <Border CornerRadius="5" Margin="10" Padding="15,10" Background="#FF1E1E1E">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <CheckBox Style="{StaticResource CheckBoxStyle}"></CheckBox>
+                        </Grid>
+                    </Border>
                 </StackPanel>
             </Border>
             <!-- Rectangle 2 -->
@@ -105,7 +116,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <fa:FontAwesome Icon="File"  Foreground="White" FontSize="20" VerticalAlignment="Center"/>
+                        <fa:FontAwesome Icon="FilePdfOutline"  Foreground="White" FontSize="25" VerticalAlignment="Center"/>
                         <TextBlock Text="Documents" Foreground="White" FontSize="16" Margin="15,0,0,0" Grid.Column="1" VerticalAlignment="Center"/>
                         <ToggleButton Grid.Column="2" Style="{StaticResource ToggleButtonStyle}" VerticalAlignment="Center"/>
                     </Grid>
@@ -119,9 +130,14 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <CheckBox Style="{StaticResource CheckBoxStyle}"></CheckBox>
+                        <fa:FontAwesome Icon="AngleDoubleDown"  Foreground="White" FontSize="25" VerticalAlignment="Center"/>
+                        <TextBlock Text="Documents" Foreground="White" FontSize="16" Margin="15,0,0,0" Grid.Column="1" VerticalAlignment="Center"/>
+                        <ToggleButton Grid.Column="2" Style="{StaticResource ToggleButtonStyle}" VerticalAlignment="Center"/>
                     </Grid>
                 </Border>
+
+
+
             </StackPanel>
         </Border>
     </Grid>
