@@ -11,13 +11,14 @@
     d:DesignWidth="1280"
     FontFamily="pack://application:,,,/Fonts/#Roboto"
     mc:Ignorable="d">
+
     <UserControl.DataContext>
         <viewmodel:SearchViewModel />
     </UserControl.DataContext>
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-      
         <Style x:Key="FlatButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
@@ -50,7 +51,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!--  Search Bar and Buttons  -->
+        <!-- Search Bar and Buttons -->
         <Border
             Grid.Row="0"
             Padding="10"
@@ -124,51 +125,104 @@
             </DockPanel>
         </Border>
 
-        <!--  DataGrid for search results  -->
-        <DataGrid
-            Grid.Row="1"
-            AlternatingRowBackground="#2F2D43"
-            AutoGenerateColumns="False"
-            Background="#272537"
-            BorderThickness="0"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            Foreground="#f8f8f8"
-            GridLinesVisibility="None"
-            IsReadOnly="True"
-            ItemsSource="{Binding SearchResults}"
-            RowBackground="#272537">
-            <DataGrid.Columns>
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Title}"
-                    Header="Title" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Authors}"
-                    Header="Authors" />
-               
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Journal}"
-                    Header="Journal" />
-                <DataGridTextColumn
-                    Width="*"
-                    Binding="{Binding Year}"
-                    Header="Year" />
-            </DataGrid.Columns>
-            <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="DataGridColumnHeader">
-                    <Setter Property="Background" Value="#2F2D43" />
-                    <Setter Property="Foreground" Value="#f8f8f8" />
-                    <Setter Property="Padding" Value="8,4" />
-                    <Setter Property="BorderThickness" Value="0,0,0,1" />
-                    <Setter Property="BorderBrush" Value="#3E3D55" />
-                    <Setter Property="FontSize" Value="12" />
-                </Style>
-            </DataGrid.ColumnHeaderStyle>
-        </DataGrid>
+        <!-- Main content area with grid splitter -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="300" />
+            </Grid.ColumnDefinitions>
 
+            <!-- DataGrid for search results -->
+            <DataGrid
+                Grid.Column="0"
+                AlternatingRowBackground="#2F2D43"
+                AutoGenerateColumns="False"
+                Background="#272537"
+                BorderThickness="0"
+                CanUserAddRows="False"
+                CanUserDeleteRows="False"
+                Foreground="#f8f8f8"
+                GridLinesVisibility="None"
+                IsReadOnly="True"
+                ItemsSource="{Binding SearchResults}"
+                RowBackground="#272537"
+                SelectedItem="{Binding SelectedPaper, Mode=TwoWay}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Title}"
+                        Header="Title" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Authors}"
+                        Header="Authors" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Journal}"
+                        Header="Journal" />
+                    <DataGridTextColumn
+                        Width="*"
+                        Binding="{Binding Year}"
+                        Header="Year" />
+                </DataGrid.Columns>
+                <DataGrid.ColumnHeaderStyle>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="#2F2D43" />
+                        <Setter Property="Foreground" Value="#f8f8f8" />
+                        <Setter Property="Padding" Value="8,4" />
+                        <Setter Property="BorderThickness" Value="0,0,0,1" />
+                        <Setter Property="BorderBrush" Value="#3E3D55" />
+                        <Setter Property="FontSize" Value="12" />
+                    </Style>
+                </DataGrid.ColumnHeaderStyle>
+            </DataGrid>
+
+            <!-- GridSplitter -->
+            <GridSplitter
+                Grid.Column="1"
+                Width="5"
+                Background="#3E3D55"
+                ResizeBehavior="PreviousAndNext"
+                ResizeDirection="Columns" />
+
+            <!-- Details Panel -->
+            <Border
+                Grid.Column="2"
+                Background="#2F2D43"
+                BorderBrush="#3E3D55"
+                BorderThickness="1,0,0,0"
+                Visibility="{Binding IsDetailsPanelVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <StackPanel Margin="10">
+                    <TextBlock
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="#f8f8f8"
+                        Text="{Binding SelectedPaper.Title}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        Foreground="#f8f8f8"
+                        Text="{Binding SelectedPaper.Authors}"
+                        TextWrapping="Wrap" />
+                    <TextBlock
+                        Margin="0,10,0,0"
+                        Foreground="#f8f8f8"
+                        Text="{Binding SelectedPaper.Journal}" />
+                    <TextBlock
+                        Margin="0,5,0,0"
+                        Foreground="#f8f8f8"
+                        Text="{Binding SelectedPaper.Year}" />
+                    <Button
+                        Margin="0,20,0,0"
+                        Padding="10,5"
+                        Background="#3E3D55"
+                        BorderThickness="0"
+                        Command="{Binding LocatePDFCommand}"
+                        Content="Locate PDF"
+                        Foreground="#f8f8f8" />
+                </StackPanel>
+            </Border>
+        </Grid>
     </Grid>
-
 </UserControl>

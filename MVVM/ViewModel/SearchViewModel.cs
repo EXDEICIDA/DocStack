@@ -15,12 +15,15 @@ namespace DocStack.MVVM.ViewModel
         private readonly CallConfigurationModel _callConfigurationModel;
         private string _searchQuery;
         private ObservableCollection<Paper> _searchResults;
+        private Paper _selectedPaper;
+        private bool _isDetailsPanelVisible;
 
         public SearchViewModel()
         {
             _callConfigurationModel = new CallConfigurationModel();
             SearchResults = new ObservableCollection<Paper>();
             SearchCommand = new RelayCommand(param => SearchPapers(), param => CanSearch());
+            LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
         }
 
         public string SearchQuery
@@ -43,7 +46,29 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        public Paper SelectedPaper
+        {
+            get => _selectedPaper;
+            set
+            {
+                _selectedPaper = value;
+                IsDetailsPanelVisible = _selectedPaper != null;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsDetailsPanelVisible
+        {
+            get => _isDetailsPanelVisible;
+            set
+            {
+                _isDetailsPanelVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand SearchCommand { get; }
+        public ICommand LocatePDFCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -55,7 +80,6 @@ namespace DocStack.MVVM.ViewModel
         private async void SearchPapers()
         {
             var results = await _callConfigurationModel.SearchPapersAsync(SearchQuery);
-
             SearchResults.Clear();
             foreach (var result in results)
             {
@@ -64,7 +88,8 @@ namespace DocStack.MVVM.ViewModel
                     Authors = string.Join(", ", result["authors"].Select(a => a["name"].ToString())),
                     Title = result["title"].ToString(),
                     Journal = result["publisher"].ToString(),
-                    Year = result["yearPublished"].ToString()
+                    Year = result["yearPublished"].ToString(),
+                    DOI = result["doi"].ToString()
                 });
             }
         }
@@ -72,6 +97,17 @@ namespace DocStack.MVVM.ViewModel
         private bool CanSearch()
         {
             return !string.IsNullOrWhiteSpace(SearchQuery);
+        }
+
+        private void LocatePDF()
+        {
+            // Implement PDF location logic here
+            Console.WriteLine($"Locating PDF for {SelectedPaper.Title}");
+        }
+
+        private bool CanLocatePDF()
+        {
+            return SelectedPaper != null;
         }
     }
 
@@ -81,5 +117,6 @@ namespace DocStack.MVVM.ViewModel
         public string Title { get; set; }
         public string Journal { get; set; }
         public string Year { get; set; }
+        public string DOI { get; set; }
     }
 }
