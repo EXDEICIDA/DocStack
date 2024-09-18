@@ -92,7 +92,9 @@
                             Foreground="#f8f8f8"
                             Icon="Search" />
                         <TextBox
+                            x:Uid="SearchViewBox"
                             Grid.Column="1"
+                            KeyDown="SearchBox_KeyDown"
                             Padding="5"
                             VerticalContentAlignment="Center"
                             BorderThickness="0"

@@ -176,6 +176,67 @@
                         Foreground="White"
                         Text="Rectangle 3" />
                     <!-- Additional content for Rectangle 3 -->
+                    <Border
+     Margin="10"
+     Padding="15,10"
+     Background="#FF1E1E1E"
+     CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <fa:FontAwesome
+             VerticalAlignment="Center"
+             FontSize="25"
+             Foreground="White"
+             Icon="FilePdfOutline" />
+                            <TextBlock
+             Grid.Column="1"
+             Margin="15,0,0,0"
+             VerticalAlignment="Center"
+             FontSize="16"
+             Foreground="White"
+             Text="Documents" />
+                            <ToggleButton
+             Grid.Column="2"
+             VerticalAlignment="Center"
+             Style="{StaticResource ToggleButtonStyle}" />
+                        </Grid>
+                    </Border>
+
+                    <Border
+     Margin="10"
+     Padding="15,10"
+     Background="#FF1E1E1E"
+     CornerRadius="5">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <fa:FontAwesome
+             VerticalAlignment="Center"
+             FontSize="25"
+             Foreground="White"
+             Icon="AngleDoubleDown" />
+                            <TextBlock
+             Grid.Column="1"
+             Margin="15,0,0,0"
+             VerticalAlignment="Center"
+             FontSize="16"
+             Foreground="White"
+             Text="Downloads" />
+                            <ToggleButton
+             Grid.Column="2"
+             VerticalAlignment="Center"
+             Style="{StaticResource ToggleButtonStyle}" />
+                        </Grid>
+                    </Border>
                 </StackPanel>
             </Border>
         </UniformGrid>
@@ -201,67 +262,7 @@
             Background="#333333"
             CornerRadius="10">
             <StackPanel Background="#FF2A2A2A">
-                <Border
-                    Margin="10"
-                    Padding="15,10"
-                    Background="#FF1E1E1E"
-                    CornerRadius="5">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <fa:FontAwesome
-                            VerticalAlignment="Center"
-                            FontSize="25"
-                            Foreground="White"
-                            Icon="FilePdfOutline" />
-                        <TextBlock
-                            Grid.Column="1"
-                            Margin="15,0,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            Foreground="White"
-                            Text="Documents" />
-                        <ToggleButton
-                            Grid.Column="2"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource ToggleButtonStyle}" />
-                    </Grid>
-                </Border>
-
-                <Border
-                    Margin="10"
-                    Padding="15,10"
-                    Background="#FF1E1E1E"
-                    CornerRadius="5">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <fa:FontAwesome
-                            VerticalAlignment="Center"
-                            FontSize="25"
-                            Foreground="White"
-                            Icon="AngleDoubleDown" />
-                        <TextBlock
-                            Grid.Column="1"
-                            Margin="15,0,0,0"
-                            VerticalAlignment="Center"
-                            FontSize="16"
-                            Foreground="White"
-                            Text="Downloads" />
-                        <ToggleButton
-                            Grid.Column="2"
-                            VerticalAlignment="Center"
-                            Style="{StaticResource ToggleButtonStyle}" />
-                    </Grid>
-                </Border>
+               
             </StackPanel>
         </Border>
 

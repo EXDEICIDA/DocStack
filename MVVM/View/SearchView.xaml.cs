@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocStack.MVVM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,18 @@ namespace DocStack.MVVM.View
         public SearchView()
         {
             InitializeComponent();
+        }
+
+        private void SearchBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var viewModel = DataContext as SearchViewModel;
+                if (viewModel?.SearchCommand.CanExecute(null) == true)
+                {
+                    viewModel.SearchCommand.Execute(null);
+                }
+            }
         }
     }
 }
