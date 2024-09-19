@@ -33,7 +33,67 @@
                 <Button Content="+" Width="20" Height="20" Background="Transparent" Foreground="White" BorderThickness="0" Padding="0" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 <TextBlock Text="Add" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <Border Background="#1F1C2E" CornerRadius="5">
-                    <TextBox Width="400" Background="Transparent" Foreground="#6E6A7C" BorderThickness="0" Padding="5,2" Text="Search within recently read..." VerticalContentAlignment="Center"/>
+                    <TextBox Width="400" 
+             Background="Transparent" 
+             Foreground="#6E6A7C" 
+             BorderThickness="0" 
+             Padding="5,2" 
+             VerticalContentAlignment="Center">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="TextBox">
+                                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                                <Grid>
+                                                    <TextBox x:Name="PART_TextBox"
+                                             Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             BorderThickness="0"
+                                             Background="Transparent"
+                                             VerticalContentAlignment="Center"
+                                             Padding="{TemplateBinding Padding}"
+                                             Foreground="{TemplateBinding Foreground}"
+                                             CaretBrush="{TemplateBinding Foreground}"/>
+                                                    <TextBlock IsHitTestVisible="False"
+                                               Text="Search within recently read..."
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Left"
+                                               Margin="{TemplateBinding Padding}"
+                                               Foreground="#6E6A7C">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Visibility" Value="Visible"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Text, ElementName=PART_TextBox}" Value="">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Text, ElementName=PART_TextBox}" Value="{x:Null}">
+                                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                                    </DataTrigger>
+                                                                    <MultiDataTrigger>
+                                                                        <MultiDataTrigger.Conditions>
+                                                                            <Condition Binding="{Binding Text, ElementName=PART_TextBox}" Value=""/>
+                                                                            <Condition Binding="{Binding IsFocused, ElementName=PART_TextBox}" Value="True"/>
+                                                                        </MultiDataTrigger.Conditions>
+                                                                        <Setter Property="Visibility" Value="Hidden"/>
+                                                                    </MultiDataTrigger>
+                                                                    <DataTrigger Binding="{Binding Text, ElementName=PART_TextBox, Converter={StaticResource IsNullOrEmptyConverter}}" Value="False">
+                                                                        <Setter Property="Visibility" Value="Hidden"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
                 </Border>
             </StackPanel>
 

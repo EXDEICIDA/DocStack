@@ -5,6 +5,8 @@
     xmlns:local="clr-namespace:DocStack"
     xmlns:view="clr-namespace:DocStack.MVVM.View"
     xmlns:viewModel="clr-namespace:DocStack.MVVM.ViewModel"
+    xmlns:converters="clr-namespace:DocStack.Converters"
+     
     StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -33,9 +35,7 @@
                 <view:SearchView></view:SearchView>
             </DataTemplate>
 
-           
-
-
+            <converters:IsNullOrEmptyConverter x:Key="IsNullOrEmptyConverter"/>
 
         </ResourceDictionary>
     </Application.Resources>
