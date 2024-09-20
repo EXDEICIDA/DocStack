@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using DocStack.MVVM.Model;
 using Cerberus.Core;
+using System.Diagnostics;
+using System.Windows;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -89,7 +91,8 @@ namespace DocStack.MVVM.ViewModel
                     Title = result["title"].ToString(),
                     Journal = result["publisher"].ToString(),
                     Year = result["yearPublished"].ToString(),
-                    DOI = result["doi"].ToString()
+                    DOI = result["doi"].ToString(),
+                    FullTextLink = result["downloadUrl"]?.ToString()
                 });
             }
         }
@@ -101,14 +104,37 @@ namespace DocStack.MVVM.ViewModel
 
         private void LocatePDF()
         {
-            // Implement PDF location logic here
-            Console.WriteLine($"Locating PDF for {SelectedPaper.Title}");
+            if (SelectedPaper != null)
+            {
+                string url = null;
+                if (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink))
+                {
+                    url = SelectedPaper.FullTextLink;
+                }
+                else if (!string.IsNullOrWhiteSpace(SelectedPaper.DOI))
+                {
+                    url = $"https://doi.org/{SelectedPaper.DOI}";
+                }
+
+                if (url != null)
+                {
+                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                }
+                else
+                {
+                    MessageBox.Show("No direct link or DOI available for this paper.", "Link Unavailable", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
         }
 
         private bool CanLocatePDF()
         {
-            return SelectedPaper != null;
+            return SelectedPaper != null &&
+                           (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink) ||
+                            !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
         }
+
+
     }
 
     public class Paper
@@ -118,5 +144,6 @@ namespace DocStack.MVVM.ViewModel
         public string Journal { get; set; }
         public string Year { get; set; }
         public string DOI { get; set; }
+        public string FullTextLink { get; set; }
     }
 }
