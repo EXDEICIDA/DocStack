@@ -9,4 +9,6 @@ namespace DocStack.MVVM.ViewModel
     internal class PapersViewModel
     {
     }
+
+
 }
