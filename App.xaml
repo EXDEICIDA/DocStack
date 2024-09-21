@@ -12,7 +12,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/MenuButtonTheme.xaml" />
+                <ResourceDictionary Source="Theme/ComboBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+          
 
             <!--  Data templates for binding the app views  -->
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
