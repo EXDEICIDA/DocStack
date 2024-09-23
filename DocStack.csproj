@@ -158,6 +158,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MVVM\View\DocumentsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MVVM\View\FavoritesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -189,6 +193,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MVVM\Model\CallConfigurationModel.cs" />
+    <Compile Include="MVVM\ViewModel\DocumentsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\FavoritesViewModel.cs" />
     <Compile Include="MVVM\ViewModel\HomeViewModel.cs" />
     <Compile Include="MVVM\ViewModel\MainViewModel.cs" />
@@ -196,6 +201,9 @@
     <Compile Include="MVVM\ViewModel\SearchViewModel.cs" />
     <Compile Include="MVVM\ViewModel\SettingsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\BoolToColorConverter.cs" />
+    <Compile Include="MVVM\View\DocumentsView.xaml.cs">
+      <DependentUpon>DocumentsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MVVM\View\FavoritesView.xaml.cs">
       <DependentUpon>FavoritesView.xaml</DependentUpon>
     </Compile>
@@ -261,6 +269,9 @@
   <ItemGroup>
     <Resource Include="Resources\Button\settings.png" />
     <Resource Include="Resources\Button\star.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Button\file.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets')" />

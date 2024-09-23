@@ -258,12 +258,21 @@
                     Style="{StaticResource SearchViewButtonStyle}" />
                 <RadioButton
                     Height="50"
+                    Command="{Binding DocumentsViewCommand}"
+                    Content="Documents"
+                    FontFamily="pack://application:,,,/Fonts/#Roboto"
+                    FontSize="18"
+                    Foreground="#f8f8f8"
+                    Style="{StaticResource DocumentsViewButtonStyle}" />
+                <RadioButton
+                    Height="50"
+                    Command="{Binding FavoriteViewCommand}"
                     Content="Favorites"
                     FontFamily="pack://application:,,,/Fonts/#Roboto"
                     FontSize="18"
-                    Command="{Binding FavoriteViewCommand}"
                     Foreground="#f8f8f8"
                     Style="{StaticResource FavoriteViewButtonStyle}" />
+
                 <RadioButton
                     Height="50"
                     Command="{Binding PapersViewCommand}"

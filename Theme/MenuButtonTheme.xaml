@@ -160,6 +160,37 @@
     </Style>
 
     <Style
+     x:Key="DocumentsViewButtonStyle"
+     BasedOn="{StaticResource MenuButtonTheme}"
+     TargetType="{x:Type RadioButton}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     Background="{TemplateBinding Background}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                         Grid.Column="0"
+                         Width="20"
+                         Height="20"
+                         Margin="24,0,5,0"
+                         Source="pack://application:,,,/Resources/Button/file.png" />
+                        <TextBlock
+                         Grid.Column="3"
+                         VerticalAlignment="Center"
+                         Text="{TemplateBinding Content}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
         x:Key="SettingsViewButtonStyle"
         BasedOn="{StaticResource MenuButtonTheme}"
         TargetType="{x:Type RadioButton}">
@@ -459,9 +490,29 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    
-    
+
+    <Style x:Key="ModernButtonForDoc" TargetType="Button">
+        <Setter Property="Background" Value="#4C5BF7" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Padding" Value="15,10" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Roboto" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#3A49D1" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
 
 
 </ResourceDictionary>
