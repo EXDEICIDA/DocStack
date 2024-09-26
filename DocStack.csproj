@@ -273,6 +273,9 @@
   <ItemGroup>
     <Resource Include="Resources\Button\file.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Button\share.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
