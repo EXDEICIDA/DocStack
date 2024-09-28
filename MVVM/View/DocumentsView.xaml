@@ -34,15 +34,8 @@
                     MinWidth="50" Padding="20,10" Margin="0,0,15,0"
                     Click="OpenFileDialog_Click"/>
 
-            <ComboBox Width="150" Style="{StaticResource ComboBoxFlatStyle}"
-                      ItemContainerStyle="{StaticResource ComboBoxItemStyle}">
-                <ComboBoxItem>All Documents</ComboBoxItem>
-                <ComboBoxItem>Recent</ComboBoxItem>
-                <ComboBoxItem>Starred</ComboBoxItem>
-            </ComboBox>
-
             <Button Style="{StaticResource ModernButtonForDoc}"
-                    MinWidth="50" Padding="10" Margin="15,0,0,0">
+                    MinWidth="50" Padding="10" Margin="0,0,15,0">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="pack://application:,,,/Resources/Button/share.png"
                            Width="15" Height="15" Margin="0,0,5,0"/>
@@ -50,6 +43,13 @@
                                FontFamily="pack://application:,,,/Fonts/#Roboto"/>
                 </StackPanel>
             </Button>
+
+            <ComboBox Width="150" Style="{StaticResource ComboBoxFlatStyle}"
+                      ItemContainerStyle="{StaticResource ComboBoxItemStyle}">
+                <ComboBoxItem>All Documents</ComboBoxItem>
+                <ComboBoxItem>Recent</ComboBoxItem>
+                <ComboBoxItem>Starred</ComboBoxItem>
+            </ComboBox>
 
             <ToggleButton Content="Toggle View" IsChecked="{Binding IsListView}"
                           Style="{StaticResource ToggleButtonStyle}"
@@ -65,6 +65,7 @@
                 <DataTemplate>
                     <Grid Margin="0,5">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="1*"/>
                             <ColumnDefinition Width="1*"/>
@@ -72,10 +73,11 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="{Binding Name}" Grid.Column="0" Foreground="#f8f8f8"/>
-                        <TextBlock Text="{Binding Size}" Grid.Column="1" Margin="10,0" Foreground="#f8f8f8"/>
-                        <TextBlock Text="{Binding DateAdded}" Grid.Column="2" Margin="10,0" Foreground="#f8f8f8"/>
-                        <Button Content="Open" Grid.Column="3" Style="{StaticResource ModernButtonForDoc}" Margin="5,0"/>
-                        <Button Content="Share" Grid.Column="4" Style="{StaticResource ModernButtonForDoc}"/>
+                        <TextBlock Text="{Binding FilePath}" Grid.Column="1" Foreground="#f8f8f8"/>
+                        <TextBlock Text="{Binding Size}" Grid.Column="2" Margin="10,0" Foreground="#f8f8f8"/>
+                        <TextBlock Text="{Binding DateAdded}" Grid.Column="3" Margin="10,0" Foreground="#f8f8f8"/>
+                        <Button Content="Open" Grid.Column="4" Style="{StaticResource ModernButtonForDoc}" Margin="5,0"/>
+                        <Button Content="Share" Grid.Column="5" Style="{StaticResource ModernButtonForDoc}"/>
                     </Grid>
                 </DataTemplate>
             </ListView.ItemTemplate>
@@ -96,7 +98,8 @@
                   AlternatingRowBackground="#2F2D43"
                   RowBackground="#272537">
             <DataGrid.Columns>
-                <DataGridTextColumn Width="3*" Binding="{Binding Name}" Header="Name" />
+                <DataGridTextColumn Width="2*" Binding="{Binding Name}" Header="Name" />
+                <DataGridTextColumn Width="3*" Binding="{Binding FilePath}" Header="File Path" />
                 <DataGridTextColumn Width="1*" Binding="{Binding Size}" Header="Size" />
                 <DataGridTextColumn Width="1*" Binding="{Binding DateAdded}" Header="Date Added" />
                 <DataGridTemplateColumn Width="Auto" Header="Actions">
