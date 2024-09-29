@@ -210,6 +210,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MVVM\Model\CallConfigurationModel.cs" />
+    <Compile Include="MVVM\Model\DocumentsModel.cs" />
     <Compile Include="MVVM\Model\ModelDatabase.cs" />
     <Compile Include="MVVM\ViewModel\DocumentsViewModel.cs" />
     <Compile Include="MVVM\ViewModel\FavoritesViewModel.cs" />

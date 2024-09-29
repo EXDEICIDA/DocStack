@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Data.SQLite;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DocStack.MVVM.Model
 {
@@ -12,8 +13,10 @@ namespace DocStack.MVVM.Model
     {
         private readonly string _connectionString;
 
-        //This is an database module which will handle our databse
-        //operations as well as configurations
+        /*
+        This is an database module which will handle our databse
+        operations as well as configurations
+        */
 
         public ModelDatabase(string databaseFileName = "DocStackApp.db")
         {
@@ -77,8 +80,57 @@ namespace DocStack.MVVM.Model
             }
         }
 
-        // From now on other methods concenring the database and other stuff
+        //other methods concenring the database and other stuff
+        public async Task AddDocumentAsync(string documentName, string filePath, long fileSize, string dateAdded)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
 
+                string insertQuery = @"INSERT INTO Documents (document_name, file_path, file_size, date_added) 
+                                       VALUES (@name, @path, @size, @date)";
+
+                using (var command = new SQLiteCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@name", documentName);
+                    command.Parameters.AddWithValue("@path", filePath);
+                    command.Parameters.AddWithValue("@size", fileSize);
+                    command.Parameters.AddWithValue("@date", dateAdded);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task<List<DocumentsModel>> GetAllDocumentsAsync()
+        {
+            List<DocumentsModel> documents = new List<DocumentsModel    >();
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string selectQuery = "SELECT * FROM Documents";
+
+                using (var command = new SQLiteCommand(selectQuery, connection))
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        documents.Add(new   DocumentsModel
+                        {
+                            Id = reader.GetInt32(0),
+                            Name = reader.GetString(1),
+                            FilePath = reader.GetString(2),
+                            Size = reader.GetInt64(3),
+                            DateAdded = reader.GetString(4)
+                        });
+                    }
+                }
+            }
+
+            return documents;
+        }
 
 
     }
