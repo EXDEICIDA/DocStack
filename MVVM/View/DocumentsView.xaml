@@ -81,6 +81,7 @@
                 IsChecked="{Binding IsListView}"
                 Style="{StaticResource ToggleButtonStyle}" />
         </StackPanel>
+        
 
         <!--  List View  -->
         <ListView

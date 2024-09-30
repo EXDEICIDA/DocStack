@@ -2,13 +2,13 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Xml.Linq;
-using DocStack.MVVM.Model;
 using System.Windows.Input;
 using System.Diagnostics;
 using System.Windows;
 using Cerberus.Core;
 using System;
+using System.Linq;
+using DocStack.MVVM.Model;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -28,6 +28,8 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+      
+
         public bool IsListView
         {
             get => _isListView;
@@ -45,10 +47,11 @@ namespace DocStack.MVVM.ViewModel
             _database = new ModelDatabase();
             Documents = new ObservableCollection<DocumentsModel>();
             OpenFileCommand = new RelayCommand(OpenFile, CanOpenFile);
-
             _ = RefreshDocumentsAsync();
         }
 
+        
+       
 
         private void OpenFile(object parameter)
         {
@@ -78,6 +81,7 @@ namespace DocStack.MVVM.ViewModel
             {
                 Documents.Add(document);
             }
+           
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

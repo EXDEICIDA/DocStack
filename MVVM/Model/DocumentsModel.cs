@@ -1,13 +1,15 @@
 ﻿using DocStack.Converters;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DocStack.MVVM.Model
 {
-    public class DocumentsModel
+    public class DocumentsModel: INotifyPropertyChanged
     {
         //A model for holding data of documents
 
@@ -27,5 +29,15 @@ namespace DocStack.MVVM.Model
         public string SizeString { get; private set; }
 
         public string DateAdded { get; set; }
+
+
+       
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

@@ -78,6 +78,40 @@ namespace DocStack.MVVM.Model
                     }
                 }
             }
+            else
+            {
+                // Add is_starred column if it doesn't exist
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    connection.Open();
+                    string addColumnQuery = @"
+                        PRAGMA table_info(Documents);
+                    ";
+                    using (var command = new SQLiteCommand(addColumnQuery, connection))
+                    {
+                        var reader = command.ExecuteReader();
+                        bool columnExists = false;
+                        while (reader.Read())
+                        {
+                            if (reader["name"].ToString() == "is_starred")
+                            {
+                                columnExists = true;
+                                break;
+                            }
+                        }
+                        if (!columnExists)
+                        {
+                            string alterTableQuery = @"
+                                ALTER TABLE Documents ADD COLUMN is_starred INTEGER DEFAULT 0;
+                            ";
+                            using (var alterCommand = new SQLiteCommand(alterTableQuery, connection))
+                            {
+                                alterCommand.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         //other methods concenring the database and other stuff
@@ -104,7 +138,7 @@ namespace DocStack.MVVM.Model
 
         public async Task<List<DocumentsModel>> GetAllDocumentsAsync()
         {
-            List<DocumentsModel> documents = new List<DocumentsModel    >();
+            List<DocumentsModel> documents = new List<DocumentsModel>();
 
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -117,7 +151,7 @@ namespace DocStack.MVVM.Model
                 {
                     while (await reader.ReadAsync())
                     {
-                        documents.Add(new   DocumentsModel
+                        documents.Add(new DocumentsModel
                         {
                             Id = reader.GetInt32(0),
                             Name = reader.GetString(1),
@@ -131,7 +165,7 @@ namespace DocStack.MVVM.Model
 
             return documents;
         }
-
+      
 
     }
 }
