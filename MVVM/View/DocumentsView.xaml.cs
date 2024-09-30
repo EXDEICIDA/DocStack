@@ -17,7 +17,11 @@ namespace DocStack.MVVM.View
             InitializeComponent();
             _database = new ModelDatabase();
             _viewModel = DataContext as DocumentsViewModel;
+            DataContext = _viewModel;
         }
+
+
+
 
         private async void OpenFileDialog_Click(object sender, EventArgs e)
         {

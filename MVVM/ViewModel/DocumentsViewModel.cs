@@ -4,6 +4,11 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using DocStack.MVVM.Model;
+using System.Windows.Input;
+using System.Diagnostics;
+using System.Windows;
+using Cerberus.Core;
+using System;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -33,11 +38,36 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        public ICommand OpenFileCommand { get; private set; }
+
         public DocumentsViewModel()
         {
             _database = new ModelDatabase();
             Documents = new ObservableCollection<DocumentsModel>();
+            OpenFileCommand = new RelayCommand(OpenFile, CanOpenFile);
+
             _ = RefreshDocumentsAsync();
+        }
+
+
+        private void OpenFile(object parameter)
+        {
+            if (parameter is DocumentsModel document)
+            {
+                try
+                {
+                    Process.Start(new ProcessStartInfo(document.FilePath) { UseShellExecute = true });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error opening file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private bool CanOpenFile(object parameter)
+        {
+            return parameter is DocumentsModel;
         }
 
         public async Task RefreshDocumentsAsync()
