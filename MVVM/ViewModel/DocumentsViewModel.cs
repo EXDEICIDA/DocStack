@@ -17,6 +17,8 @@ namespace DocStack.MVVM.ViewModel
         private readonly ModelDatabase _database;
         private ObservableCollection<DocumentsModel> _documents;
         private bool _isListView = true;
+        private DocumentsModel _selectedDocument;
+
 
         public ObservableCollection<DocumentsModel> Documents
         {
@@ -40,13 +42,28 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        public DocumentsModel SelectedDocument
+        {
+            get => _selectedDocument;
+            set
+            {
+                _selectedDocument = value;
+                OnPropertyChanged();
+            }
+        }
+
+        //Commands
         public ICommand OpenFileCommand { get; private set; }
+        public ICommand ShareCommand { get; private set; }
+
 
         public DocumentsViewModel()
         {
             _database = new ModelDatabase();
             Documents = new ObservableCollection<DocumentsModel>();
             OpenFileCommand = new RelayCommand(OpenFile, CanOpenFile);
+            ShareCommand = new RelayCommand(ShareFile, CanShareFile);
+
             _ = RefreshDocumentsAsync();
         }
 
@@ -69,6 +86,30 @@ namespace DocStack.MVVM.ViewModel
         }
 
         private bool CanOpenFile(object parameter)
+        {
+            return parameter is DocumentsModel;
+        }
+
+        private void ShareFile(object parameter)
+        {
+            if (parameter is DocumentsModel document)
+            {
+                try
+                {
+                    string subject = Uri.EscapeDataString($"Sharing document: {document.Name}");
+                    string body = Uri.EscapeDataString($"I'm sharing the following document with you: {document.Name}\n\nFile path: {document.FilePath}");
+                    string mailtoUri = $"mailto:?subject={subject}&body={body}";
+                    Process.Start(new ProcessStartInfo(mailtoUri) { UseShellExecute = true });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error sharing file: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+
+        private bool CanShareFile(object parameter)
         {
             return parameter is DocumentsModel;
         }

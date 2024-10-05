@@ -123,44 +123,51 @@
 
             <!-- Rectangle 2 -->
             <Border
-                Margin="5"
-                Padding="10"
-                Background="#333333"
-                CornerRadius="10">
+        Margin="5"
+        Padding="10"
+        Background="#333333"
+        CornerRadius="10">
                 <StackPanel>
                     <TextBlock
-                        Margin="0,0,0,10"
+                Margin="0,0,0,10"
+                Foreground="White"
+                Text="Language Settings" />
+                    <Border
+                Margin="10"
+                Padding="15,10"
+                Background="#FF1E1E1E"
+                CornerRadius="5">
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <fa:FontAwesome
+                        Grid.Column="0"
+                        Margin="0,0,10,0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
                         Foreground="White"
-                        Text="Language Settings" />
-                    <Grid HorizontalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <fa:FontAwesome
-                            Grid.Column="0"
-                            Margin="0,0,10,0"
-                            VerticalAlignment="Center"
+                        Icon="Globe" />
+                            <TextBlock
+                        Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Foreground="White"
+                        Text="Language" />
+                            <Button
+                        x:Name="OpenLanguagePopupButton"
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Command="{Binding OpenLanguagePopupCommand}"
+                        Style="{StaticResource RoundedButtonStyle}">
+                                <fa:FontAwesome
                             FontSize="16"
                             Foreground="White"
-                            Icon="Globe" />
-                        <TextBlock
-                            Grid.Column="1"
-                            VerticalAlignment="Center"
-                            Foreground="White"
-                            Text="Language" />
-                        <Button
-                            x:Name="OpenLanguagePopupButton"
-                            Grid.Column="2"
-                            HorizontalAlignment="Right"
-                            Command="{Binding OpenLanguagePopupCommand}">
-                            <fa:FontAwesome
-                                FontSize="16"
-                                Foreground="White"
-                                Icon="ChevronRight" />
-                        </Button>
-                    </Grid>
+                            Icon="ChevronRight" />
+                            </Button>
+                        </Grid>
+                    </Border>
                 </StackPanel>
             </Border>
 
@@ -281,6 +288,7 @@
                     <Grid Grid.Row="0">
                         <TextBlock Text="Choose a language:" FontWeight="Bold" />
                         <Button HorizontalAlignment="Right"
+                                
                                 Command="{Binding CloseLanguagePopupCommand}"
                                 >
                             <fa:FontAwesome Icon="Times" />
@@ -297,6 +305,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Content="{Binding}"
+                                        Style="{StaticResource NormalButtonDesign}"
                                         Margin="5"
                                         Command="{Binding DataContext.SelectLanguageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                         CommandParameter="{Binding}" />

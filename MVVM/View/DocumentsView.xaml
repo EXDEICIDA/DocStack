@@ -46,13 +46,15 @@
                 Padding="20,10"
                 Click="OpenFileDialog_Click"
                 Content="+ New"
-                Style="{StaticResource ModernButtonForDoc}" />
+                Style="{StaticResource ModernButtonForDoc}" Width="53" />
 
             <Button
                 MinWidth="50"
                 Margin="0,0,15,0"
                 Padding="10"
-                Style="{StaticResource ModernButtonForDoc}">
+                 Command="{Binding ShareCommand}"
+                CommandParameter="{Binding SelectedDocument}"
+                Style="{StaticResource ModernButtonForDoc}" Width="60">
                 <StackPanel Orientation="Horizontal">
                     <Image
                         Width="15"
@@ -62,7 +64,7 @@
                     <TextBlock
                         VerticalAlignment="Center"
                         FontFamily="pack://application:,,,/Fonts/#Roboto"
-                        Text="Share" />
+                        Text="Export" />
                 </StackPanel>
             </Button>
 
@@ -89,6 +91,7 @@
             Background="Transparent"
             BorderThickness="0"
             ItemsSource="{Binding Documents}"
+             SelectedItem="{Binding SelectedDocument}"
             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
             Visibility="{Binding IsListView, Converter={StaticResource BoolToVis}}">
             <ListView.ItemTemplate>
@@ -143,6 +146,8 @@
             BorderThickness="0"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
+            
+            SelectedItem="{Binding SelectedDocument}"
             Foreground="#f8f8f8"
             GridLinesVisibility="None"
             IsReadOnly="True"
@@ -187,6 +192,22 @@
                                             Width="25"
                                             Foreground="#f8f8f8"
                                             Icon="ArrowRight" />
+                                    </Button.Content>
+                                </Button>
+                                <Button
+                                    Width="25"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Background="Transparent"
+                                    ToolTip="Share"
+                                    BorderThickness="0"
+                                    Command="{Binding DataContext.ShareCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    CommandParameter="{Binding}">
+                                    <Button.Content>
+                                        <fa:FontAwesome
+                                            Width="25"
+                                            Foreground="#f8f8f8"
+                                            Icon="Share" />
                                     </Button.Content>
                                 </Button>
                             </StackPanel>

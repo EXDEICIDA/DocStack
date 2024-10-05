@@ -10,6 +10,7 @@ namespace DocStack.MVVM.ViewModel
 {
     public class HomeViewModel : INotifyPropertyChanged
     {
+
         private DateTime _currentDate = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<CalendarDay> Days { get; set; }
@@ -25,6 +26,7 @@ namespace DocStack.MVVM.ViewModel
                 UpdateCalendarDays();
             }
         }
+
         public ICommand PreviousMonthCommand { get; }
         public ICommand NextMonthCommand { get; }
         public ICommand TodayCommand { get; }
