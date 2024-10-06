@@ -16,7 +16,7 @@ namespace DocStack.MVVM.ViewModel
     {
         private readonly ModelDatabase _database;
         private ObservableCollection<DocumentsModel> _documents;
-        private bool _isListView = true;
+        
         private DocumentsModel _selectedDocument;
 
 
@@ -32,15 +32,7 @@ namespace DocStack.MVVM.ViewModel
 
       
 
-        public bool IsListView
-        {
-            get => _isListView;
-            set
-            {
-                _isListView = value;
-                OnPropertyChanged();
-            }
-        }
+      
 
         public DocumentsModel SelectedDocument
         {

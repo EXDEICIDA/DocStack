@@ -41,20 +41,22 @@
             Margin="30,0,30,20"
             Orientation="Horizontal">
             <Button
+                Width="53"
                 MinWidth="50"
                 Margin="0,0,15,0"
                 Padding="20,10"
                 Click="OpenFileDialog_Click"
                 Content="+ New"
-                Style="{StaticResource ModernButtonForDoc}" Width="53" />
+                Style="{StaticResource ModernButtonForDoc}" />
 
             <Button
+                Width="60"
                 MinWidth="50"
                 Margin="0,0,15,0"
                 Padding="10"
-                 Command="{Binding ShareCommand}"
+                Command="{Binding ShareCommand}"
                 CommandParameter="{Binding SelectedDocument}"
-                Style="{StaticResource ModernButtonForDoc}" Width="60">
+                Style="{StaticResource ModernButtonForDoc}">
                 <StackPanel Orientation="Horizontal">
                     <Image
                         Width="15"
@@ -80,62 +82,11 @@
             <ToggleButton
                 Margin="15,0,0,0"
                 Content="Toggle View"
-                IsChecked="{Binding IsListView}"
                 Style="{StaticResource ToggleButtonStyle}" />
         </StackPanel>
-        
 
-        <!--  List View  -->
-        <ListView
-            Grid.Row="2"
-            Background="Transparent"
-            BorderThickness="0"
-            ItemsSource="{Binding Documents}"
-             SelectedItem="{Binding SelectedDocument}"
-            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-            Visibility="{Binding IsListView, Converter={StaticResource BoolToVis}}">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid Margin="0,5">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*" />
-                            <ColumnDefinition Width="3*" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock
-                            Grid.Column="0"
-                            Foreground="#f8f8f8"
-                            Text="{Binding Name}" />
-                        <TextBlock
-                            Grid.Column="1"
-                            Foreground="#f8f8f8"
-                            Text="{Binding FilePath}" />
-                        <TextBlock
-                            Grid.Column="2"
-                            Margin="10,0"
-                            Foreground="#f8f8f8"
-                            Text="{Binding Size}" />
-                        <TextBlock
-                            Grid.Column="3"
-                            Margin="10,0"
-                            Foreground="#f8f8f8"
-                            Text="{Binding DateAdded}" />
-                        <Button
-                            Grid.Column="4"
-                            Margin="5,0"
-                            Content="Open"
-                            Style="{StaticResource ModernButtonForDoc}" />
-                        <Button
-                            Grid.Column="5"
-                            Content="Share"
-                            Style="{StaticResource ModernButtonForDoc}" />
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+
+
 
         <!--  Table View  -->
         <DataGrid
@@ -146,13 +97,12 @@
             BorderThickness="0"
             CanUserAddRows="False"
             CanUserDeleteRows="False"
-            
-            SelectedItem="{Binding SelectedDocument}"
             Foreground="#f8f8f8"
             GridLinesVisibility="None"
             IsReadOnly="True"
             ItemsSource="{Binding Documents}"
             RowBackground="#272537"
+            SelectedItem="{Binding SelectedDocument}"
             Visibility="{Binding IsListView, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}">
             <DataGrid.Columns>
                 <DataGridTextColumn
@@ -183,10 +133,10 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Background="Transparent"
-                                    ToolTip="Open"
                                     BorderThickness="0"
                                     Command="{Binding DataContext.OpenFileCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding}">
+                                    CommandParameter="{Binding}"
+                                    ToolTip="Open">
                                     <Button.Content>
                                         <fa:FontAwesome
                                             Width="25"
@@ -199,10 +149,10 @@
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Center"
                                     Background="Transparent"
-                                    ToolTip="Share"
                                     BorderThickness="0"
                                     Command="{Binding DataContext.ShareCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding}">
+                                    CommandParameter="{Binding}"
+                                    ToolTip="Share">
                                     <Button.Content>
                                         <fa:FontAwesome
                                             Width="25"

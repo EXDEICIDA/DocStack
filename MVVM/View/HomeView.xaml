@@ -48,22 +48,32 @@
                         <Grid Margin="0,0,0,10">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <Button
-                                    Background="Transparent"
+                                    Background="#FF1E1E1E"
                                     BorderThickness="0"
                                     Command="{Binding PreviousMonthCommand}"
-                                    Content="&#x2039;"
-                                    FontSize="18" />
+                                    FontSize="18"
+                                    Style="{StaticResource RoundedButtonStyle}">
+                                    <fa:FontAwesome
+                                        FontSize="16"
+                                        Foreground="White"
+                                        Icon="ChevronLeft" />
+                                </Button>
                                 <TextBlock
                                     Margin="10,0"
                                     VerticalAlignment="Center"
                                     FontSize="18"
                                     Text="{Binding CurrentMonthYear}" />
                                 <Button
-                                    Background="Transparent"
+                                    Background="#FF1E1E1E"
                                     BorderThickness="0"
                                     Command="{Binding NextMonthCommand}"
-                                    Content="&#x203A;"
-                                    FontSize="18" />
+                                    FontSize="18"
+                                    Style="{StaticResource RoundedButtonStyle}">
+                                    <fa:FontAwesome
+                                        FontSize="16"
+                                        Foreground="White"
+                                        Icon="ChevronRight" />
+                                </Button>
                             </StackPanel>
                             <Button
                                 Padding="10,5"
