@@ -9,6 +9,10 @@ using Cerberus.Core;
 using System;
 using System.Linq;
 using DocStack.MVVM.Model;
+using System.IO;
+using Microsoft.Win32;
+
+
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -47,6 +51,7 @@ namespace DocStack.MVVM.ViewModel
         //Commands
         public ICommand OpenFileCommand { get; private set; }
         public ICommand ShareCommand { get; private set; }
+        public ICommand ExportAllCommand { get; private set; }
 
 
         public DocumentsViewModel()
@@ -55,12 +60,74 @@ namespace DocStack.MVVM.ViewModel
             Documents = new ObservableCollection<DocumentsModel>();
             OpenFileCommand = new RelayCommand(OpenFile, CanOpenFile);
             ShareCommand = new RelayCommand(ShareFile, CanShareFile);
+            ExportAllCommand = new RelayCommand(ExportAll, CanExportAll);
 
             _ = RefreshDocumentsAsync();
         }
 
-        
-       
+        private void ExportAll(object parameter)
+        {
+            try
+            {
+                var dialog = new SaveFileDialog
+                {
+                    Title = "Select folder to export documents",
+                    FileName = "Select Folder", // Dummy filename
+                    CheckFileExists = false,
+                    CheckPathExists = true,
+                    OverwritePrompt = false
+                };
+
+                if (dialog.ShowDialog() == true)
+                {
+                    string targetFolder = Path.GetDirectoryName(dialog.FileName);
+                    string exportFolderName = "ExportedDocuments_" + DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                    string exportPath = Path.Combine(targetFolder, exportFolderName);
+
+                    Directory.CreateDirectory(exportPath);
+
+                    int successCount = 0;
+                    int failCount = 0;
+
+                    foreach (var document in Documents)
+                    {
+                        try
+                        {
+                            string destinationPath = Path.Combine(exportPath, Path.GetFileName(document.FilePath));
+                            File.Copy(document.FilePath, destinationPath, true);
+                            successCount++;
+                        }
+                        catch (Exception ex)
+                        {
+                            failCount++;
+                            Debug.WriteLine($"Failed to copy {document.FilePath}: {ex.Message}");
+                        }
+                    }
+
+                    MessageBox.Show(
+                        $"Export completed.\nSuccessful: {successCount}\nFailed: {failCount}\nLocation: {exportPath}",
+                        "Export Results",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Error during export: {ex.Message}",
+                    "Export Error",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error
+                );
+            }
+        }
+
+        private bool CanExportAll(object parameter)
+        {
+            return Documents.Any();
+        }
+
 
         private void OpenFile(object parameter)
         {
