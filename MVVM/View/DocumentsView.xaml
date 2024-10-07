@@ -36,54 +36,95 @@
             Text="Documents" />
 
         <!--  Controls  -->
-        <StackPanel
-            Grid.Row="1"
-            Margin="30,0,30,20"
-            Orientation="Horizontal">
-            <Button
-                Width="53"
-                MinWidth="50"
-                Margin="0,0,15,0"
-                Padding="20,10"
-                Click="OpenFileDialog_Click"
-                Content="+ New"
-                Style="{StaticResource ModernButtonForDoc}" />
+        <Grid Grid.Row="1" Margin="30,0,30,20">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-            <Button
-                Width="60"
-                MinWidth="50"
-                Margin="0,0,15,0"
-                Padding="10"
-               Command="{Binding ExportAllCommand}"
-                CommandParameter="{Binding SelectedDocument}"
-                Style="{StaticResource ModernButtonForDoc}">
-                <StackPanel Orientation="Horizontal">
-                    <Image
-                        Width="15"
-                        Height="15"
-                        Margin="0,0,5,0"
-                        Source="pack://application:,,,/Resources/Button/share.png" />
+            <StackPanel Grid.Column="0" Orientation="Horizontal">
+                <Button
+                    Width="53"
+                    MinWidth="50"
+                    Margin="0,0,15,0"
+                    Padding="20,10"
+                    Click="OpenFileDialog_Click"
+                    Content="+ New"
+                    Style="{StaticResource ModernButtonForDoc}" />
+
+                <Button
+                    Width="60"
+                    MinWidth="50"
+                    Margin="0,0,15,0"
+                    Padding="10"
+                    Command="{Binding ExportAllCommand}"
+                    CommandParameter="{Binding SelectedDocument}"
+                    Style="{StaticResource ModernButtonForDoc}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image
+                            Width="15"
+                            Height="15"
+                            Margin="0,0,5,0"
+                            Source="pack://application:,,,/Resources/Button/share.png" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            FontFamily="pack://application:,,,/Fonts/#Roboto"
+                            Text="Export" />
+                    </StackPanel>
+                </Button>
+
+                <ComboBox
+                    Width="150"
+                    ItemContainerStyle="{StaticResource ComboBoxItemStyle}"
+                    Style="{StaticResource ComboBoxFlatStyle}">
+                    <ComboBoxItem>All Documents</ComboBoxItem>
+                    <ComboBoxItem>Recent</ComboBoxItem>
+                    <ComboBoxItem>Starred</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Grid Width="200" Margin="0,0,15,0">
+                    <TextBox
+                        x:Name="SearchTextBox"
+                        Padding="25,5,5,5"
+                        KeyDown="SearchTextBox_KeyDown"
+                        Style="{StaticResource ModernSearchBarCustom}"
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
                     <TextBlock
+                        Margin="25,0,0,0"
+                        HorizontalAlignment="Left"
                         VerticalAlignment="Center"
-                        FontFamily="pack://application:,,,/Fonts/#Roboto"
-                        Text="Export" />
-                </StackPanel>
-            </Button>
+                        Foreground="Gray"
+                        IsHitTestVisible="False"
+                        Text="Search...">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <fa:FontAwesome
+                        Width="12"
+                        Height="12"
+                        Margin="5,0,0,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        Foreground="Gray"
+                        Icon="Search" />
+                </Grid>
 
-            <ComboBox
-                Width="150"
-                ItemContainerStyle="{StaticResource ComboBoxItemStyle}"
-                Style="{StaticResource ComboBoxFlatStyle}">
-                <ComboBoxItem>All Documents</ComboBoxItem>
-                <ComboBoxItem>Recent</ComboBoxItem>
-                <ComboBoxItem>Starred</ComboBoxItem>
-            </ComboBox>
-
-            <ToggleButton
-                Margin="15,0,0,0"
-                Content="Toggle View"
-                Style="{StaticResource ToggleButtonStyle}" />
-        </StackPanel>
+                <ToggleButton
+                    Content="Toggle View"
+                    Style="{StaticResource ToggleButtonStyle}" />
+            </StackPanel>
+        </Grid>
 
 
 

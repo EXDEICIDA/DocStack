@@ -4,6 +4,8 @@ using System.Windows.Controls;
 using System.IO;
 using DocStack.MVVM.ViewModel;
 using DocStack.MVVM.Model;
+using System.Windows.Input;
+using System.Windows;
 
 namespace DocStack.MVVM.View
 {
@@ -22,6 +24,22 @@ namespace DocStack.MVVM.View
 
 
 
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var viewModel = DataContext as DocumentsViewModel;
+                if (viewModel != null && !string.IsNullOrWhiteSpace(viewModel.SearchText))
+                {
+                    viewModel.Search();
+                }
+                else
+                {
+                    // Optionally show a message or handle the case where no text is entered
+                    MessageBox.Show("Please enter a value to search.", "Input Required", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+        }
 
         private async void OpenFileDialog_Click(object sender, EventArgs e)
         {

@@ -20,7 +20,9 @@ namespace DocStack.MVVM.ViewModel
     {
         private readonly ModelDatabase _database;
         private ObservableCollection<DocumentsModel> _documents;
-        
+        private string _searchText; // This is the missing backing field for SearchText
+
+
         private DocumentsModel _selectedDocument;
 
 
@@ -34,9 +36,21 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
-      
 
-      
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (_searchText != value)
+                {
+                    _searchText = value;
+                    OnPropertyChanged(nameof(SearchText));
+                    
+                }
+            }
+        }
+
 
         public DocumentsModel SelectedDocument
         {
@@ -52,6 +66,8 @@ namespace DocStack.MVVM.ViewModel
         public ICommand OpenFileCommand { get; private set; }
         public ICommand ShareCommand { get; private set; }
         public ICommand ExportAllCommand { get; private set; }
+        public ICommand SearchCommand { get; }
+
 
 
         public DocumentsViewModel()
@@ -61,9 +77,17 @@ namespace DocStack.MVVM.ViewModel
             OpenFileCommand = new RelayCommand(OpenFile, CanOpenFile);
             ShareCommand = new RelayCommand(ShareFile, CanShareFile);
             ExportAllCommand = new RelayCommand(ExportAll, CanExportAll);
+            SearchCommand = new RelayCommand(o => Search());
+
 
             _ = RefreshDocumentsAsync();
         }
+
+        public void Search()
+        {
+           
+        }
+
 
         private void ExportAll(object parameter)
         {
