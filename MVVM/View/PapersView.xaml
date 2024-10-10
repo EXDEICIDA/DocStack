@@ -14,9 +14,6 @@
         <viewModel:PapersViewModel/>
     </UserControl.DataContext>
 
-
-
-
     <Grid Background="#272537">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -34,34 +31,34 @@
                 <TextBlock Text="Add" Foreground="White" VerticalAlignment="Center" Margin="0,0,20,0"/>
                 <Border Background="#1F1C2E" CornerRadius="5">
                     <TextBox Width="400" 
-             Background="Transparent" 
-             Foreground="#6E6A7C" 
-             BorderThickness="0" 
-             Padding="5,2" 
-             VerticalContentAlignment="Center">
+                             Background="Transparent" 
+                             Foreground="#6E6A7C" 
+                             BorderThickness="0" 
+                             Padding="5,2" 
+                             VerticalContentAlignment="Center">
                         <TextBox.Style>
                             <Style TargetType="TextBox">
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="TextBox">
                                             <Border Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                    BorderThickness="{TemplateBinding BorderThickness}">
                                                 <Grid>
                                                     <TextBox x:Name="PART_TextBox"
-                                             Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                             BorderThickness="0"
-                                             Background="Transparent"
-                                             VerticalContentAlignment="Center"
-                                             Padding="{TemplateBinding Padding}"
-                                             Foreground="{TemplateBinding Foreground}"
-                                             CaretBrush="{TemplateBinding Foreground}"/>
+                                                             Text="{Binding Path=Text, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                             BorderThickness="0"
+                                                             Background="Transparent"
+                                                             VerticalContentAlignment="Center"
+                                                             Padding="{TemplateBinding Padding}"
+                                                             Foreground="{TemplateBinding Foreground}"
+                                                             CaretBrush="{TemplateBinding Foreground}"/>
                                                     <TextBlock IsHitTestVisible="False"
-                                               Text="Search within recently read..."
-                                               VerticalAlignment="Center"
-                                               HorizontalAlignment="Left"
-                                               Margin="{TemplateBinding Padding}"
-                                               Foreground="#6E6A7C">
+                                                               Text="Search within recently read..."
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Left"
+                                                               Margin="{TemplateBinding Padding}"
+                                                               Foreground="#6E6A7C">
                                                         <TextBlock.Style>
                                                             <Style TargetType="TextBlock">
                                                                 <Setter Property="Visibility" Value="Visible"/>
@@ -106,7 +103,7 @@
         <DataGrid Grid.Row="1" AutoGenerateColumns="False" Background="Transparent" BorderThickness="0" 
                   RowBackground="#1F1C2E" AlternatingRowBackground="#272537" 
                   GridLinesVisibility="None" HeadersVisibility="Column" 
-                  CanUserAddRows="False" IsReadOnly="True" Margin="10,0,10,10">
+                  CanUserAddRows="False" IsReadOnly="True" Margin="10,0,10,10"  ItemsSource="{Binding Papers}">
             <DataGrid.Resources>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="Transparent"/>
@@ -132,10 +129,34 @@
                         <CheckBox IsHitTestVisible="False" IsEnabled="False"/>
                     </DataGridCheckBoxColumn.Header>
                 </DataGridCheckBoxColumn>
-                <DataGridTextColumn Header="Authors"  FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Authors}" Width="*"/>
-                <DataGridTextColumn Header="Title"  FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Title}" Width="*"/>
-                <DataGridTextColumn Header="Journal"  FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Journal}" Width="*"/>
-                <DataGridTextColumn Header="Year"   FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Year}" Width="100"  />
+                <DataGridTextColumn Header="Authors" FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Authors}" Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#f8f8f8"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Title" FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Title}" Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#f8f8f8"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Journal" FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Journal}" Width="*">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#f8f8f8"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Year" FontFamily="pack://application:,,,/Fonts/#Roboto" Binding="{Binding Year}" Width="100">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="#f8f8f8"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

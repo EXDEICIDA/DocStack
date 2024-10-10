@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Diagnostics;
 using System.Windows;
-using Cerberus.Core;
+using DocStack.Core;
 using System;
 using System.Linq;
 using DocStack.MVVM.Model;

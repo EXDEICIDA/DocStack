@@ -131,74 +131,112 @@
 
         <!--  Table View  -->
         <DataGrid
-            Grid.Row="2"
-            AlternatingRowBackground="#2F2D43"
-            AutoGenerateColumns="False"
-            Background="#272537"
-            BorderThickness="0"
-            CanUserAddRows="False"
-            CanUserDeleteRows="False"
-            Foreground="#f8f8f8"
-            GridLinesVisibility="None"
-            IsReadOnly="True"
-            ItemsSource="{Binding Documents}"
-            RowBackground="#272537"
-            SelectedItem="{Binding SelectedDocument}"
-            Visibility="{Binding IsListView, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}">
+    Grid.Row="2"
+    AlternatingRowBackground="#2F2D43"
+    AutoGenerateColumns="False"
+    Background="#272537"
+             FontFamily="pack://application:,,,/Fonts/#Roboto"
+    BorderThickness="0"
+    CanUserAddRows="False"
+    CanUserDeleteRows="False"
+    Foreground="#f8f8f8"
+    GridLinesVisibility="None"
+    IsReadOnly="True"
+    ItemsSource="{Binding Documents}"
+    RowBackground="#272537"
+    SelectedItem="{Binding SelectedDocument}"
+    Visibility="{Binding IsListView, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}">
+            <DataGrid.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#3E3D55"/>
+                <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#3E3D55"/>
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="#272537"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Margin" Value="0,2"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#3E3D55"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#4A4968"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="10,5"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.Columns>
                 <DataGridTextColumn
-                    Width="2*"
-                    Binding="{Binding Name}"
-                    Header="Name" />
+            Width="2*"
+            Binding="{Binding Name}"
+            Header="Name" />
                 <DataGridTextColumn
-                    Width="3*"
-                    Binding="{Binding FilePath}"
-                    Header="File Path" />
+            Width="3*"
+            Binding="{Binding FilePath}"
+            Header="File Path" />
                 <DataGridTextColumn
-                    Width="1*"
-                    Binding="{Binding SizeString}"
-                    Header="Size" />
+            Width="1*"
+            Binding="{Binding SizeString}"
+            Header="Size" />
                 <DataGridTextColumn
-                    Width="1*"
-                    Binding="{Binding DateAdded}"
-                    Header="Date Added" />
+            Width="1*"
+            Binding="{Binding DateAdded}"
+            Header="Date Added" />
                 <DataGridTemplateColumn Width="Auto" Header="Actions">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Orientation="Horizontal">
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal">
                                 <Button
-                                    Width="25"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DataContext.OpenFileCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding}"
-                                    ToolTip="Open">
+                            Width="25"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Command="{Binding DataContext.OpenFileCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                            CommandParameter="{Binding}"
+                            ToolTip="Open">
                                     <Button.Content>
                                         <fa:FontAwesome
-                                            Width="25"
-                                            Foreground="#f8f8f8"
-                                            Icon="ArrowRight" />
+                                    Width="25"
+                                    Foreground="#f8f8f8"
+                                    Icon="ArrowRight" />
                                     </Button.Content>
                                 </Button>
                                 <Button
-                                    Width="25"
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Center"
-                                    Background="Transparent"
-                                    BorderThickness="0"
-                                    Command="{Binding DataContext.ShareCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                    CommandParameter="{Binding}"
-                                    ToolTip="Share">
+                            Width="25"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Command="{Binding DataContext.ShareCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                            CommandParameter="{Binding}"
+                            ToolTip="Share">
                                     <Button.Content>
                                         <fa:FontAwesome
-                                            Width="25"
-                                            Foreground="#f8f8f8"
-                                            Icon="Share" />
+                                    Width="25"
+                                    Foreground="#f8f8f8"
+                                    Icon="Share" />
                                     </Button.Content>
                                 </Button>
                             </StackPanel>
@@ -210,10 +248,30 @@
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="Background" Value="#2F2D43" />
                     <Setter Property="Foreground" Value="#f8f8f8" />
-                    <Setter Property="Padding" Value="8,4" />
+                    <Setter Property="Padding" Value="10,8" />
+                    <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Roboto" />
+
                     <Setter Property="BorderThickness" Value="0,0,0,1" />
                     <Setter Property="BorderBrush" Value="#3E3D55" />
-                    <Setter Property="FontSize" Value="12" />
+                    <Setter Property="FontSize" Value="13" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                                <Grid>
+                                    <Border
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ContentPresenter 
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </DataGrid.ColumnHeaderStyle>
         </DataGrid>

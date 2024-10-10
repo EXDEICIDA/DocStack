@@ -231,7 +231,7 @@
                                     x:Name="OpenMyPapersButton"
                                     Grid.Column="2"
                                     HorizontalAlignment="Right"
-                                    Command="{Binding OpenLanguagePopupCommand}"
+                                    Command="{Binding PapersViewShortcut}"
                                     Style="{StaticResource RoundedButtonStyle}">
                                     <fa:FontAwesome
                                         FontSize="16"
@@ -267,7 +267,7 @@
                                     x:Name="OpenLanguagePopupButton1"
                                     Grid.Column="2"
                                     HorizontalAlignment="Right"
-                                    Command="{Binding OpenLanguagePopupCommand}"
+                                    Command="{Binding SearchViewShortcut}"
                                     Style="{StaticResource RoundedButtonStyle}">
                                     <fa:FontAwesome
                                         FontSize="16"

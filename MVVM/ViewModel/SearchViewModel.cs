@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using DocStack.MVVM.Model;
-using Cerberus.Core;
+using DocStack.Core;
 using System.Diagnostics;
 using System.Windows;
 
@@ -19,13 +19,19 @@ namespace DocStack.MVVM.ViewModel
         private ObservableCollection<Paper> _searchResults;
         private Paper _selectedPaper;
         private bool _isDetailsPanelVisible;
+        private readonly ModelDatabase _database;
+
 
         public SearchViewModel()
         {
             _callConfigurationModel = new CallConfigurationModel();
             SearchResults = new ObservableCollection<Paper>();
+            _database = new ModelDatabase();
+
             SearchCommand = new RelayCommand(param => SearchPapers(), param => CanSearch());
             LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
+            AddPaperCommand = new RelayCommand(async param => await AddPaper(), param => CanAddPaper());
+
         }
 
         public string SearchQuery
@@ -37,6 +43,8 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+
+
 
         public ObservableCollection<Paper> SearchResults
         {
@@ -71,12 +79,28 @@ namespace DocStack.MVVM.ViewModel
 
         public ICommand SearchCommand { get; }
         public ICommand LocatePDFCommand { get; }
+        public ICommand AddPaperCommand { get; }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private async Task AddPaper()
+        {
+            if (SelectedPaper != null)
+            {
+                await _database.AddPaperAsync(SelectedPaper);
+                MessageBox.Show("Paper added to the database successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private bool CanAddPaper()
+        {
+            return SelectedPaper != null;
         }
 
         private async void SearchPapers()
@@ -90,7 +114,7 @@ namespace DocStack.MVVM.ViewModel
                     Authors = string.Join(", ", result["authors"].Select(a => a["name"].ToString())),
                     Title = result["title"].ToString(),
                     Journal = result["publisher"].ToString(),
-                    Year = result["yearPublished"].ToString(),
+                    Year = int.Parse(result["yearPublished"].ToString()),
                     DOI = result["doi"].ToString(),
                     FullTextLink = result["downloadUrl"]?.ToString()
                 });
@@ -130,19 +154,17 @@ namespace DocStack.MVVM.ViewModel
         private bool CanLocatePDF()
         {
             return SelectedPaper != null &&
-                           (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink) ||
-                            !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
+                   (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink) ||
+                    !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
         }
-
-
     }
-
     public class Paper
     {
+        public int PaperID { get; set; }
         public string Authors { get; set; }
         public string Title { get; set; }
         public string Journal { get; set; }
-        public string Year { get; set; }
+        public int Year { get; set; }  // Changed from string to int
         public string DOI { get; set; }
         public string FullTextLink { get; set; }
     }

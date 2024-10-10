@@ -538,8 +538,8 @@
 
 
     <Style x:Key="ModernSearchBarCustom" TargetType="{x:Type TextBox}">
-        <Setter Property="Foreground" Value="#CFCFCF" />
-        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Foreground" Value="#f8f8f8" />
+        <Setter Property="FontSize" Value="14" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
@@ -547,12 +547,12 @@
                       Width="200"
                       Height="30"
                       Background="#353340"
-                      CornerRadius="10">
+                      CornerRadius="5">
                         <Grid>
                             <ScrollViewer
                               x:Name="PART_ContentHost"
                               Margin="1"
-                              Padding="5"
+                              Padding="20"
                               VerticalContentAlignment="Center"
                               Background="Transparent"
                               Foreground="#CFCFCF" />

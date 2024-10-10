@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
-using Cerberus.Core;
+using DocStack.Core;
 
 namespace DocStack.MVVM.ViewModel
 {

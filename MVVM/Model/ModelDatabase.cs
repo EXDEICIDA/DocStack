@@ -6,12 +6,14 @@ using System.IO;
 using System.Data.SQLite;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using DocStack.MVVM.ViewModel;
 
 namespace DocStack.MVVM.Model
 {
     public class ModelDatabase
     {
         private readonly string _connectionString;
+
 
         /*
         This is an database module which will handle our databse
@@ -21,7 +23,7 @@ namespace DocStack.MVVM.Model
         public ModelDatabase(string databaseFileName = "DocStackApp.db")
         {
             string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            string appFolder = Path.Combine(appDataPath, "Cerberus");
+            string appFolder = Path.Combine(appDataPath, "DocStack");
             string databasePath = Path.Combine(appFolder, databaseFileName);
 
             Directory.CreateDirectory(appFolder);
@@ -48,6 +50,43 @@ namespace DocStack.MVVM.Model
                     Console.WriteLine($"Error creating database file: {ex.Message}");
                     throw;
                 }
+
+
+
+
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+                        Console.WriteLine("Database connection opened successfully.");
+
+                        // Papers table with updated columns
+                        string createPapersTableQuery = @"
+                                     CREATE TABLE IF NOT EXISTS Papers (
+                                     PaperID INTEGER PRIMARY KEY AUTOINCREMENT,
+                                     Authors TEXT NOT NULL,
+                                     Title TEXT NOT NULL,
+                                     Journal TEXT NOT NULL,
+                                     Year INTEGER NOT NULL,
+                                     DOI TEXT,
+                                     FullTextLink TEXT
+            )";
+
+                        using (var command = new SQLiteCommand(createPapersTableQuery, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+
+                        Console.WriteLine("Papers table created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error initializing database: {ex.Message}");
+                        throw;
+                    }
+                }
+
 
                 using (var connection = new SQLiteConnection(_connectionString))
                 {
@@ -135,6 +174,67 @@ namespace DocStack.MVVM.Model
                 }
             }
         }
+
+
+
+        //Papers view and table mmethods 
+        public async Task AddPaperAsync(Paper paper)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string insertQuery = @"INSERT INTO Papers (Authors, Title, Journal, Year, DOI, FullTextLink) 
+                                       VALUES (@authors, @title, @journal, @year, @doi, @fullTextLink)";
+
+                using (var command = new SQLiteCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@authors", paper.Authors);
+                    command.Parameters.AddWithValue("@title", paper.Title);
+                    command.Parameters.AddWithValue("@journal", paper.Journal);
+                    command.Parameters.AddWithValue("@year", paper.Year);
+                    command.Parameters.AddWithValue("@doi", paper.DOI ?? (object)DBNull.Value);
+                    command.Parameters.AddWithValue("@fullTextLink", paper.FullTextLink ?? (object)DBNull.Value);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task<List<Paper>> GetAllPapersAsync()
+        {
+            List<Paper> papers = new List<Paper>();
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string selectQuery = "SELECT * FROM Papers";
+
+                using (var command = new SQLiteCommand(selectQuery, connection))
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        papers.Add(new Paper
+                        {
+                            PaperID = reader.GetInt32(0),
+                            Authors = reader.GetString(1),
+                            Title = reader.GetString(2),
+                            Journal = reader.GetString(3),
+                            Year = reader.GetInt32(4),
+                            DOI = reader.IsDBNull(5) ? null : reader.GetString(5),
+                            FullTextLink = reader.IsDBNull(6) ? null : reader.GetString(6)
+                        });
+                    }
+                }
+            }
+
+            return papers;
+        }
+
+
+
 
         public async Task<List<DocumentsModel>> GetAllDocumentsAsync()
         {

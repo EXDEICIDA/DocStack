@@ -40,6 +40,11 @@
             <DataTemplate DataType="{x:Type viewModel:DocumentsViewModel}">
                 <view:DocumentsView/>
             </DataTemplate>
+            
+            
+            
+       
+
 
             <converters:IsNullOrEmptyConverter x:Key="IsNullOrEmptyConverter"/>
 
