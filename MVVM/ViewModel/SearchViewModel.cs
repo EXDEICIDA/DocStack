@@ -9,6 +9,7 @@ using DocStack.MVVM.Model;
 using DocStack.Core;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -167,5 +168,7 @@ namespace DocStack.MVVM.ViewModel
         public int Year { get; set; }  // Changed from string to int
         public string DOI { get; set; }
         public string FullTextLink { get; set; }
+        
+
     }
 }
