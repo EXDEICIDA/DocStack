@@ -41,7 +41,9 @@
                       Width="120"
                       Height="30"
                       Style="{StaticResource ComboBoxFlatStyle}"
-                      Margin="0,0,15,0"/>
+                      Margin="0,0,15,0">
+                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}"> Year</ComboBoxItem>
+            </ComboBox>
 
             <!-- Search Bar -->
             <Border Grid.Column="2"

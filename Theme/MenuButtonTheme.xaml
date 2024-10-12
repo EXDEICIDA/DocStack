@@ -449,7 +449,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border
-                        Width="200"
+                        Width="250"
                         Height="20"
                         Background="#353340"
                         CornerRadius="5">
@@ -588,6 +588,34 @@
         </Setter>
     </Style>
 
+
+    <Style x:Key="AbstractTextBoxStyle" TargetType="TextBox">
+        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Roboto"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="#f8f8f8"/>
+        <Setter Property="Background" Value="#3E3D55"/>
+        <Setter Property="BorderBrush" Value="#4A4867"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="10"/>
+        <Setter Property="Margin" Value="0,5,0,15"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+        <Setter Property="AcceptsReturn" Value="True"/>
+        <Setter Property="VerticalContentAlignment" Value="Top"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8">
+                        <ScrollViewer x:Name="PART_ContentHost" 
+                                      Margin="{TemplateBinding Padding}"
+                                      VerticalScrollBarVisibility="Auto"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
 
 

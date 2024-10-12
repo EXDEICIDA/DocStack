@@ -10,6 +10,7 @@ using DocStack.Core;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -110,6 +111,7 @@ namespace DocStack.MVVM.ViewModel
             SearchResults.Clear();
             foreach (var result in results)
             {
+
                 SearchResults.Add(new Paper
                 {
                     Authors = string.Join(", ", result["authors"].Select(a => a["name"].ToString())),
@@ -117,7 +119,11 @@ namespace DocStack.MVVM.ViewModel
                     Journal = result["publisher"].ToString(),
                     Year = int.Parse(result["yearPublished"].ToString()),
                     DOI = result["doi"].ToString(),
-                    FullTextLink = result["downloadUrl"]?.ToString()
+                    FullTextLink = result["downloadUrl"]?.ToString(),
+                    Abstract = result["abstract"]?.ToString()  // Fetch abstract from the API response
+                   
+
+
                 });
             }
         }
@@ -168,7 +174,10 @@ namespace DocStack.MVVM.ViewModel
         public int Year { get; set; }  // Changed from string to int
         public string DOI { get; set; }
         public string FullTextLink { get; set; }
-        
+        public string Abstract { get; set; }  // To hold the abstract of the paper
+      
+
+
 
     }
 }
