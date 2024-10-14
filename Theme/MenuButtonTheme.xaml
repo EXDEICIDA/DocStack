@@ -330,6 +330,46 @@
         </Setter>
     </Style>
 
+    <Style x:Key="NormalButtonDesignForObjects" TargetType="{x:Type Button}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border
+                    Width="30"
+                    Height="30"
+                    Background="#353340"
+                    CornerRadius="5"
+                    x:Name="border">
+                        <Grid>
+                            <Rectangle StrokeThickness="1" />
+                            <TextBlock
+                            Margin="1"
+                            Padding="5"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Foreground="#CFCFCF"
+                            Text="{TemplateBinding Content}" />
+                        </Grid>
+                    </Border>
+
+                    <!-- Triggers for Hover and Press -->
+                    <ControlTemplate.Triggers>
+                        <!-- Trigger for Mouse Over (hover effect) -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#333333" />
+                        </Trigger>
+
+                        <!-- Trigger for when Button is pressed -->
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="#333333" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 
     <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
         <Setter Property="Template">
