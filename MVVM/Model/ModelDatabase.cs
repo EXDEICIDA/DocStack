@@ -154,13 +154,13 @@ namespace DocStack.MVVM.Model
                     {
                         favoritePapers.Add(new Paper
                         {
-                            PaperID = reader.GetInt32(reader.GetOrdinal("ID")),
                             Authors = reader.GetString(reader.GetOrdinal("Authors")),
                             Title = reader.GetString(reader.GetOrdinal("Title")),
                             Journal = reader.GetString(reader.GetOrdinal("Journal")),
                             Year = reader.GetInt32(reader.GetOrdinal("Year")),
                             DOI = reader.IsDBNull(reader.GetOrdinal("DOI")) ? null : reader.GetString(reader.GetOrdinal("DOI")),
-                            FullTextLink = reader.IsDBNull(reader.GetOrdinal("FullTextLink")) ? null : reader.GetString(reader.GetOrdinal("FullTextLink"))
+                            FullTextLink = reader.IsDBNull(reader.GetOrdinal("FullTextLink")) ? null : reader.GetString(reader.GetOrdinal("FullTextLink")),
+                            ColorCode = reader.GetString(reader.GetOrdinal("ColorCode"))
                         });
                     }
                 }

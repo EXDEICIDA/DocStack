@@ -14,16 +14,37 @@ using System.Collections.Generic;
 
 namespace DocStack.MVVM.ViewModel
 {
+    public class Paper : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public string Abstract { get; set; }
+        public string Authors { get; set; }
+        // To hold the abstract of the paper
+        public string ColorCode { get; set; }
+
+        public string DOI { get; set; }
+        public string FullTextLink { get; set; }
+        public string Journal { get; set; }
+        public int PaperID { get; set; }
+        public string Title { get; set; }
+        public int Year { get; set; }  // Changed from string to int
+                                       // Add this property for ColorCode
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+    }
+
     public class SearchViewModel : INotifyPropertyChanged
     {
         private readonly CallConfigurationModel _callConfigurationModel;
+        private readonly ModelDatabase _database;
+        private bool _isDetailsPanelVisible;
         private string _searchQuery;
         private ObservableCollection<Paper> _searchResults;
         private Paper _selectedPaper;
-        private bool _isDetailsPanelVisible;
-        private readonly ModelDatabase _database;
-
-
         public SearchViewModel()
         {
             _callConfigurationModel = new CallConfigurationModel();
@@ -35,6 +56,24 @@ namespace DocStack.MVVM.ViewModel
             AddPaperCommand = new RelayCommand(async param => await AddPaper(), param => CanAddPaper());
 
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public ICommand AddPaperCommand { get; }
+
+        public bool IsDetailsPanelVisible
+        {
+            get => _isDetailsPanelVisible;
+            set
+            {
+                _isDetailsPanelVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ICommand LocatePDFCommand { get; }
+
+        public ICommand SearchCommand { get; }
 
         public string SearchQuery
         {
@@ -68,24 +107,6 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
-
-        public bool IsDetailsPanelVisible
-        {
-            get => _isDetailsPanelVisible;
-            set
-            {
-                _isDetailsPanelVisible = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand SearchCommand { get; }
-        public ICommand LocatePDFCommand { get; }
-        public ICommand AddPaperCommand { get; }
-
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -105,27 +126,11 @@ namespace DocStack.MVVM.ViewModel
             return SelectedPaper != null;
         }
 
-        private async void SearchPapers()
+        private bool CanLocatePDF()
         {
-            var results = await _callConfigurationModel.SearchPapersAsync(SearchQuery);
-            SearchResults.Clear();
-            foreach (var result in results)
-            {
-
-                SearchResults.Add(new Paper
-                {
-                    Authors = string.Join(", ", result["authors"].Select(a => a["name"].ToString())),
-                    Title = result["title"].ToString(),
-                    Journal = result["publisher"].ToString(),
-                    Year = int.Parse(result["yearPublished"].ToString()),
-                    DOI = result["doi"].ToString(),
-                    FullTextLink = result["downloadUrl"]?.ToString(),
-                    Abstract = result["abstract"]?.ToString()  // Fetch abstract from the API response
-                   
-
-
-                });
-            }
+            return SelectedPaper != null &&
+                   (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink) ||
+                    !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
         }
 
         private bool CanSearch()
@@ -146,7 +151,6 @@ namespace DocStack.MVVM.ViewModel
                 {
                     url = $"https://doi.org/{SelectedPaper.DOI}";
                 }
-
                 if (url != null)
                 {
                     Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
@@ -158,31 +162,46 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
-        private bool CanLocatePDF()
+        private async void SearchPapers()
         {
-            return SelectedPaper != null &&
-                   (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink) ||
-                    !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
+    try
+    {
+        var results = await _callConfigurationModel.SearchPapersAsync(SearchQuery);
+        SearchResults.Clear();
+        foreach (var result in results)
+        {
+            var paper = new Paper
+            {
+                Authors = string.Join(", ", result["authors"]?.Select(a => a["name"]?.ToString() ?? "Unknown") ?? new[] { "Unknown" }),
+                Title = result["title"]?.ToString() ?? "Untitled",
+                Journal = result["publisher"]?.ToString() ?? "Unknown",
+                DOI = result["doi"]?.ToString() ?? string.Empty,
+                FullTextLink = result["downloadUrl"]?.ToString() ?? string.Empty,
+                Abstract = result["abstract"]?.ToString() ?? string.Empty
+            };
+
+            // Safely parse the year
+            if (result["yearPublished"] != null && int.TryParse(result["yearPublished"].ToString(), out int year))
+            {
+                paper.Year = year;
+            }
+            else
+            {
+                paper.Year = 0; // Or some default value to indicate unknown year
+            }
+
+            SearchResults.Add(paper);
+        }
+
+        if (SearchResults.Count == 0)
+        {
+            MessageBox.Show($"No results found for '{SearchQuery}'. Try different keywords or check your search terms.", "No Results", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
-    public class Paper:INotifyPropertyChanged
+    catch (Exception ex)
     {
-        public int PaperID { get; set; }
-        public string Authors { get; set; }
-        public string Title { get; set; }
-        public string Journal { get; set; }
-        public int Year { get; set; }  // Changed from string to int
-        public string DOI { get; set; }
-        public string FullTextLink { get; set; }
-        public string Abstract { get; set; }  // To hold the abstract of the paper
-        public string ColorCode { get; set; }  // Add this property for ColorCode
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+        MessageBox.Show($"An error occurred while searching: {ex.Message}", "Search Error", MessageBoxButton.OK, MessageBoxImage.Error);
+    }
+}
     }
 }

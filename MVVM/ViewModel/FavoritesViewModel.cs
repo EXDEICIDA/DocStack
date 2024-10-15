@@ -1,8 +1,10 @@
-﻿using DocStack.MVVM.Model;
+﻿using DocStack.Core;
+using DocStack.MVVM.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -21,29 +23,35 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        public ICommand LoadFavoritesCommand { get; }
+        public ICommand RefreshCommand { get; }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public FavoritesViewModel()
         {
             _database = new ModelDatabase();
             FavoritePapers = new ObservableCollection<Paper>();
-            Task.Run(async () => await LoadFavoritePapersAsync());
+
+            LoadFavoritesCommand = new RelayCommand(o => LoadFavoritesAsync().ConfigureAwait(false));
+            RefreshCommand = new RelayCommand(o => LoadFavoritesAsync().ConfigureAwait(false));
+
+            Task.Run(async () => await LoadFavoritesAsync());
         }
 
-        // Fetch favorite papers from the database
-        private async Task LoadFavoritePapersAsync()
+        private async Task LoadFavoritesAsync()
         {
-            var papersList = await _database.GetAllFavoritePapersAsync();
+            var favoritesList = await _database.GetAllFavoritePapersAsync();
             FavoritePapers.Clear();
-            foreach (var paper in papersList)
+            foreach (var paper in favoritesList)
             {
                 FavoritePapers.Add(paper);
             }
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
