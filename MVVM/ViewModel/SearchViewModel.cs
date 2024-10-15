@@ -165,7 +165,7 @@ namespace DocStack.MVVM.ViewModel
                     !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
         }
     }
-    public class Paper
+    public class Paper:INotifyPropertyChanged
     {
         public int PaperID { get; set; }
         public string Authors { get; set; }
@@ -175,9 +175,14 @@ namespace DocStack.MVVM.ViewModel
         public string DOI { get; set; }
         public string FullTextLink { get; set; }
         public string Abstract { get; set; }  // To hold the abstract of the paper
-      
+        public string ColorCode { get; set; }  // Add this property for ColorCode
 
+        public event PropertyChangedEventHandler PropertyChanged;
 
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
     }
 }

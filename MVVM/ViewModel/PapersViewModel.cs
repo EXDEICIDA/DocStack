@@ -18,6 +18,8 @@ namespace DocStack.MVVM.ViewModel
         private readonly ModelDatabase _database;
         private ObservableCollection<Paper> _papers;
         private ModelDatabase _modelDatabase;
+        private Paper _selectedPaper;
+
 
         public ObservableCollection<Paper> Papers
         {
@@ -29,9 +31,22 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        // Selected paper property for binding and use in commands
+        public Paper SelectedPaper
+        {
+            get => _selectedPaper;
+            set
+            {
+                _selectedPaper = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public ICommand AddPaperCommand { get; }
         public ICommand LoadPapersCommand { get; }
         public ICommand RefreshCommand { get; }
+        public ICommand AddToFavoritesCommand { get; }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -43,7 +58,7 @@ namespace DocStack.MVVM.ViewModel
         public PapersViewModel()
 
         {
-           
+           //Init
             Papers = new ObservableCollection<Paper>();
             _database = new ModelDatabase();
             Papers = new ObservableCollection<Paper>();
@@ -51,14 +66,15 @@ namespace DocStack.MVVM.ViewModel
             _modelDatabase = new ModelDatabase();
             Papers = new ObservableCollection<Paper>();
 
-         
+   
 
-
-            // Wrap the async call inside a synchronous lambda expression
+            //Relay Commands
             RefreshCommand = new RelayCommand(o => LoadPapersAsync().ConfigureAwait(false));
 
-            // If you need to handle the add paper command:
             AddPaperCommand = new RelayCommand(o => AddPaper((Paper)o).ConfigureAwait(false));
+
+
+            AddToFavoritesCommand = new RelayCommand(async o => await AddToFavoritesAsync(SelectedPaper), o => SelectedPaper != null);
 
 
             // Load papers initially
@@ -82,6 +98,15 @@ namespace DocStack.MVVM.ViewModel
             foreach (var paper in papersList)
             {
                 Papers.Add(paper);
+            }
+        }
+
+        // Method for adding the selected paper to the favorites
+        private async Task AddToFavoritesAsync(Paper paper)
+        {
+            if (paper != null)
+            {
+                await _database.AddToFavoritesAsync(paper);
             }
         }
     }

@@ -1,80 +1,47 @@
-﻿using System;
+﻿using DocStack.MVVM.Model;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Media;
-using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace DocStack.MVVM.ViewModel
 {
     public class FavoritesViewModel : INotifyPropertyChanged
     {
-        private readonly ObservableCollection<DocumentItem> _favoriteDocuments;
-        public ObservableCollection<DocumentItem> FavoriteDocuments => _favoriteDocuments;
+        private readonly ModelDatabase _database;
+        private ObservableCollection<Paper> _favoritePapers;
 
-        public FavoritesViewModel()
+        public ObservableCollection<Paper> FavoritePapers
         {
-            _favoriteDocuments = new ObservableCollection<DocumentItem>
-            {
-                new DocumentItem
-                {
-                    ColorCode = Brushes.Blue,
-                    Authors = "Cynthia H. Gemmell",
-                    Year = 1997,
-                    Title = "A flow cytometric immunoassay to quantify ad...",
-                    Journal = "Journal of Biomedical Materia...",
-                    LastAuthor = "Cynthia H. Gemmell",
-                    Rating = 0,
-                    LastRead = null
-                },
-                new DocumentItem
-                {
-                    ColorCode = Brushes.Orange,
-                    Authors = "Byrappa Venkatesh et al.",
-                    Year = 2014,
-                    Title = "Elephant shark genome provides unique insights i...",
-                    Journal = "Nature",
-                    LastAuthor = "Wesley C. Warren",
-                    Rating = 5,
-                    LastRead = new DateTime(2019, 8, 12, 13, 28, 0)
-                },
-                // Add more sample items here
-            };
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-    public class DocumentItem : INotifyPropertyChanged
-    {
-        public Brush ColorCode { get; set; }
-        public string Authors { get; set; }
-        public int Year { get; set; }
-        public string Title { get; set; }
-        public string Journal { get; set; }
-        public string LastAuthor { get; set; }
-
-        private int _rating;
-        public int Rating
-        {
-            get => _rating;
+            get => _favoritePapers;
             set
             {
-                _rating = value;
-                OnPropertyChanged(nameof(Rating));
-                OnPropertyChanged(nameof(RatingStars));
+                _favoritePapers = value;
+                OnPropertyChanged();
             }
         }
 
-        public DateTime? LastRead { get; set; }
-
-        public ObservableCollection<bool> RatingStars => new ObservableCollection<bool>(Enumerable.Range(0, 5).Select(i => i < Rating));
-
         public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged(string propertyName)
+
+        public FavoritesViewModel()
+        {
+            _database = new ModelDatabase();
+            FavoritePapers = new ObservableCollection<Paper>();
+            Task.Run(async () => await LoadFavoritePapersAsync());
+        }
+
+        // Fetch favorite papers from the database
+        private async Task LoadFavoritePapersAsync()
+        {
+            var papersList = await _database.GetAllFavoritePapersAsync();
+            FavoritePapers.Clear();
+            foreach (var paper in papersList)
+            {
+                FavoritePapers.Add(paper);
+            }
+        }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -36,90 +36,6 @@ namespace DocStack.MVVM.Model
 
         //Databse init method.
 
-        private void InitializeDatabase(string databasePath)
-        {
-            if (!File.Exists(databasePath))
-            {
-                try
-                {
-                    SQLiteConnection.CreateFile(databasePath);
-                    Console.WriteLine($"Database file created at: {databasePath}");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error creating database file: {ex.Message}");
-                    throw;
-                }
-
-
-
-
-                using (var connection = new SQLiteConnection(_connectionString))
-                {
-                    try
-                    {
-                        connection.Open();
-                        Console.WriteLine("Database connection opened successfully.");
-
-                        // Papers table with updated columns
-                        string createPapersTableQuery = @"
-                                     CREATE TABLE IF NOT EXISTS Papers (
-                                     PaperID INTEGER PRIMARY KEY AUTOINCREMENT,
-                                     Authors TEXT NOT NULL,
-                                     Title TEXT NOT NULL,
-                                     Journal TEXT NOT NULL,
-                                     Year INTEGER NOT NULL,
-                                     DOI TEXT,
-                                     FullTextLink TEXT
-            )";
-
-                        using (var command = new SQLiteCommand(createPapersTableQuery, connection))
-                        {
-                            command.ExecuteNonQuery();
-                        }
-
-                        Console.WriteLine("Papers table created successfully.");
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error initializing database: {ex.Message}");
-                        throw;
-                    }
-                }
-
-
-                using (var connection = new SQLiteConnection(_connectionString))
-                {
-                    try
-                    {
-                        connection.Open();
-                        Console.WriteLine("Database connection opened successfully.");
-
-                        // Documents table
-                        string createDocumentsTableQuery = @"CREATE TABLE IF NOT EXISTS Documents (
-                                                           Id INTEGER PRIMARY KEY,
-                                                           document_name TEXT NOT NULL,
-                                                           file_path TEXT NOT NULL,
-                                                           file_size INTEGER NOT NULL,
-                                                           date_added TEXT NOT NULL
-                                                                                      )";
-                        using (var command = new SQLiteCommand(createDocumentsTableQuery, connection))
-                        {
-                            command.ExecuteNonQuery();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        {
-                            Console.WriteLine($"Error initializing database: {ex.Message}");
-                            throw;
-                        }
-                    }
-                }
-            }
-           
-        }
-
         //other methods concenring the database and other stuff
         public async Task AddDocumentAsync(string documentName, string filePath, long fileSize, string dateAdded)
         {
@@ -142,9 +58,6 @@ namespace DocStack.MVVM.Model
             }
         }
 
-
-
-        //Papers view and table mmethods 
         public async Task AddPaperAsync(Paper paper)
         {
             using (var connection = new SQLiteConnection(_connectionString))
@@ -168,40 +81,31 @@ namespace DocStack.MVVM.Model
             }
         }
 
-        public async Task<List<Paper>> GetAllPapersAsync()
+        //A method for adding into the favorites table 
+        public async Task AddToFavoritesAsync(Paper paper)
         {
-            List<Paper> papers = new List<Paper>();
-
             using (var connection = new SQLiteConnection(_connectionString))
             {
                 await connection.OpenAsync();
 
-                string selectQuery = "SELECT * FROM Papers";
+                string insertQuery = @"INSERT OR REPLACE INTO FavoritePapers 
+                               (Authors, Title, Journal, Year, ColorCode, FullTextLink, DOI) 
+                               VALUES (@Authors, @Title, @Journal, @Year, @ColorCode, @FullTextLink, @DOI)";
 
-                using (var command = new SQLiteCommand(selectQuery, connection))
-                using (var reader = await command.ExecuteReaderAsync())
+                using (var command = new SQLiteCommand(insertQuery, connection))
                 {
-                    while (await reader.ReadAsync())
-                    {
-                        papers.Add(new Paper
-                        {
-                            PaperID = reader.GetInt32(0),
-                            Authors = reader.GetString(1),
-                            Title = reader.GetString(2),
-                            Journal = reader.GetString(3),
-                            Year = reader.GetInt32(4),
-                            DOI = reader.IsDBNull(5) ? null : reader.GetString(5),
-                            FullTextLink = reader.IsDBNull(6) ? null : reader.GetString(6)
-                        });
-                    }
+                    command.Parameters.AddWithValue("@Authors", paper.Authors);
+                    command.Parameters.AddWithValue("@Title", paper.Title);
+                    command.Parameters.AddWithValue("@Journal", paper.Journal);
+                    command.Parameters.AddWithValue("@Year", paper.Year);
+                    command.Parameters.AddWithValue("@ColorCode", "Grey");  // Default value or you can pass paper.ColorCode if it's set
+                    command.Parameters.AddWithValue("@FullTextLink", paper.FullTextLink);
+                    command.Parameters.AddWithValue("@DOI", paper.DOI);
+
+                    await command.ExecuteNonQueryAsync();
                 }
             }
-
-            return papers;
         }
-
-
-
 
         public async Task<List<DocumentsModel>> GetAllDocumentsAsync()
         {
@@ -232,7 +136,188 @@ namespace DocStack.MVVM.Model
 
             return documents;
         }
-      
 
+        public async Task<List<Paper>> GetAllFavoritePapersAsync()
+        {
+            List<Paper> favoritePapers = new List<Paper>();
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string selectQuery = "SELECT * FROM FavoritePapers";
+
+                using (var command = new SQLiteCommand(selectQuery, connection))
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        favoritePapers.Add(new Paper
+                        {
+                            PaperID = reader.GetInt32(reader.GetOrdinal("ID")),
+                            Authors = reader.GetString(reader.GetOrdinal("Authors")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Journal = reader.GetString(reader.GetOrdinal("Journal")),
+                            Year = reader.GetInt32(reader.GetOrdinal("Year")),
+                            DOI = reader.IsDBNull(reader.GetOrdinal("DOI")) ? null : reader.GetString(reader.GetOrdinal("DOI")),
+                            FullTextLink = reader.IsDBNull(reader.GetOrdinal("FullTextLink")) ? null : reader.GetString(reader.GetOrdinal("FullTextLink"))
+                        });
+                    }
+                }
+            }
+
+            return favoritePapers;
+        }
+
+        //Papers view and table mmethods 
+        public async Task<List<Paper>> GetAllPapersAsync()
+        {
+            List<Paper> papers = new List<Paper>();
+
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string selectQuery = "SELECT * FROM Papers";
+
+                using (var command = new SQLiteCommand(selectQuery, connection))
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        papers.Add(new Paper
+                        {
+                            PaperID = reader.GetInt32(reader.GetOrdinal("PaperID")),
+                            Authors = reader.GetString(reader.GetOrdinal("Authors")),
+                            Title = reader.GetString(reader.GetOrdinal("Title")),
+                            Journal = reader.GetString(reader.GetOrdinal("Journal")),
+                            Year = reader.GetInt32(reader.GetOrdinal("Year")),
+                            DOI = reader.IsDBNull(reader.GetOrdinal("DOI")) ? null : reader.GetString(reader.GetOrdinal("DOI")),
+                            FullTextLink = reader.IsDBNull(reader.GetOrdinal("FullTextLink")) ? null : reader.GetString(reader.GetOrdinal("FullTextLink"))
+                        });
+                    }
+                }
+            }
+
+            return papers;
+        }
+        private void InitializeDatabase(string databasePath)
+        {
+            if (!File.Exists(databasePath))
+            {
+                try
+                {
+                    SQLiteConnection.CreateFile(databasePath);
+                    Console.WriteLine($"Database file created at: {databasePath}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error creating database file: {ex.Message}");
+                    throw;
+                }
+
+
+
+                //Papers Table - for holding the research papers datas
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+                        Console.WriteLine("Database connection opened successfully.");
+
+                        // Papers table with updated columns
+                        string createPapersTableQuery = @"
+                                     CREATE TABLE IF NOT EXISTS Papers (
+                                     PaperID INTEGER PRIMARY KEY AUTOINCREMENT,
+                                     Authors TEXT NOT NULL,
+                                     Title TEXT NOT NULL,
+                                     Journal TEXT NOT NULL,
+                                     Year INTEGER NOT NULL,
+                                     DOI TEXT,
+                                     FullTextLink TEXT
+                                                        )";
+
+                        using (var command = new SQLiteCommand(createPapersTableQuery, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+
+                        Console.WriteLine("Papers table created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error initializing database: {ex.Message}");
+                        throw;
+                    }
+                }
+
+                //Documents table - for holding the documents
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+                        Console.WriteLine("Database connection opened successfully.");
+
+                        // Documents table
+                        string createDocumentsTableQuery = @"CREATE TABLE IF NOT EXISTS Documents (
+                                                           Id INTEGER PRIMARY KEY,
+                                                           document_name TEXT NOT NULL,
+                                                           file_path TEXT NOT NULL,
+                                                           file_size INTEGER NOT NULL,
+                                                           date_added TEXT NOT NULL
+                                                                                      )";
+                        using (var command = new SQLiteCommand(createDocumentsTableQuery, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        {
+                            Console.WriteLine($"Error initializing database: {ex.Message}");
+                            throw;
+                        }
+                    }
+                }
+
+                //Favorite papers - a table for holding favorites
+
+                using (var connection = new SQLiteConnection(_connectionString))
+                {
+                    try
+                    {
+                        connection.Open();
+                        Console.WriteLine("Database connection opened successfully.");
+
+                        string createFavoritePapersTableQuery = @"
+                    CREATE TABLE IF NOT EXISTS FavoritePapers (
+                        ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Authors TEXT NOT NULL,
+                        Title TEXT NOT NULL,
+                        Journal TEXT,
+                        Year INTEGER,
+                        ColorCode TEXT,
+                        FullTextLink TEXT,
+                        DOI TEXT UNIQUE
+                    )";
+
+                        using (var command = new SQLiteCommand(createFavoritePapersTableQuery, connection))
+                        {
+                            command.ExecuteNonQuery();
+                        }
+
+                        Console.WriteLine("FavoritePapers table created successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error initializing database: {ex.Message}");
+                        throw;
+                    }
+                }
+            }
+           
+        }
     }
 }

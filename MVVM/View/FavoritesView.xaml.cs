@@ -14,21 +14,24 @@ namespace DocStack.MVVM.View
 
         private void ColorButton_Click(object sender, RoutedEventArgs e)
         {
+            /*
             if (sender is Button button && button.DataContext is DocumentItem selectedItem)
             {
                 ColorPopup.DataContext = selectedItem;
                 ColorPopup.PlacementTarget = button;
                 ColorPopup.IsOpen = true;
             }
+            */
         }
 
         private void ColorSelectionButton_Click(object sender, RoutedEventArgs e)
-        {
+        {   /*
             if (sender is Button button && ColorPopup.DataContext is DocumentItem selectedItem)
             {
                 selectedItem.ColorCode = button.Background;
                 ColorPopup.IsOpen = false;
             }
+            */
         }
 
         private void CloseColorPopup_Click(object sender, RoutedEventArgs e)
