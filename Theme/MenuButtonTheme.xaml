@@ -842,4 +842,181 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    
+    
+    <!-- Custom datagrid style -->
+    <Style x:Key="CustomDataGridStyle" TargetType="{x:Type DataGrid}">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="#3E3D55"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="AlternatingRowBackground" Value="#2F2D43"/>
+        <Setter Property="RowBackground" Value="#272537"/>
+        <Setter Property="Foreground" Value="#f8f8f8"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
+        <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Roboto"/>
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+        <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+        <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+        <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGrid}">
+                    <Border Background="{TemplateBinding Background}" 
+                        BorderBrush="{TemplateBinding BorderBrush}" 
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="10"
+                        ClipToBounds="True">
+                        <ScrollViewer x:Name="DG_ScrollViewer" Focusable="false">
+                            <ScrollViewer.Template>
+                                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Border Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Grid.ColumnSpan="2"
+                                            Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                            BorderBrush="{Binding BorderBrush, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                            BorderThickness="{Binding BorderThickness, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                            CornerRadius="10"/>
+
+                                        <DataGridColumnHeadersPresenter x:Name="PART_ColumnHeadersPresenter" 
+                                                                    Grid.Column="0"
+                                                                    Grid.Row="0"/>
+                                        <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" 
+                                                            Grid.Column="0"
+                                                            Grid.Row="1"
+                                                            CanContentScroll="{TemplateBinding CanContentScroll}" 
+                                                            Content="{TemplateBinding Content}"/>
+                                        <ScrollBar x:Name="PART_VerticalScrollBar" 
+                                               Grid.Column="1" 
+                                               Grid.Row="0" 
+                                               Grid.RowSpan="2"
+                                               Maximum="{TemplateBinding ScrollableHeight}" 
+                                               Orientation="Vertical" 
+                                               ViewportSize="{TemplateBinding ViewportHeight}" 
+                                               Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        <ScrollBar x:Name="PART_HorizontalScrollBar" 
+                                               Grid.Column="0" 
+                                               Grid.Row="2" 
+                                               Maximum="{TemplateBinding ScrollableWidth}" 
+                                               Orientation="Horizontal" 
+                                               ViewportSize="{TemplateBinding ViewportWidth}" 
+                                               Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </ScrollViewer.Template>
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </ScrollViewer>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RowStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="#272537" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Margin" Value="0,2" />
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#3E3D55" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#4A4968" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="CellStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Padding" Value="10,5" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridCell}">
+                                <Border
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                                    <ContentPresenter VerticalAlignment="Center" />
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ColumnHeaderStyle">
+            <Setter.Value>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#2F2D43" />
+                    <Setter Property="Foreground" Value="#f8f8f8" />
+                    <Setter Property="Padding" Value="10,8" />
+                    <Setter Property="FontFamily" Value="pack://application:,,,/Fonts/#Roboto" />
+                    <Setter Property="BorderThickness" Value="0,0,0,1" />
+                    <Setter Property="BorderBrush" Value="#3E3D55" />
+                    <Setter Property="FontSize" Value="13" />
+                    <Setter Property="FontWeight" Value="SemiBold" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type DataGridColumnHeader}">
+                                <Grid>
+                                    <Border
+                                    Padding="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                    </Border>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
+    <!-- Open button style for papersview-->
+    <Style x:Key="OpenButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="#1E90FF" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="4">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#E6F3FF" />
+                            <Setter Property="BorderBrush" Value="#1E90FF" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#B3D9FF" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

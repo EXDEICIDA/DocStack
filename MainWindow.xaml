@@ -15,7 +15,9 @@
     Background="Transparent"
     Icon="pack://application:,,,/Resources/AppLogo/Pyramid-remove.png"
     WindowStartupLocation="CenterScreen"
+    Title="DocStack"
     WindowStyle="None"
+   
     mc:Ignorable="d">
 
     <Window.DataContext>

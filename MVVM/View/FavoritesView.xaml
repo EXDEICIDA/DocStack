@@ -19,7 +19,45 @@
 
     <UserControl.Resources>
         <FontFamily x:Key="RobotoFont">pack://application:,,,/Fonts/#Roboto</FontFamily>
-
+        <!-- Custom Scrollbar Style -->
+        <Style x:Key="CustomScrollBarStyle" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid>
+                            <Rectangle x:Name="TrackBackground" 
+                                   Fill="{TemplateBinding Background}" 
+                                   RadiusX="4" RadiusY="4"/>
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="{x:Type Thumb}">
+                                                <Rectangle x:Name="ThumbRectangle" 
+                                                       Fill="#BDBDBD" 
+                                                       RadiusX="4" RadiusY="4"
+                                                       Width="6"
+                                                       HorizontalAlignment="Center"/>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ThumbRectangle" Property="Fill" Value="#9E9E9E"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsDragging" Value="True">
+                                                        <Setter TargetName="ThumbRectangle" Property="Fill" Value="#757575"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Style x:Key="ModernDataGridStyle" TargetType="{x:Type DataGrid}">
             <Setter Property="Background" Value="White" />
             <Setter Property="Foreground" Value="#333333" />
@@ -29,6 +67,62 @@
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="GridLinesVisibility" Value="None" />
             <Setter Property="RowHeaderWidth" Value="0" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGrid}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{TemplateBinding Background}" 
+                            Padding="{TemplateBinding Padding}" 
+                            SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="DG_ScrollViewer" Focusable="False">
+                                <ScrollViewer.Template>
+                                    <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <DockPanel Margin="{TemplateBinding Padding}">
+                                                <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" 
+                                                                    CanContentScroll="{TemplateBinding CanContentScroll}" 
+                                                                    Content="{TemplateBinding Content}" 
+                                                                    ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                                            </DockPanel>
+                                            <ScrollBar x:Name="PART_VerticalScrollBar" 
+                                                   Grid.Column="1" 
+                                                   Maximum="{TemplateBinding ScrollableHeight}" 
+                                                   Orientation="Vertical" 
+                                                   Style="{StaticResource CustomScrollBarStyle}" 
+                                                   ViewportSize="{TemplateBinding ViewportHeight}" 
+                                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" 
+                                                   Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                            <ScrollBar x:Name="PART_HorizontalScrollBar" 
+                                                   Grid.Row="1" 
+                                                   Maximum="{TemplateBinding ScrollableWidth}" 
+                                                   Orientation="Horizontal" 
+                                                   Style="{StaticResource CustomScrollBarStyle}" 
+                                                   ViewportSize="{TemplateBinding ViewportWidth}" 
+                                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" 
+                                                   Value="{Binding HorizontalOffset, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ScrollViewer.Template>
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Setter Property="ColumnHeaderStyle">
                 <Setter.Value>
                     <Style TargetType="{x:Type DataGridColumnHeader}">
