@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="clr-namespace:DocStack.MVVM.View"
     xmlns:viewModel="clr-namespace:DocStack.MVVM.ViewModel"
+    xmlns:converters="clr-namespace:DocStack.Converters"
     xmlns:viewMoel="http://materialdesigninxaml.net/winfx/xaml/themes"
     d:DesignHeight="720"
     d:DesignWidth="1280"
@@ -19,6 +20,7 @@
 
     <UserControl.Resources>
         <FontFamily x:Key="RobotoFont">pack://application:,,,/Fonts/#Roboto</FontFamily>
+        <converters:ColorConverter x:Key="ColorConverter"/>
         <!-- Custom Scrollbar Style -->
         <Style x:Key="CustomScrollBarStyle" TargetType="{x:Type ScrollBar}">
             <Setter Property="Width" Value="8"/>
@@ -379,25 +381,22 @@
                     <DataGridTemplateColumn Width="40">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button
-                Width="20"
-                Height="20"
-                Padding="0"
-                Background="Transparent"
-                BorderThickness="0"
-                Click="ColorButton_Click">
+                                <Button Width="20"
+                            Height="20"
+                            Padding="0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Click="ColorButton_Click">
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
                                             <Grid>
-                                                <Ellipse
-                                Width="16"
-                                Height="16"
-                                Fill="{Binding ColorCode}"/>
-                                                <Ellipse
-                                Width="16"
-                                Height="16"
-                                Fill="Blue"
-                                Opacity="0">
+                                                <Ellipse Width="16"
+                                             Height="16"
+                                             Fill="{Binding ColorCode, Converter={StaticResource ColorConverter}}"/>
+                                                <Ellipse Width="16"
+                                             Height="16"
+                                             Fill="Blue"
+                                             Opacity="0">
                                                     <Ellipse.Style>
                                                         <Style TargetType="Ellipse">
                                                             <Style.Triggers>
@@ -493,6 +492,7 @@
                             Padding="5"
                             HorizontalAlignment="Right"
                             Background="Transparent"
+                            
                             BorderThickness="0"
                             Click="CloseColorPopup_Click">
                             <fa:FontAwesome
@@ -524,13 +524,13 @@
                                 </Setter>
                             </Style>
                         </ItemsControl.Resources>
-                        <Button Background="#F44336" Click="ColorButton_Click" />
-                        <Button Background="#2196F3" Click="ColorButton_Click" />
-                        <Button Background="#4CAF50" Click="ColorButton_Click" />
-                        <Button Background="#FF9800" Click="ColorButton_Click" />
-                        <Button Background="#9C27B0" Click="ColorButton_Click" />
-                        <Button Background="#FFEB3B" Click="ColorButton_Click" />
-                        <Button Background="#9E9E9E" Click="ColorButton_Click" />
+                        <Button Background="#F44336" Click="ColorSelectionButton_Click" />
+                        <Button Background="#2196F3" Click="ColorSelectionButton_Click" />
+                        <Button Background="#4CAF50" Click="ColorSelectionButton_Click" />
+                        <Button Background="#FF9800" Click="ColorSelectionButton_Click" />
+                        <Button Background="#9C27B0" Click="ColorSelectionButton_Click" />
+                        <Button Background="#FFEB3B" Click="ColorSelectionButton_Click" />
+                        <Button Background="#9E9E9E" Click="ColorSelectionButton_Click" />
                     </ItemsControl>
                 </Grid>
             </Border>

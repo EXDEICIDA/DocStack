@@ -107,6 +107,33 @@ namespace DocStack.MVVM.Model
             }
         }
 
+        /// <summary>
+        /// Asynchronously updates the color code associated with a favorite paper in the database.
+        /// </summary>
+        /// <param name="doi">The DOI (Digital Object Identifier) of the paper to be updated.</param>
+        /// <param name="colorCode">The new color code to associate with the paper.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task UpdateFavoritePaperColorAsync(string doi, string colorCode)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string updateQuery = @"UPDATE FavoritePapers 
+                                   SET ColorCode = @ColorCode 
+                                   WHERE DOI = @DOI";
+
+                using (var command = new SQLiteCommand(updateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@ColorCode", colorCode);
+                    command.Parameters.AddWithValue("@DOI", doi);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+
         public async Task<List<DocumentsModel>> GetAllDocumentsAsync()
         {
             List<DocumentsModel> documents = new List<DocumentsModel>();

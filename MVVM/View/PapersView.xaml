@@ -409,7 +409,7 @@
                     Command="{Binding DataContext.OpenCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                     CommandParameter="{Binding}"
                     Style="{StaticResource OpenButton}">
-                                    <fa:FontAwesome FontSize="14" Icon="FolderOpen" />
+                                    <fa:FontAwesome FontSize="14" Icon="ChevronRight" />
                                 </Button>
                             </StackPanel>
                         </DataTemplate>
