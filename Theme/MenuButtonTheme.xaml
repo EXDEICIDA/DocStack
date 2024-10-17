@@ -1148,4 +1148,188 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="CustomScrollViewerStyle" TargetType="{x:Type ScrollViewer}">
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ScrollViewer}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <ScrollContentPresenter Grid.Column="0" Grid.Row="0"/>
+
+                        <ScrollBar x:Name="PART_VerticalScrollBar"
+                               Grid.Column="1"
+                               Grid.Row="0"
+                               Value="{TemplateBinding VerticalOffset}"
+                               Maximum="{TemplateBinding ScrollableHeight}"
+                               ViewportSize="{TemplateBinding ViewportHeight}"
+                               Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}">
+                            <ScrollBar.Style>
+                                <Style TargetType="{x:Type ScrollBar}">
+                                    <Setter Property="Width" Value="8" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                                <Grid>
+                                                    <Rectangle
+                                                    x:Name="TrackBackground"
+                                                    Fill="{TemplateBinding Background}"
+                                                    RadiusX="4"
+                                                    RadiusY="4" />
+                                                    <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                                        <Track.Thumb>
+                                                            <Thumb>
+                                                                <Thumb.Template>
+                                                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                                                        <Rectangle
+                                                                        x:Name="ThumbRectangle"
+                                                                        Width="6"
+                                                                        HorizontalAlignment="Center"
+                                                                        Fill="#BDBDBD"
+                                                                        RadiusX="4"
+                                                                        RadiusY="4" />
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter TargetName="ThumbRectangle" Property="Fill" Value="#9E9E9E" />
+                                                                            </Trigger>
+                                                                            <Trigger Property="IsDragging" Value="True">
+                                                                                <Setter TargetName="ThumbRectangle" Property="Fill" Value="#757575" />
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Thumb.Template>
+                                                            </Thumb>
+                                                        </Track.Thumb>
+                                                    </Track>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ScrollBar.Style>
+                        </ScrollBar>
+
+                        <ScrollBar x:Name="PART_HorizontalScrollBar"
+                               Orientation="Horizontal"
+                               Grid.Column="0"
+                               Grid.Row="1"
+                               Value="{TemplateBinding HorizontalOffset}"
+                               Maximum="{TemplateBinding ScrollableWidth}"
+                               ViewportSize="{TemplateBinding ViewportWidth}"
+                               Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}">
+                            <ScrollBar.Style>
+                                <Style TargetType="{x:Type ScrollBar}">
+                                    <Setter Property="Height" Value="8" />
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ScrollBar}">
+                                                <Grid>
+                                                    <Rectangle
+                                                    x:Name="TrackBackground"
+                                                    Fill="{TemplateBinding Background}"
+                                                    RadiusX="4"
+                                                    RadiusY="4" />
+                                                    <Track x:Name="PART_Track" IsDirectionReversed="False">
+                                                        <Track.Thumb>
+                                                            <Thumb>
+                                                                <Thumb.Template>
+                                                                    <ControlTemplate TargetType="{x:Type Thumb}">
+                                                                        <Rectangle
+                                                                        x:Name="ThumbRectangle"
+                                                                        Height="6"
+                                                                        VerticalAlignment="Center"
+                                                                        Fill="#BDBDBD"
+                                                                        RadiusX="4"
+                                                                        RadiusY="4" />
+                                                                        <ControlTemplate.Triggers>
+                                                                            <Trigger Property="IsMouseOver" Value="True">
+                                                                                <Setter TargetName="ThumbRectangle" Property="Fill" Value="#9E9E9E" />
+                                                                            </Trigger>
+                                                                            <Trigger Property="IsDragging" Value="True">
+                                                                                <Setter TargetName="ThumbRectangle" Property="Fill" Value="#757575" />
+                                                                            </Trigger>
+                                                                        </ControlTemplate.Triggers>
+                                                                    </ControlTemplate>
+                                                                </Thumb.Template>
+                                                            </Thumb>
+                                                        </Track.Thumb>
+                                                    </Track>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ScrollBar.Style>
+                        </ScrollBar>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ResponsiveMiniTextBoxStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="Foreground" Value="#f8f8f8" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="FontFamily" Value="/Fonts/#Roboto" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border
+                    Background="#353340"
+                    CornerRadius="5">
+                        <Grid>
+                            <ScrollViewer
+                            x:Name="PART_ContentHost"
+                            Margin="5,0,0,0"
+                            VerticalAlignment="Center" />
+                            <TextBlock
+                            x:Name="PlaceholderText"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontFamily="/Fonts/#Roboto"
+                            FontSize="12"
+                            Foreground="DarkGray"
+                            IsHitTestVisible="False"
+                            Text="Enter text">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" Value="" />
+                                                    <Condition Binding="{Binding IsFocused, RelativeSource={RelativeSource TemplatedParent}}" Value="False" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="Visibility" Value="Visible" />
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+
 </ResourceDictionary>
