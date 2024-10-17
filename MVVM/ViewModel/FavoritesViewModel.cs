@@ -24,6 +24,17 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        private Paper _selectedPaper;
+        public Paper SelectedPaper
+        {
+            get => _selectedPaper;
+            set
+            {
+                _selectedPaper = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ICommand LoadFavoritesCommand { get; }
         public ICommand RefreshCommand { get; }
         public ICommand ChangeColorCommand { get; }

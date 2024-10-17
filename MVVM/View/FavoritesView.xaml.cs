@@ -38,7 +38,19 @@ namespace DocStack.MVVM.View
             }
         }
 
-      
+        private void OpenDetails_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (Button)sender;
+            var paper = (Paper)button.CommandParameter;
+
+            var viewModel = (FavoritesViewModel)DataContext;
+            viewModel.SelectedPaper = paper;
+
+            DetailPanelColumn.Width = new GridLength(300);
+            DetailPanel.Visibility = Visibility.Visible;
+            GridSplitter gridSplitter = (GridSplitter)this.FindName("GridSplitter");
+            gridSplitter.Visibility = Visibility.Visible;
+        }
 
 
 

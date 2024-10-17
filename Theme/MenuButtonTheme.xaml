@@ -1116,4 +1116,36 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+           <!-- Grid Spliter Style-->
+    <Style TargetType="GridSplitter" x:Key="ModernGridSplitterStyle">
+        <Setter Property="Width" Value="5" />
+        <Setter Property="Background" Value="#E0E0E0" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Visibility" Value="Collapsed" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="GridSplitter">
+                    <Border
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="3">
+                        <Border.Effect>
+                            <DropShadowEffect 
+                                BlurRadius="5" 
+                                ShadowDepth="1" 
+                                Opacity="0.5" 
+                                Color="Black" />
+                        </Border.Effect>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Cursor" Value="SizeWE" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="#D6D6D6" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
