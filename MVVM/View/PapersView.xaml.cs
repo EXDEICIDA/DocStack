@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocStack.MVVM.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,23 @@ namespace DocStack.MVVM.View
         public PapersView()
         {
             InitializeComponent();
+        }
+
+        //A simple search method for Papers view search bar
+
+        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                // Get the view model from the DataContext
+                var viewModel = DataContext as PapersViewModel;
+
+                // If the view model and the search text are valid, call the Search method
+                if (viewModel != null && !string.IsNullOrWhiteSpace(viewModel.SearchText))
+                {
+                    viewModel.Search();
+                }
+            }
         }
     }
 }

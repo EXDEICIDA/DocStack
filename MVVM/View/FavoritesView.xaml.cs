@@ -38,6 +38,8 @@ namespace DocStack.MVVM.View
             }
         }
 
+      
+
 
 
         private void CloseColorPopup_Click(object sender, RoutedEventArgs e)

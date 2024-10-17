@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -19,6 +20,7 @@ namespace DocStack.MVVM.ViewModel
         private ObservableCollection<Paper> _papers;
         private ModelDatabase _modelDatabase;
         private Paper _selectedPaper;
+        private string _searchText;
 
 
         public ObservableCollection<Paper> Papers
@@ -42,11 +44,27 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        //for search purpose on the view 
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                if (_searchText != value)
+                {
+                    _searchText = value;
+                    OnPropertyChanged(nameof(SearchText));
+                
+                }
+            }
+        }
 
         public ICommand AddPaperCommand { get; }
         public ICommand LoadPapersCommand { get; }
         public ICommand RefreshCommand { get; }
         public ICommand AddToFavoritesCommand { get; }
+        public ICommand SearchCommand { get; }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -75,11 +93,43 @@ namespace DocStack.MVVM.ViewModel
 
 
             AddToFavoritesCommand = new RelayCommand(async o => await AddToFavoritesAsync(SelectedPaper), o => SelectedPaper != null);
+           // SearchCommand = new RelayCommand(o => Search());
 
 
             // Load papers initially
             Task.Run(async () => await LoadPapersAsync());
         }
+
+
+        //Simple Text Search method
+
+        public void Search()
+        {
+            if (string.IsNullOrWhiteSpace(_searchText))
+            {
+                // If the search text is empty, reload all papers
+                Task.Run(async () => await LoadPapersAsync());
+                return;
+            }
+
+            // Perform a case-insensitive search across multiple fields with null checks
+            var filteredPapers = _papers.Where(paper =>
+                (!string.IsNullOrEmpty(paper.Title) && paper.Title.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                (!string.IsNullOrEmpty(paper.Authors) && paper.Authors.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                (!string.IsNullOrEmpty(paper.Journal) && paper.Journal.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                (!string.IsNullOrEmpty(paper.DOI) && paper.DOI.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                (paper.Year.ToString().IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0)
+            ).ToList();
+
+            // Clear the current list of papers and add only the filtered ones
+            Papers.Clear();
+            foreach (var paper in filteredPapers)
+            {
+                Papers.Add(paper);
+            }
+        }
+
+
 
         private async Task AddPaper(Paper paper)
         {
