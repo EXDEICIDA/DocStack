@@ -19,13 +19,14 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*" />
             <ColumnDefinition Width="2*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Settings header -->
+        <!--  Settings header  -->
         <TextBlock
             Grid.ColumnSpan="2"
             Margin="15,0,0,20"
@@ -33,7 +34,7 @@
             Foreground="White"
             Text="Settings" />
 
-        <!-- Left side: responsive rectangles -->
+        <!--  Left side: responsive rectangles  -->
         <UniformGrid
             Grid.Row="1"
             Grid.RowSpan="2"
@@ -42,7 +43,7 @@
             VerticalAlignment="Stretch"
             Columns="1">
 
-            <!-- Rectangle 1 -->
+            <!--  Rectangle 1  -->
             <Border
                 Margin="5"
                 Padding="10"
@@ -52,8 +53,7 @@
                     <TextBlock
                         Margin="0,0,0,10"
                         Foreground="White"
-                        Text="Rectangle 1" />
-                    <!-- Additional content for Rectangle 1 -->
+                        Text="General Settings" />
                     <Border
                         Margin="10"
                         Padding="15,10"
@@ -121,93 +121,7 @@
                 </StackPanel>
             </Border>
 
-            <!-- Rectangle 2 -->
-            <Border
-        Margin="5"
-        Padding="10"
-        Background="#333333"
-        CornerRadius="10">
-                <StackPanel>
-                    <TextBlock
-                Margin="0,0,0,10"
-                Foreground="White"
-                Text="Language Settings" />
-                    <Border
-                Margin="10"
-                Padding="15,10"
-                Background="#FF1E1E1E"
-                CornerRadius="5">
-                        <Grid HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <fa:FontAwesome
-                        Grid.Column="0"
-                        Margin="0,0,10,0"
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Foreground="White"
-                        Icon="Globe" />
-                            <TextBlock
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Foreground="White"
-                        Text="Language" />
-                            <Button
-                        x:Name="OpenLanguagePopupButton"
-                        Grid.Column="2"
-                        HorizontalAlignment="Right"
-                        Command="{Binding OpenLanguagePopupCommand}"
-                        Style="{StaticResource RoundedButtonStyle}">
-                                <fa:FontAwesome
-                            FontSize="16"
-                            Foreground="White"
-                            Icon="ChevronRight" />
-                            </Button>
-                        </Grid>
-                    </Border>
-                    <Border
-Margin="10"
-Padding="15,10"
-Background="#FF1E1E1E"
-CornerRadius="5">
-                        <Grid HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-                            <fa:FontAwesome
-        Grid.Column="0"
-        Margin="0,0,10,0"
-        VerticalAlignment="Center"
-        FontSize="16"
-        Foreground="White"
-        Icon="Database" />
-                            <TextBlock
-        Grid.Column="1"
-        VerticalAlignment="Center"
-        Foreground="White"
-        Text="API Settings" />
-                            <Button
-        x:Name="OpenLanguagePopupButton2"
-        Grid.Column="2"
-        HorizontalAlignment="Right"
-        Command="{Binding OpenLanguagePopupCommand}"
-        Style="{StaticResource RoundedButtonStyle}">
-                                <fa:FontAwesome
-            FontSize="16"
-            Foreground="White"
-            Icon="ChevronRight" />
-                            </Button>
-                        </Grid>
-                    </Border>
-                </StackPanel>
-            </Border>
-
-            <!-- Rectangle 3 -->
+            <!--  Rectangle 2  -->
             <Border
                 Margin="5"
                 Padding="10"
@@ -217,13 +131,98 @@ CornerRadius="5">
                     <TextBlock
                         Margin="0,0,0,10"
                         Foreground="White"
-                        Text="Rectangle 3" />
-                    <!-- Additional content for Rectangle 3 -->
+                        Text="Language Settings" />
                     <Border
-     Margin="10"
-     Padding="15,10"
-     Background="#FF1E1E1E"
-     CornerRadius="5">
+                        Margin="10"
+                        Padding="15,10"
+                        Background="#FF1E1E1E"
+                        CornerRadius="5">
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <fa:FontAwesome
+                                Grid.Column="0"
+                                Margin="0,0,10,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="White"
+                                Icon="Globe" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="White"
+                                Text="Language" />
+                            <Button
+                                x:Name="OpenLanguagePopupButton"
+                                Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Command="{Binding OpenLanguagePopupCommand}"
+                                Style="{StaticResource RoundedButtonStyle}">
+                                <fa:FontAwesome
+                                    FontSize="16"
+                                    Foreground="White"
+                                    Icon="ChevronRight" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                    <Border
+                        Margin="10"
+                        Padding="15,10"
+                        Background="#FF1E1E1E"
+                        CornerRadius="5">
+                        <Grid HorizontalAlignment="Stretch">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <fa:FontAwesome
+                                Grid.Column="0"
+                                Margin="0,0,10,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="White"
+                                Icon="Database" />
+                            <TextBlock
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="White"
+                                Text="API Settings" />
+                            <Button
+                                x:Name="OpenAPIPopupButton"
+                                Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Command="{Binding OpenAPIPopupCommand}"
+                                Style="{StaticResource RoundedButtonStyle}">
+                                <fa:FontAwesome
+                                    FontSize="16"
+                                    Foreground="White"
+                                    Icon="ChevronRight" />
+                            </Button>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </Border>
+
+            <!--  Rectangle 3  -->
+            <Border
+                Margin="5"
+                Padding="10"
+                Background="#333333"
+                CornerRadius="10">
+                <StackPanel>
+                    <TextBlock
+                        Margin="0,0,0,10"
+                        Foreground="White"
+                        Text="File Settings" />
+                    <Border
+                        Margin="10"
+                        Padding="15,10"
+                        Background="#FF1E1E1E"
+                        CornerRadius="5">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -232,29 +231,29 @@ CornerRadius="5">
                             </Grid.ColumnDefinitions>
 
                             <fa:FontAwesome
-             VerticalAlignment="Center"
-             FontSize="25"
-             Foreground="White"
-             Icon="FilePdfOutline" />
+                                VerticalAlignment="Center"
+                                FontSize="25"
+                                Foreground="White"
+                                Icon="FilePdfOutline" />
                             <TextBlock
-             Grid.Column="1"
-             Margin="15,0,0,0"
-             VerticalAlignment="Center"
-             FontSize="16"
-             Foreground="White"
-             Text="Documents" />
-                            <ToggleButton
-             Grid.Column="2"
-             VerticalAlignment="Center"
-             Style="{StaticResource ToggleButtonStyle}" />
+                                Grid.Column="1"
+                                Margin="15,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="White"
+                                Text="Documents" />
+                            <CheckBox
+                                Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Style="{StaticResource CheckBoxStyle}" />
                         </Grid>
                     </Border>
 
                     <Border
-     Margin="10"
-     Padding="15,10"
-     Background="#FF1E1E1E"
-     CornerRadius="5">
+                        Margin="10"
+                        Padding="15,10"
+                        Background="#FF1E1E1E"
+                        CornerRadius="5">
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
@@ -263,28 +262,28 @@ CornerRadius="5">
                             </Grid.ColumnDefinitions>
 
                             <fa:FontAwesome
-             VerticalAlignment="Center"
-             FontSize="25"
-             Foreground="White"
-             Icon="AngleDoubleDown" />
+                                VerticalAlignment="Center"
+                                FontSize="25"
+                                Foreground="White"
+                                Icon="AngleDoubleDown" />
                             <TextBlock
-             Grid.Column="1"
-             Margin="15,0,0,0"
-             VerticalAlignment="Center"
-             FontSize="16"
-             Foreground="White"
-             Text="Downloads" />
-                            <ToggleButton
-             Grid.Column="2"
-             VerticalAlignment="Center"
-             Style="{StaticResource ToggleButtonStyle}" />
+                                Grid.Column="1"
+                                Margin="15,0,0,0"
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Foreground="White"
+                                Text="Downloads" />
+                            <CheckBox
+                                Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Style="{StaticResource CheckBoxStyle}" />
                         </Grid>
                     </Border>
                 </StackPanel>
             </Border>
         </UniformGrid>
 
-        <!-- Third section (Recommended settings) -->
+        <!--  Third section (Recommended settings)  -->
         <Border
             Grid.Row="1"
             Grid.Column="1"
@@ -293,10 +292,119 @@ CornerRadius="5">
             Background="#333333"
             CornerRadius="10">
             <StackPanel>
-                <!-- Add content here -->
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="18"
+                    Foreground="White"
+                    Text="Recommended Settings" />
+                <Border
+                    Margin="0,5"
+                    Padding="10"
+                    Background="#FF1E1E1E"
+                    CornerRadius="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <fa:FontAwesome
+                            FontSize="16"
+                            Foreground="White"
+                            Icon="Bell" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Foreground="White"
+                            Text="Enable Notifications" />
+                        <CheckBox
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource CheckBoxStyle}" />
+                    </Grid>
+                </Border>
+                <Border
+                    Margin="0,5"
+                    Padding="10"
+                    Background="#FF1E1E1E"
+                    CornerRadius="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <fa:FontAwesome
+                            FontSize="16"
+                            Foreground="White"
+                            Icon="Cloud" />
+                        <TextBlock
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Foreground="White"
+                            Text="Auto-sync Documents" />
+                        <CheckBox
+                            Grid.Column="2"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource CheckBoxStyle}" />
+                    </Grid>
+                </Border>
+                <Border
+     Margin="0,5"
+     Padding="10"
+     Background="#FF1E1E1E"
+     CornerRadius="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <fa:FontAwesome
+             FontSize="16"
+             Foreground="White"
+             Icon="FolderOpen" Height="25" VerticalAlignment="Top" />
+                        <TextBlock
+             Grid.Column="1"
+             Margin="10,0,0,0"
+             Foreground="White"
+             Text="Local Documents" />
+                        <CheckBox
+             Grid.Column="2"
+             HorizontalAlignment="Right"
+             Style="{StaticResource CheckBoxStyle}" />
+                    </Grid>
+                </Border>
+                <Border
+Margin="0,5"
+Padding="10"
+Background="#FF1E1E1E"
+CornerRadius="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <fa:FontAwesome
+        FontSize="16"
+        Foreground="White"
+        Icon="Recycle" Height="25" VerticalAlignment="Top" />
+                        <TextBlock
+        Grid.Column="1"
+        Margin="10,0,0,0"
+        Foreground="White"
+        Text="Reset All Settings" />
+                        <CheckBox
+        Grid.Column="2"
+        HorizontalAlignment="Right"
+        Style="{StaticResource CheckBoxStyle}" />
+                    </Grid>
+                </Border>
             </StackPanel>
         </Border>
 
+        <!--  Fourth section (Additional Settings)  -->
         <Border
             Grid.Row="2"
             Grid.Column="1"
@@ -304,17 +412,75 @@ CornerRadius="5">
             Padding="10"
             Background="#333333"
             CornerRadius="10">
-            <StackPanel Background="#FF2A2A2A">
-               
+            <StackPanel>
+                <TextBlock
+                    Margin="0,0,0,10"
+                    FontSize="18"
+                    Foreground="White"
+                    Text="Additional Settings" />
+                <Border
+                    Margin="0,5"
+                    Padding="10"
+                    Background="#FF1E1E1E"
+                    CornerRadius="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <fa:FontAwesome
+                            FontSize="16"
+                            Foreground="White"
+                            Icon="Font" />
+                        <ComboBox
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Style="{StaticResource ComboBoxFlatStyle}"
+                            SelectedIndex="0">
+                            <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Small" />
+                            <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Medium" />
+                            <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="Large" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+                <Border
+                    Margin="0,5"
+                    Padding="10"
+                    Background="#FF1E1E1E"
+                    CornerRadius="5">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <fa:FontAwesome
+                            FontSize="16"
+                            Foreground="White"
+                            Icon="PaintBrush" />
+                        <ComboBox
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            SelectedIndex="0"
+                            Style="{StaticResource ComboBoxFlatStyle}">
+                            <ComboBoxItem Content="Dark" Style="{StaticResource ComboBoxItemStyle}" />
+                            <ComboBoxItem Content="Light" Style="{StaticResource ComboBoxItemStyle}" />
+                            <ComboBoxItem Content="System" Style="{StaticResource ComboBoxItemStyle}" />
+                        </ComboBox>
+                    </Grid>
+                </Border>
+              
             </StackPanel>
         </Border>
 
         <Popup
             x:Name="LanguagePopup"
             IsOpen="{Binding IsLanguagePopupOpen, Mode=TwoWay}"
-            PlacementTarget="{Binding ElementName=OpenLanguagePopupButton}"
-            Placement="Bottom">
-            <Border Background="White" CornerRadius="5" Padding="10">
+            Placement="Bottom"
+            PlacementTarget="{Binding ElementName=OpenLanguagePopupButton}">
+            <Border
+                Padding="10"
+                Background="White"
+                CornerRadius="5">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -322,17 +488,13 @@ CornerRadius="5">
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
-                        <TextBlock Text="Choose a language:" FontWeight="Bold" />
-                        <Button HorizontalAlignment="Right"
-                                
-                                Command="{Binding CloseLanguagePopupCommand}"
-                                >
+                        <TextBlock FontWeight="Bold" Text="Choose a language:" />
+                        <Button HorizontalAlignment="Right" Command="{Binding CloseLanguagePopupCommand}">
                             <fa:FontAwesome Icon="Times" />
                         </Button>
                     </Grid>
 
-                    <ItemsControl Grid.Row="1"
-                                  ItemsSource="{Binding Languages}">
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Languages}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
@@ -340,11 +502,12 @@ CornerRadius="5">
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding}"
-                                        Style="{StaticResource NormalButtonDesign}"
-                                        Margin="5"
-                                        Command="{Binding DataContext.SelectLanguageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                        CommandParameter="{Binding}" />
+                                <Button
+                                    Margin="5"
+                                    Command="{Binding DataContext.SelectLanguageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Content="{Binding}"
+                                    Style="{StaticResource NormalButtonDesign}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -352,11 +515,14 @@ CornerRadius="5">
             </Border>
         </Popup>
         <Popup
-      x:Name="APIPOPUP"
-      IsOpen="{Binding IsLanguagePopupOpen, Mode=TwoWay}"
-      PlacementTarget="{Binding ElementName=OpenLanguagePopupButton}"
-      Placement="Bottom">
-            <Border Background="White" CornerRadius="5" Padding="10">
+            x:Name="APIPOPUP"
+            IsOpen="{Binding IsLanguagePopupOpen, Mode=TwoWay}"
+            Placement="Bottom"
+            PlacementTarget="{Binding ElementName=OpenLanguagePopupButton}">
+            <Border
+                Padding="10"
+                Background="White"
+                CornerRadius="5">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -364,17 +530,13 @@ CornerRadius="5">
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
-                        <TextBlock Text="Choose a language:" FontWeight="Bold" />
-                        <Button HorizontalAlignment="Right"
-                          
-                          Command="{Binding CloseLanguagePopupCommand}"
-                          >
+                        <TextBlock FontWeight="Bold" Text="Choose a language:" />
+                        <Button HorizontalAlignment="Right" Command="{Binding CloseLanguagePopupCommand}">
                             <fa:FontAwesome Icon="Times" />
                         </Button>
                     </Grid>
 
-                    <ItemsControl Grid.Row="1"
-                            ItemsSource="{Binding Languages}">
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Languages}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel />
@@ -382,11 +544,12 @@ CornerRadius="5">
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding}"
-                                  Style="{StaticResource NormalButtonDesign}"
-                                  Margin="5"
-                                  Command="{Binding DataContext.SelectLanguageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                  CommandParameter="{Binding}" />
+                                <Button
+                                    Margin="5"
+                                    Command="{Binding DataContext.SelectLanguageCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                    CommandParameter="{Binding}"
+                                    Content="{Binding}"
+                                    Style="{StaticResource NormalButtonDesign}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>

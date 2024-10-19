@@ -79,8 +79,8 @@
                     ItemContainerStyle="{StaticResource ComboBoxItemStyle}"
                     Style="{StaticResource ComboBoxFlatStyle}">
                     <ComboBoxItem>All Documents</ComboBoxItem>
-                    <ComboBoxItem>Recent</ComboBoxItem>
-                    <ComboBoxItem>Starred</ComboBoxItem>
+                    <ComboBoxItem>Size</ComboBoxItem>
+                    <ComboBoxItem>Data Added</ComboBoxItem>
                 </ComboBox>
             </StackPanel>
 
@@ -89,9 +89,14 @@
                     <TextBox
                         x:Name="SearchTextBox"
                         Padding="25,5,5,5"
-                        KeyDown="SearchTextBox_KeyDown"
+                       KeyDown="SearchBox_KeyDown"
                         Style="{StaticResource ModernSearchBarCustom}"
-                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" />
+                        Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"  >
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding SearchCommand}" />
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    
                     <TextBlock
                         Margin="25,0,0,0"
                         HorizontalAlignment="Left"

@@ -21,6 +21,7 @@ namespace DocStack.MVVM.ViewModel
         private readonly ModelDatabase _database;
         private ObservableCollection<DocumentsModel> _documents;
         private string _searchText; // This is the missing backing field for SearchText
+        private ObservableCollection<DocumentsModel> _filteredDocuments;
 
 
         private DocumentsModel _selectedDocument;
@@ -28,14 +29,13 @@ namespace DocStack.MVVM.ViewModel
 
         public ObservableCollection<DocumentsModel> Documents
         {
-            get => _documents;
+            get => _filteredDocuments ?? _documents;
             set
             {
                 _documents = value;
                 OnPropertyChanged();
             }
         }
-
 
         public string SearchText
         {
@@ -46,7 +46,7 @@ namespace DocStack.MVVM.ViewModel
                 {
                     _searchText = value;
                     OnPropertyChanged(nameof(SearchText));
-                    
+                    Search();
                 }
             }
         }
@@ -85,7 +85,19 @@ namespace DocStack.MVVM.ViewModel
 
         public void Search()
         {
-           
+            if (string.IsNullOrWhiteSpace(SearchText))
+            {
+                _filteredDocuments = null;
+            }
+            else
+            {
+                string searchLower = SearchText.ToLower();
+                _filteredDocuments = new ObservableCollection<DocumentsModel>(
+                    _documents.Where(d => d.Name.ToLower().Contains(searchLower) ||
+                                          d.FilePath.ToLower().Contains(searchLower))
+                );
+            }
+            OnPropertyChanged(nameof(Documents));
         }
 
 
@@ -191,6 +203,13 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        public void OnSearchKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Search();
+            }
+        }
 
         private bool CanShareFile(object parameter)
         {
@@ -205,7 +224,7 @@ namespace DocStack.MVVM.ViewModel
             {
                 Documents.Add(document);
             }
-           
+            Search();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

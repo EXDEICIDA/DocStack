@@ -24,22 +24,14 @@ namespace DocStack.MVVM.View
 
 
 
-        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        private void SearchBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (DataContext is DocumentsViewModel viewModel)
             {
-                var viewModel = DataContext as DocumentsViewModel;
-                if (viewModel != null && !string.IsNullOrWhiteSpace(viewModel.SearchText))
-                {
-                    viewModel.Search();
-                }
-                else
-                {
-                    // Optionally show a message or handle the case where no text is entered
-                    MessageBox.Show("Please enter a value to search.", "Input Required", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                viewModel.OnSearchKeyDown(sender, e);
             }
         }
+
 
         private async void OpenFileDialog_Click(object sender, EventArgs e)
         {

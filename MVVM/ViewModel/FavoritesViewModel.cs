@@ -41,6 +41,9 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+     
+
+
         public ObservableCollection<Paper> FilteredPapers
         {
             get => _filteredPapers;
@@ -96,6 +99,8 @@ namespace DocStack.MVVM.ViewModel
             Task.Run(async () => await LoadFavoritesAsync());
         }
 
+
+      
         private async Task LoadFavoritesAsync()
         {
             var favoritesList = await _database.GetAllFavoritePapersAsync();
