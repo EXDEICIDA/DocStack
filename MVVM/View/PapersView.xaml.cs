@@ -28,18 +28,12 @@ namespace DocStack.MVVM.View
 
         //A simple search method for Papers view search bar
 
-        private void SearchTextBox_KeyDown(object sender, KeyEventArgs e)
+        //key down method 
+        private void SearchBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
+            if (DataContext is PapersViewModel viewModel)
             {
-                // Get the view model from the DataContext
-                var viewModel = DataContext as PapersViewModel;
-
-                // If the view model and the search text are valid, call the Search method
-                if (viewModel != null && !string.IsNullOrWhiteSpace(viewModel.SearchText))
-                {
-                    viewModel.Search();
-                }
+                viewModel.OnSearchKeyDown(sender, e);
             }
         }
     }

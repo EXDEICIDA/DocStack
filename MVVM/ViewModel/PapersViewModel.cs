@@ -1,39 +1,33 @@
 ﻿using DocStack.Core;
 using DocStack.MVVM.Model;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-
 
 namespace DocStack.MVVM.ViewModel
 {
     public class PapersViewModel : INotifyPropertyChanged
     {
         private readonly ModelDatabase _database;
-        private ObservableCollection<Paper> _papers;
-        private ModelDatabase _modelDatabase;
+        private ObservableCollection<Paper> _allPapers;
+        private ObservableCollection<Paper> _filteredPapers;
         private Paper _selectedPaper;
-        private string _searchText;
+        private string _searchQuery;
 
-
-        public ObservableCollection<Paper> Papers
+        public ObservableCollection<Paper> FilteredPapers
         {
-            get => _papers;
+            get => _filteredPapers;
             set
             {
-                _papers = value;
+                _filteredPapers = value;
                 OnPropertyChanged();
             }
         }
 
-        // Selected paper property for binding and use in commands
         public Paper SelectedPaper
         {
             get => _selectedPaper;
@@ -44,18 +38,14 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
-        //for search purpose on the view 
-        public string SearchText
+        public string SearchQuery
         {
-            get => _searchText;
+            get => _searchQuery;
             set
             {
-                if (_searchText != value)
-                {
-                    _searchText = value;
-                    OnPropertyChanged(nameof(SearchText));
-                
-                }
+                _searchQuery = value;
+                OnPropertyChanged();
+                SearchPapers();
             }
         }
 
@@ -65,7 +55,6 @@ namespace DocStack.MVVM.ViewModel
         public ICommand AddToFavoritesCommand { get; }
         public ICommand SearchCommand { get; }
 
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
@@ -74,84 +63,78 @@ namespace DocStack.MVVM.ViewModel
         }
 
         public PapersViewModel()
-
         {
-           //Init
-            Papers = new ObservableCollection<Paper>();
             _database = new ModelDatabase();
-            Papers = new ObservableCollection<Paper>();
+            _allPapers = new ObservableCollection<Paper>();
+            FilteredPapers = new ObservableCollection<Paper>();
 
-            _modelDatabase = new ModelDatabase();
-            Papers = new ObservableCollection<Paper>();
-
-   
-
-            //Relay Commands
+            LoadPapersCommand = new RelayCommand(o => LoadPapersAsync().ConfigureAwait(false));
             RefreshCommand = new RelayCommand(o => LoadPapersAsync().ConfigureAwait(false));
-
-            AddPaperCommand = new RelayCommand(o => AddPaper((Paper)o).ConfigureAwait(false));
-
-
+            AddPaperCommand = new RelayCommand(o => AddPaperAsync((Paper)o).ConfigureAwait(false));
             AddToFavoritesCommand = new RelayCommand(async o => await AddToFavoritesAsync(SelectedPaper), o => SelectedPaper != null);
-           // SearchCommand = new RelayCommand(o => Search());
+            SearchCommand = new RelayCommand(o => SearchPapers());
 
-
-            // Load papers initially
             Task.Run(async () => await LoadPapersAsync());
         }
 
-
-        //Simple Text Search method
-
-        public void Search()
+        private async Task LoadPapersAsync()
         {
-            if (string.IsNullOrWhiteSpace(_searchText))
-            {
-                // If the search text is empty, reload all papers
-                Task.Run(async () => await LoadPapersAsync());
-                return;
-            }
+            var papersList = await _database.GetAllPapersAsync();
+            _allPapers.Clear();
+            FilteredPapers.Clear();
 
-            // Perform a case-insensitive search across multiple fields with null checks
-            var filteredPapers = _papers.Where(paper =>
-                (!string.IsNullOrEmpty(paper.Title) && paper.Title.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                (!string.IsNullOrEmpty(paper.Authors) && paper.Authors.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                (!string.IsNullOrEmpty(paper.Journal) && paper.Journal.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                (!string.IsNullOrEmpty(paper.DOI) && paper.DOI.IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                (paper.Year.ToString().IndexOf(_searchText, StringComparison.OrdinalIgnoreCase) >= 0)
-            ).ToList();
-
-            // Clear the current list of papers and add only the filtered ones
-            Papers.Clear();
-            foreach (var paper in filteredPapers)
+            foreach (var paper in papersList)
             {
-                Papers.Add(paper);
+                _allPapers.Add(paper);
+                FilteredPapers.Add(paper);
             }
         }
 
+        private void SearchPapers()
+        {
+            if (string.IsNullOrWhiteSpace(SearchQuery))
+            {
+                FilteredPapers = new ObservableCollection<Paper>(_allPapers);
+            }
+            else
+            {
+                FilteredPapers = new ObservableCollection<Paper>(
+                    _allPapers.Where(p =>
+                        ContainsIgnoreCase(p.Title, SearchQuery) ||
+                        ContainsIgnoreCase(p.Authors, SearchQuery) ||
+                        ContainsIgnoreCase(p.Journal, SearchQuery) ||
+                        ContainsIgnoreCase(p.DOI, SearchQuery) ||
+                        ContainsIgnoreCase(p.Year.ToString(), SearchQuery)
+                    )
+                );
+            }
+        }
 
+        private bool ContainsIgnoreCase(string source, string searchTerm)
+        {
+            if (string.IsNullOrEmpty(source) || string.IsNullOrEmpty(searchTerm))
+                return false;
 
-        private async Task AddPaper(Paper paper)
+            return source.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        public void OnSearchKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SearchPapers();
+            }
+        }
+
+        private async Task AddPaperAsync(Paper paper)
         {
             if (paper != null)
             {
                 await _database.AddPaperAsync(paper);
-                await LoadPapersAsync(); // Reload papers to refresh the list
+                await LoadPapersAsync();
             }
         }
 
-
-        private async Task LoadPapersAsync()
-        {
-            var papersList = await _modelDatabase.GetAllPapersAsync();
-            Papers.Clear();
-            foreach (var paper in papersList)
-            {
-                Papers.Add(paper);
-            }
-        }
-
-        // Method for adding the selected paper to the favorites
         private async Task AddToFavoritesAsync(Paper paper)
         {
             if (paper != null)
@@ -160,5 +143,4 @@ namespace DocStack.MVVM.ViewModel
             }
         }
     }
-
 }

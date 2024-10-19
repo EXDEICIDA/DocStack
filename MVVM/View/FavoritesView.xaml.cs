@@ -1,6 +1,7 @@
 ﻿using DocStack.MVVM.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DocStack.MVVM.View
@@ -52,7 +53,13 @@ namespace DocStack.MVVM.View
             gridSplitter.Visibility = Visibility.Visible;
         }
 
-
+        private void SearchBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (DataContext is FavoritesViewModel viewModel)
+            {
+                viewModel.OnSearchKeyDown(sender, e);
+            }
+        }
 
         private void CloseColorPopup_Click(object sender, RoutedEventArgs e)
         {
