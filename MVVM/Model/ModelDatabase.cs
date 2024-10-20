@@ -228,6 +228,23 @@ namespace DocStack.MVVM.Model
 
             return papers;
         }
+
+
+        //A method to get the count of papers from papers table
+        public async Task<int> GetPaperCountAsync()
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string countQuery = "SELECT COUNT(*) FROM Papers";
+
+                using (var command = new SQLiteCommand(countQuery, connection))
+                {
+                    return Convert.ToInt32(await command.ExecuteScalarAsync());
+                }
+            }
+        }
         private void InitializeDatabase(string databasePath)
         {
             if (!File.Exists(databasePath))

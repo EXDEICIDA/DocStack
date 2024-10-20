@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="DocStack"
     Width="750"
-     Icon="pack://application:,,,/Resources/AppLogo/Pyramid-remove.png"
+    Icon="pack://application:,,,/Resources/AppLogo/Pyramid-remove.png"
     Height="450"
     AllowsTransparency="True"
     Background="Transparent"

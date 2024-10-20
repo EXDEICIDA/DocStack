@@ -5,6 +5,10 @@ using System.Windows.Input;
 using DocStack.Core;
 using System.Globalization;
 using System.Linq;
+using DocStack.MVVM.Model;
+using LiveCharts;
+using LiveCharts.Wpf;
+using System.Threading.Tasks;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -14,6 +18,8 @@ namespace DocStack.MVVM.ViewModel
         private DateTime _currentDate = DateTime.Now;
         public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<CalendarDay> Days { get; set; }
+        private readonly ModelDatabase _database;
+        private int _paperCount;
         public string CurrentMonthYear => CurrentDate.ToString("MMMM yyyy");
         public DateTime CurrentDate
         {
@@ -27,6 +33,19 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        public int PaperCount
+        {
+            get => _paperCount;
+            set
+            {
+                _paperCount = value;
+                OnPropertyChanged(nameof(PaperCount));
+                UpdateChartSeries();
+            }
+        }
+
+        public SeriesCollection ChartSeries { get; set; }
+
         public ICommand PreviousMonthCommand { get; }
         public ICommand NextMonthCommand { get; }
         public ICommand TodayCommand { get; }
@@ -37,12 +56,18 @@ namespace DocStack.MVVM.ViewModel
     
         public HomeViewModel()
         {
+            _database = new ModelDatabase();
+
             _calendar = CultureInfo.CurrentCulture.Calendar;
             Days = new ObservableCollection<CalendarDay>();
+            ChartSeries = new SeriesCollection();
+
             PreviousMonthCommand = new RelayCommand(PreviousMonth);
             NextMonthCommand = new RelayCommand(NextMonth);
             TodayCommand = new RelayCommand(GoToToday);
             UpdateCalendarDays();
+            LoadPaperCount();
+
         }
 
         private void UpdateCalendarDays()
@@ -67,6 +92,22 @@ namespace DocStack.MVVM.ViewModel
                 });
                 currentDay = currentDay.AddDays(1);
             }
+        }
+
+        private async Task LoadPaperCount()
+        {
+            PaperCount = await _database.GetPaperCountAsync();
+        }
+
+        private void UpdateChartSeries()
+        {
+            ChartSeries.Clear();
+            ChartSeries.Add(new PieSeries
+            {
+                Title = "Papers",
+                Values = new ChartValues<int> { PaperCount },
+                DataLabels = true
+            });
         }
 
         private void PreviousMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, -1);
