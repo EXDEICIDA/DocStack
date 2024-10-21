@@ -441,7 +441,6 @@
                                     Width="32"
                                     Height="32"
                                     Command="{Binding LocatePDFCommand}"
-                                    CommandParameter="{Binding}"
                                     Style="{StaticResource OpenButton}">
                                     <fa:FontAwesome FontSize="14" Icon="ChevronRight" />
                                 </Button>

@@ -291,13 +291,13 @@
                         Grid.Column="1"
                         Margin="0,0,5,0"
                         Padding="5,2"
-                        Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
-         KeyDown="SearchBox_KeyDown"
                         VerticalContentAlignment="Center"
                         Background="Transparent"
                         BorderThickness="0"
                         FontFamily="{StaticResource RobotoFont}"
-                        Foreground="#f8f8f8">
+                        Foreground="#f8f8f8"
+                        KeyDown="SearchBox_KeyDown"
+                        Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}">
                         <TextBox.Style>
                             <Style TargetType="TextBox">
                                 <Setter Property="Template">
@@ -367,13 +367,13 @@
                 <Button
                     x:Name="ListForm"
                     Width="30"
-                    Click="ListForm_Click"
                     Height="30"
                     Margin="0,0,10,0"
                     Padding="0"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
+                    Click="ListForm_Click"
                     Content="☰"
                     Foreground="White"
                     Style="{StaticResource NormalButtonDesignForObjects}"
@@ -381,12 +381,12 @@
                 <Button
                     x:Name="Datagridform"
                     Width="30"
-                    Click="Datagridform_Click"
                     Height="30"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
+                    Click="Datagridform_Click"
                     Content="⊞"
                     FontSize="15"
                     Foreground="White"
@@ -401,25 +401,149 @@
             CornerRadius="8">
             <Grid>
                 <DataGrid
-                x:Name="FavoritesDataGrid"
-                AutoGenerateColumns="False"
-                
-                CanUserAddRows="False"
-                IsReadOnly="True"
-                ItemsSource="{Binding FilteredPapers}"
-                RowHeight="50"
-                    Visibility="{Binding IsDataGridView, Converter={StaticResource BooleanToVisibilityConverter}}"
-                SelectedItem="{Binding SelectedPaper, Mode=TwoWay}"
-                SelectionMode="Single"
-                SelectionUnit="FullRow"
-                Style="{StaticResource ModernDataGridStyle}">
-                <DataGrid.Columns>
-                    <DataGridTemplateColumn Width="40">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
+                    x:Name="FavoritesDataGrid"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding FilteredPapers}"
+                    RowHeight="50"
+                    SelectedItem="{Binding SelectedPaper, Mode=TwoWay}"
+                    SelectionMode="Single"
+                    SelectionUnit="FullRow"
+                    Style="{StaticResource ModernDataGridStyle}"
+                    Visibility="{Binding IsDataGridView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Width="40">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button
+                                        Width="20"
+                                        Height="20"
+                                        Padding="0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Click="ColorButton_Click">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Grid>
+                                                    <Ellipse
+                                                        Width="16"
+                                                        Height="16"
+                                                        Fill="{Binding ColorCode, Converter={StaticResource ColorConverter}}" />
+                                                    <Ellipse
+                                                        Width="16"
+                                                        Height="16"
+                                                        Fill="Blue"
+                                                        Opacity="0">
+                                                        <Ellipse.Style>
+                                                            <Style TargetType="Ellipse">
+                                                                <Style.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Opacity" Value="0.3" />
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Ellipse.Style>
+                                                    </Ellipse>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Authors}"
+                            Header="Authors">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn
+                            Width="2*"
+                            Binding="{Binding Title}"
+                            Header="Title">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn
+                            Width="2*"
+                            Binding="{Binding Journal}"
+                            Header="Journal">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Year}"
+                            Header="Year">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Width="Auto" Header="Actions">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+
+                                        <Button
+                                            x:Name="OpenDetails"
+                                            Width="32"
+                                            Height="32"
+                                            Click="OpenDetails_Click"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource CompactIconButton}">
+                                            <fa:FontAwesome FontSize="14" Foreground="#5b8fd4" Icon="ChevronRight" />
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <ListView
+                    x:Name="FavoritesListView"
+                    Padding="0,0,8,0"
+                    BorderThickness="0"
+                    ItemsSource="{Binding FilteredPapers}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    SelectedItem="{Binding SelectedPaper, Mode=TwoWay}"
+                    Visibility="{Binding IsListView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ListView.Template>
+                        <ControlTemplate TargetType="{x:Type ListView}">
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                <ScrollViewer Padding="{TemplateBinding Padding}" Focusable="False">
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </ControlTemplate>
+                    </ListView.Template>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
                                 <Button
+                                    Grid.Column="0"
                                     Width="20"
                                     Height="20"
+                                    Margin="0,0,12,0"
                                     Padding="0"
                                     Background="Transparent"
                                     BorderThickness="0"
@@ -450,175 +574,47 @@
                                         </ControlTemplate>
                                     </Button.Template>
                                 </Button>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Authors}"
-                        Header="Authors">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn
-                        Width="2*"
-                        Binding="{Binding Title}"
-                        Header="Title">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn
-                        Width="2*"
-                        Binding="{Binding Journal}"
-                        Header="Journal">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn
-                        Width="*"
-                        Binding="{Binding Year}"
-                        Header="Year">
-                        <DataGridTextColumn.ElementStyle>
-                            <Style TargetType="TextBlock">
-                                <Setter Property="VerticalAlignment" Value="Center" />
-                            </Style>
-                        </DataGridTextColumn.ElementStyle>
-                    </DataGridTextColumn>
-                    <DataGridTemplateColumn Width="Auto" Header="Actions">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-
-                                    <Button
-                                        x:Name="OpenDetails"
-                                        Width="32"
-                                        Height="32"
-                                        Click="OpenDetails_Click"
-                                        CommandParameter="{Binding}"
-                                        Style="{StaticResource OpenButton}">
-                                        <fa:FontAwesome FontSize="14" Icon="ChevronRight" />
-                                    </Button>
-                                </StackPanel>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                </DataGrid.Columns>
-            </DataGrid>
-                <ListView
-                    
-    x:Name="FavoritesListView"
-    Visibility="{Binding IsListView, Converter={StaticResource BooleanToVisibilityConverter}}"
-    ItemsSource="{Binding FilteredPapers}"
-    SelectedItem="{Binding SelectedPaper, Mode=TwoWay}"
-    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-    ScrollViewer.VerticalScrollBarVisibility="Auto"
-    BorderThickness="0"
-    Padding="0,0,8,0">
-                    <ListView.Template>
-                        <ControlTemplate TargetType="{x:Type ListView}">
-                            <Border BorderThickness="{TemplateBinding BorderThickness}"
-                    BorderBrush="{TemplateBinding BorderBrush}">
-                                <ScrollViewer Padding="{TemplateBinding Padding}"
-                              Focusable="False">
-                                    <ItemsPresenter />
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </ListView.Template>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="0,4">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-
-                                <Button
-                    Grid.Column="0"
-                    Width="20"
-                    Height="20"
-                    Margin="0,0,12,0"
-                    Padding="0"
-                    Background="Transparent"
-                    BorderThickness="0"
-                    Click="ColorButton_Click">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Grid>
-                                                <Ellipse
-                                    Width="16"
-                                    Height="16"
-                                    Fill="{Binding ColorCode, Converter={StaticResource ColorConverter}}" />
-                                                <Ellipse
-                                    Width="16"
-                                    Height="16"
-                                    Fill="Blue"
-                                    Opacity="0">
-                                                    <Ellipse.Style>
-                                                        <Style TargetType="Ellipse">
-                                                            <Style.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Setter Property="Opacity" Value="0.3" />
-                                                                </Trigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Ellipse.Style>
-                                                </Ellipse>
-                                            </Grid>
-                                        </ControlTemplate>
-                                    </Button.Template>
-                                </Button>
 
                                 <StackPanel Grid.Column="1" Margin="0,0,12,0">
                                     <TextBlock
-                        Text="{Binding Title}"
-                        FontWeight="SemiBold"
-                        FontSize="14"
-                        TextWrapping="Wrap"/>
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Text="{Binding Title}"
+                                        TextWrapping="Wrap" />
                                     <TextBlock
-                        Text="{Binding Authors}"
-                        Margin="0,4,0,0"
-                        FontSize="12"
-                        Opacity="0.7"
-                        TextWrapping="Wrap"/>
+                                        Margin="0,4,0,0"
+                                        FontSize="12"
+                                        Opacity="0.7"
+                                        Text="{Binding Authors}"
+                                        TextWrapping="Wrap" />
                                     <TextBlock
-                        Text="{Binding Journal}"
-                        Margin="0,2,0,0"
-                        FontSize="12"
-                        Opacity="0.7"/>
+                                        Margin="0,2,0,0"
+                                        FontSize="12"
+                                        Opacity="0.7"
+                                        Text="{Binding Journal}" />
                                     <TextBlock
-                        Text="{Binding Year}"
-                        Margin="0,2,0,0"
-                        FontSize="12"
-                        Opacity="0.7"/>
+                                        Margin="0,2,0,0"
+                                        FontSize="12"
+                                        Opacity="0.7"
+                                        Text="{Binding Year}" />
                                 </StackPanel>
 
                                 <Button
-                    Grid.Column="2"
-                    Style="{StaticResource OpenButton}"
-                    Click="OpenDetails_Click"
-                    CommandParameter="{Binding}"
-                    VerticalAlignment="Center">
-                                    <fa:FontAwesome Icon="ChevronRight" FontSize="14"/>
+                                    Grid.Column="2"
+                                    VerticalAlignment="Center"
+                                    Click="OpenDetails_Click"
+                                    CommandParameter="{Binding}"
+                                    Style="{StaticResource  CompactIconButton}">
+                                    <fa:FontAwesome FontSize="14" Foreground="#5b8fd4" Icon="ChevronRight" />
                                 </Button>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                     <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemStyle}"/>
+                        <Style BasedOn="{StaticResource ListViewItemStyle}" TargetType="ListViewItem" />
                     </ListView.ItemContainerStyle>
                     <ListView.Resources>
-                        <Style TargetType="ScrollBar" BasedOn="{StaticResource ListViewScrollBarStyle}"/>
+                        <Style BasedOn="{StaticResource ListViewScrollBarStyle}" TargetType="ScrollBar" />
                     </ListView.Resources>
                 </ListView>
             </Grid>

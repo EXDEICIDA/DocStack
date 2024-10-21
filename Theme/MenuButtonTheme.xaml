@@ -1355,7 +1355,7 @@
                 <Setter Property="Background" Value="#F0F0F0"/>
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="#E3F2FD"/>
+                <Setter Property="Background" Value="#4CAF50"/>
             </Trigger>
         </Style.Triggers>
     </Style>
