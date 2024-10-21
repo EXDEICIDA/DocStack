@@ -164,6 +164,9 @@ namespace DocStack.MVVM.Model
             return documents;
         }
 
+
+        //A method for getting papers from appers table then using their id and
+
         public async Task<List<Paper>> GetAllFavoritePapersAsync()
         {
             List<Paper> favoritePapers = new List<Paper>();

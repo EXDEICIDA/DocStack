@@ -41,8 +41,19 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
-     
 
+        private bool _isDataGridView = true;
+        public bool IsDataGridView
+        {
+            get => _isDataGridView;
+            set
+            {
+                _isDataGridView = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsListView));
+            }
+        }
+        public bool IsListView => !IsDataGridView;
 
         public ObservableCollection<Paper> FilteredPapers
         {
@@ -70,6 +81,8 @@ namespace DocStack.MVVM.ViewModel
         public ICommand ChangeColorCommand { get; }
         public ICommand LocatePDFCommand { get; }
         public ICommand SearchCommand { get; }
+        public ICommand SwitchViewCommand { get; }
+
 
 
 
@@ -92,6 +105,8 @@ namespace DocStack.MVVM.ViewModel
             RefreshCommand = new RelayCommand(o => LoadFavoritesAsync().ConfigureAwait(false));
             ChangeColorCommand = new RelayCommand(ChangeColorAsync);
             LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
+            SwitchViewCommand = new RelayCommand(SwitchView);
+
             SearchCommand = new RelayCommand(o => SearchPapers());
 
 
@@ -100,7 +115,15 @@ namespace DocStack.MVVM.ViewModel
         }
 
 
-      
+        private void SwitchView(object parameter)
+        {
+            if (parameter is string viewType)
+            {
+                IsDataGridView = viewType == "DataGrid";
+            }
+        }
+
+
         private async Task LoadFavoritesAsync()
         {
             var favoritesList = await _database.GetAllFavoritePapersAsync();
@@ -131,6 +154,17 @@ namespace DocStack.MVVM.ViewModel
                     )
                 );
             }
+        }
+
+
+        //A method for adding external Papers
+        private void AddExternalPaper()
+        {
+          
+            /*
+              TODO
+             */
+
         }
 
         public void OnSearchKeyDown(object sender, KeyEventArgs e)

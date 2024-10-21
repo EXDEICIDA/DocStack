@@ -21,6 +21,8 @@
     <UserControl.Resources>
         <FontFamily x:Key="RobotoFont">pack://application:,,,/Fonts/#Roboto</FontFamily>
         <converters:ColorConverter x:Key="ColorConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
         <!--  Custom Scrollbar Style  -->
         <Style x:Key="CustomScrollBarStyle" TargetType="{x:Type ScrollBar}">
             <Setter Property="Width" Value="8" />
@@ -363,7 +365,9 @@
                 Margin="15,0,0,0"
                 Orientation="Horizontal">
                 <Button
+                    x:Name="ListForm"
                     Width="30"
+                    Click="ListForm_Click"
                     Height="30"
                     Margin="0,0,10,0"
                     Padding="0"
@@ -375,7 +379,9 @@
                     Style="{StaticResource NormalButtonDesignForObjects}"
                     ToolTip="List View" />
                 <Button
+                    x:Name="Datagridform"
                     Width="30"
+                    Click="Datagridform_Click"
                     Height="30"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
@@ -393,7 +399,8 @@
             Padding="20"
             Background="White"
             CornerRadius="8">
-            <DataGrid
+            <Grid>
+                <DataGrid
                 x:Name="FavoritesDataGrid"
                 AutoGenerateColumns="False"
                 
@@ -401,6 +408,7 @@
                 IsReadOnly="True"
                 ItemsSource="{Binding FilteredPapers}"
                 RowHeight="50"
+                    Visibility="{Binding IsDataGridView, Converter={StaticResource BooleanToVisibilityConverter}}"
                 SelectedItem="{Binding SelectedPaper, Mode=TwoWay}"
                 SelectionMode="Single"
                 SelectionUnit="FullRow"
@@ -505,6 +513,116 @@
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+                <ListView
+                    
+    x:Name="FavoritesListView"
+    Visibility="{Binding IsListView, Converter={StaticResource BooleanToVisibilityConverter}}"
+    ItemsSource="{Binding FilteredPapers}"
+    SelectedItem="{Binding SelectedPaper, Mode=TwoWay}"
+    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+    ScrollViewer.VerticalScrollBarVisibility="Auto"
+    BorderThickness="0"
+    Padding="0,0,8,0">
+                    <ListView.Template>
+                        <ControlTemplate TargetType="{x:Type ListView}">
+                            <Border BorderThickness="{TemplateBinding BorderThickness}"
+                    BorderBrush="{TemplateBinding BorderBrush}">
+                                <ScrollViewer Padding="{TemplateBinding Padding}"
+                              Focusable="False">
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </ControlTemplate>
+                    </ListView.Template>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Margin="0,4">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Button
+                    Grid.Column="0"
+                    Width="20"
+                    Height="20"
+                    Margin="0,0,12,0"
+                    Padding="0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Click="ColorButton_Click">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid>
+                                                <Ellipse
+                                    Width="16"
+                                    Height="16"
+                                    Fill="{Binding ColorCode, Converter={StaticResource ColorConverter}}" />
+                                                <Ellipse
+                                    Width="16"
+                                    Height="16"
+                                    Fill="Blue"
+                                    Opacity="0">
+                                                    <Ellipse.Style>
+                                                        <Style TargetType="Ellipse">
+                                                            <Style.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                    <Setter Property="Opacity" Value="0.3" />
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Ellipse.Style>
+                                                </Ellipse>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+
+                                <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                                    <TextBlock
+                        Text="{Binding Title}"
+                        FontWeight="SemiBold"
+                        FontSize="14"
+                        TextWrapping="Wrap"/>
+                                    <TextBlock
+                        Text="{Binding Authors}"
+                        Margin="0,4,0,0"
+                        FontSize="12"
+                        Opacity="0.7"
+                        TextWrapping="Wrap"/>
+                                    <TextBlock
+                        Text="{Binding Journal}"
+                        Margin="0,2,0,0"
+                        FontSize="12"
+                        Opacity="0.7"/>
+                                    <TextBlock
+                        Text="{Binding Year}"
+                        Margin="0,2,0,0"
+                        FontSize="12"
+                        Opacity="0.7"/>
+                                </StackPanel>
+
+                                <Button
+                    Grid.Column="2"
+                    Style="{StaticResource OpenButton}"
+                    Click="OpenDetails_Click"
+                    CommandParameter="{Binding}"
+                    VerticalAlignment="Center">
+                                    <fa:FontAwesome Icon="ChevronRight" FontSize="14"/>
+                                </Button>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem" BasedOn="{StaticResource ListViewItemStyle}"/>
+                    </ListView.ItemContainerStyle>
+                    <ListView.Resources>
+                        <Style TargetType="ScrollBar" BasedOn="{StaticResource ListViewScrollBarStyle}"/>
+                    </ListView.Resources>
+                </ListView>
+            </Grid>
+
         </Border>
         <GridSplitter
             x:Name="GridSplitter"

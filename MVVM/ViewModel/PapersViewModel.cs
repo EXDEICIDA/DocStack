@@ -3,9 +3,11 @@ using DocStack.MVVM.Model;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DocStack.MVVM.ViewModel
@@ -54,6 +56,8 @@ namespace DocStack.MVVM.ViewModel
         public ICommand RefreshCommand { get; }
         public ICommand AddToFavoritesCommand { get; }
         public ICommand SearchCommand { get; }
+        public ICommand LocatePDFCommand { get; }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -72,6 +76,8 @@ namespace DocStack.MVVM.ViewModel
             RefreshCommand = new RelayCommand(o => LoadPapersAsync().ConfigureAwait(false));
             AddPaperCommand = new RelayCommand(o => AddPaperAsync((Paper)o).ConfigureAwait(false));
             AddToFavoritesCommand = new RelayCommand(async o => await AddToFavoritesAsync(SelectedPaper), o => SelectedPaper != null);
+            LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
+
             SearchCommand = new RelayCommand(o => SearchPapers());
 
             Task.Run(async () => await LoadPapersAsync());
@@ -140,6 +146,40 @@ namespace DocStack.MVVM.ViewModel
             if (paper != null)
             {
                 await _database.AddToFavoritesAsync(paper);
+            }
+        }
+
+
+
+        private bool CanLocatePDF()
+        {
+            return SelectedPaper != null &&
+                   (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink) ||
+                    !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
+        }
+
+        //A private method for locating full text soruce
+        private void LocatePDF()
+        {
+            if (SelectedPaper != null)
+            {
+                string url = null;
+                if (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink))
+                {
+                    url = SelectedPaper.FullTextLink;
+                }
+                else if (!string.IsNullOrWhiteSpace(SelectedPaper.DOI))
+                {
+                    url = $"https://doi.org/{SelectedPaper.DOI}";
+                }
+                if (url != null)
+                {
+                    Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                }
+                else
+                {
+                    MessageBox.Show("No direct link or DOI available for this paper.", "Link Unavailable", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
         }
     }

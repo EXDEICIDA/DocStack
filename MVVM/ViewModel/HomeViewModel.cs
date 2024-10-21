@@ -40,11 +40,10 @@ namespace DocStack.MVVM.ViewModel
             {
                 _paperCount = value;
                 OnPropertyChanged(nameof(PaperCount));
-                UpdateChartSeries();
+                
             }
         }
 
-        public SeriesCollection ChartSeries { get; set; }
 
         public ICommand PreviousMonthCommand { get; }
         public ICommand NextMonthCommand { get; }
@@ -60,13 +59,12 @@ namespace DocStack.MVVM.ViewModel
 
             _calendar = CultureInfo.CurrentCulture.Calendar;
             Days = new ObservableCollection<CalendarDay>();
-            ChartSeries = new SeriesCollection();
 
             PreviousMonthCommand = new RelayCommand(PreviousMonth);
             NextMonthCommand = new RelayCommand(NextMonth);
             TodayCommand = new RelayCommand(GoToToday);
             UpdateCalendarDays();
-            LoadPaperCount();
+            LoadPaperCountAsync(); 
 
         }
 
@@ -94,22 +92,12 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
-        private async Task LoadPaperCount()
+        private async void LoadPaperCountAsync()
         {
             PaperCount = await _database.GetPaperCountAsync();
         }
 
-        private void UpdateChartSeries()
-        {
-            ChartSeries.Clear();
-            ChartSeries.Add(new PieSeries
-            {
-                Title = "Papers",
-                Values = new ChartValues<int> { PaperCount },
-                DataLabels = true
-            });
-        }
-
+       
         private void PreviousMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, -1);
         private void NextMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, 1);
         private void GoToToday(object obj) => CurrentDate = DateTime.Today;
