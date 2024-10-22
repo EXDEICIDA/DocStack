@@ -169,25 +169,27 @@
 
             <!--  New Button  -->
             <Button
+                x:Name="AddPaper"
                 Grid.Column="0"
                 Width="80"
                 Height="30"
                 Margin="0,0,15,0"
+                Command="{Binding AddExternalPaperCommand}"
                 Content="+ New"
                 Style="{StaticResource ModernButtonForDoc}" />
 
             <!--  Combo Box  -->
             <ComboBox
-    Grid.Column="1"
-    Width="120"
-    Height="30"
-    Margin="0,0,15,0"
-    SelectedValue="{Binding SelectedFilterOption, UpdateSourceTrigger=PropertyChanged}"
-    Style="{StaticResource ComboBoxFlatStyle}">
-                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="None" />
-                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="By Year" />
-                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="By Journal" />
-                <ComboBoxItem Style="{StaticResource ComboBoxItemStyle}" Content="By Color" />
+                Grid.Column="1"
+                Width="120"
+                Height="30"
+                Margin="0,0,15,0"
+                SelectedValue="{Binding SelectedFilterOption, UpdateSourceTrigger=PropertyChanged}"
+                Style="{StaticResource ComboBoxFlatStyle}">
+                <ComboBoxItem Content="None" Style="{StaticResource ComboBoxItemStyle}" />
+                <ComboBoxItem Content="By Year" Style="{StaticResource ComboBoxItemStyle}" />
+                <ComboBoxItem Content="By Journal" Style="{StaticResource ComboBoxItemStyle}" />
+                <ComboBoxItem Content="By Color" Style="{StaticResource ComboBoxItemStyle}" />
             </ComboBox>
 
             <!--  Search Bar  -->

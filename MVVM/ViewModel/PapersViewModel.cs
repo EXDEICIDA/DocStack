@@ -1,5 +1,6 @@
 ﻿using DocStack.Core;
 using DocStack.MVVM.Model;
+using Microsoft.Win32;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -9,6 +10,11 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using System.IO;
+
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -70,6 +76,8 @@ namespace DocStack.MVVM.ViewModel
         public ICommand AddToFavoritesCommand { get; }
         public ICommand SearchCommand { get; }
         public ICommand LocatePDFCommand { get; }
+        public ICommand AddExternalPaperCommand { get; }
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -92,6 +100,8 @@ namespace DocStack.MVVM.ViewModel
             AddPaperCommand = new RelayCommand(o => AddPaperAsync((Paper)o).ConfigureAwait(false));
             AddToFavoritesCommand = new RelayCommand(async o => await AddToFavoritesAsync(SelectedPaper), o => SelectedPaper != null);
             LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
+            AddExternalPaperCommand = new RelayCommand(o => AddExternalPaperAsync().ConfigureAwait(false));
+
 
             SearchCommand = new RelayCommand(o => SearchPapers());
 
@@ -109,6 +119,120 @@ namespace DocStack.MVVM.ViewModel
                 _allPapers.Add(paper);
                 FilteredPapers.Add(paper);
             }
+        }
+
+        private async Task AddExternalPaperAsync()
+        {
+            try
+            {
+                // Create OpenFileDialog
+                OpenFileDialog openFileDialog = new OpenFileDialog
+                {
+                    Filter = "PDF files (*.pdf)|*.pdf",
+                    Title = "Select a PDF paper"
+                };
+
+                if (openFileDialog.ShowDialog() == true)
+                {
+                    string filePath = openFileDialog.FileName;
+                    string fileName = Path.GetFileName(filePath);
+
+                    // Extract metadata from PDF
+                    var metadata = await ExtractPDFMetadataAsync(filePath);
+
+                    // Create new Paper object
+                    Paper newPaper = new Paper
+                    {
+                        Title = metadata.Title ?? fileName,
+                        Authors = metadata.Authors ?? "Unknown Authors",
+                        Year = metadata.Year ?? DateTime.Now.Year,
+                        Journal = metadata.Journal ?? "Unknown Journal",
+                        FullTextLink = filePath, // Store the local file path
+                        ColorCode = "#808080" // Default color
+                    };
+
+                    // Add to database
+                    await _database.AddPaperAsync(newPaper);
+                    await LoadPapersAsync(); // Refresh the list
+
+                    MessageBox.Show("Paper added successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error adding paper: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async Task<(string Title, string Authors, int? Year, string Journal)> ExtractPDFMetadataAsync(string filePath)
+        {
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    using (PdfReader pdfReader = new PdfReader(filePath))
+                    using (PdfDocument pdfDoc = new PdfDocument(pdfReader))
+                    {
+                        // Get document info
+                        var info = pdfDoc.GetDocumentInfo();
+
+                        // Extract first page text for additional metadata
+                        var strategy = new LocationTextExtractionStrategy();
+                        var firstPageText = PdfTextExtractor.GetTextFromPage(pdfDoc.GetFirstPage(), strategy);
+
+                        // Try to parse title (first line of first page, usually)
+                        string title = info.GetTitle();
+                        if (string.IsNullOrEmpty(title))
+                        {
+                            var firstLines = firstPageText.Split('\n');
+                            title = firstLines.FirstOrDefault()?.Trim() ?? Path.GetFileNameWithoutExtension(filePath);
+                        }
+
+                        // Try to get authors
+                        string authors = info.GetAuthor();
+                        if (string.IsNullOrEmpty(authors))
+                        {
+                            // Try to find authors in first page text
+                            // This is a simple approach - might need refinement
+                            var lines = firstPageText.Split('\n');
+                            authors = lines.Skip(1).FirstOrDefault()?.Trim() ?? "Unknown Authors";
+                        }
+
+                        // Try to extract year
+                        int? year = null;
+                        var yearMatch = System.Text.RegularExpressions.Regex.Match(firstPageText, @"(?:19|20)\d{2}");
+                        if (yearMatch.Success)
+                        {
+                            year = int.Parse(yearMatch.Value);
+                        }
+
+                        // Try to extract journal name
+                        string journal = "Unknown Journal";
+                        // Look for common journal indicators in first page
+                        var journalIndicators = new[] { "Journal of", "Proceedings of", "IEEE", "ACM" };
+                        foreach (var indicator in journalIndicators)
+                        {
+                            var index = firstPageText.IndexOf(indicator);
+                            if (index >= 0)
+                            {
+                                var endIndex = firstPageText.IndexOf('\n', index);
+                                if (endIndex > index)
+                                {
+                                    journal = firstPageText.Substring(index, endIndex - index).Trim();
+                                    break;
+                                }
+                            }
+                        }
+
+                        return (title, authors, year, journal);
+                    }
+                }
+                catch
+                {
+                    // If metadata extraction fails, return null values
+                    return (null, null, null, null);
+                }
+            });
         }
 
         private void ApplyFilter()

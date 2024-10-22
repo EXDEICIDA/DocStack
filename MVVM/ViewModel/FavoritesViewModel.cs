@@ -1,6 +1,7 @@
 ﻿using DocStack.Core;
 using DocStack.MVVM.Model;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -38,6 +39,19 @@ namespace DocStack.MVVM.ViewModel
             {
                 _selectedPaper = value;
                 OnPropertyChanged();
+            }
+        }
+
+        // Add new properties
+        private string _selectedFilterOption;
+        public string SelectedFilterOption
+        {
+            get => _selectedFilterOption;
+            set
+            {
+                _selectedFilterOption = value;
+                OnPropertyChanged();
+                ApplySelectedFilter();
             }
         }
 
@@ -106,12 +120,78 @@ namespace DocStack.MVVM.ViewModel
             ChangeColorCommand = new RelayCommand(ChangeColorAsync);
             LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
             SwitchViewCommand = new RelayCommand(SwitchView);
+            SelectedFilterOption = "None"; // Default value
 
             SearchCommand = new RelayCommand(o => SearchPapers());
 
 
 
             Task.Run(async () => await LoadFavoritesAsync());
+        }
+
+
+           private void ApplySelectedFilter()
+    {
+        switch (SelectedFilterOption)
+        {
+            case "By Journal":
+                FilterByJournal();
+                break;
+            case "By Year":
+                FilterByYear();
+                break;
+            case "By Color":
+                FilterByColor();
+                break;
+            default:
+                // Reset to original order
+                FilteredPapers = new ObservableCollection<Paper>(FavoritePapers);
+                break;
+        }
+    }
+
+    private void FilterByJournal()
+    {
+        var groupedPapers = FavoritePapers
+            .GroupBy(p => p.Journal)
+            .OrderBy(g => g.Key)
+            .SelectMany(g => g.OrderBy(p => p.Title));
+
+        FilteredPapers = new ObservableCollection<Paper>(groupedPapers);
+    }
+
+        private void FilterByYear()
+        {
+            var orderedPapers = FavoritePapers
+                .OrderBy(p => p.Year)               // Sort by year in ascending order (from oldest)
+                .ThenBy(p => p.Journal)             // Group by journal name
+                .ThenBy(p => p.Title);              // Sort by title within each journal
+
+            FilteredPapers = new ObservableCollection<Paper>(orderedPapers);
+        }
+
+
+        private void FilterByColor()
+        {
+            // Color priority: Red > Blue > Green > Orange > Purple > Yellow > Grey
+            var colorPriority = new Dictionary<string, int>
+    {
+        { "#F44336", 1 }, // Red
+        { "#2196F3", 2 }, // Blue
+        { "#4CAF50", 3 }, // Green
+        { "#FF9800", 4 }, // Orange
+        { "#9C27B0", 5 }, // Purple
+        { "#FFEB3B", 6 }, // Yellow
+        { "#9E9E9E", 7 }  // Grey
+    };
+
+            var colorOrderedPapers = FavoritePapers
+                .OrderBy(p => colorPriority.ContainsKey(p.ColorCode)
+                    ? colorPriority[p.ColorCode]
+                    : int.MaxValue)              // Sort by color priority
+                .ThenBy(p => p.Title);           // Sort by title within each color group
+
+            FilteredPapers = new ObservableCollection<Paper>(colorOrderedPapers);
         }
 
 
