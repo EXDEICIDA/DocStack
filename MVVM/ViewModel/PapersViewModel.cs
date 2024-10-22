@@ -19,6 +19,8 @@ namespace DocStack.MVVM.ViewModel
         private ObservableCollection<Paper> _filteredPapers;
         private Paper _selectedPaper;
         private string _searchQuery;
+        private string _selectedFilterOption;
+
 
         public ObservableCollection<Paper> FilteredPapers
         {
@@ -27,6 +29,17 @@ namespace DocStack.MVVM.ViewModel
             {
                 _filteredPapers = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public string SelectedFilterOption
+        {
+            get => _selectedFilterOption;
+            set
+            {
+                _selectedFilterOption = value;
+                OnPropertyChanged();
+                ApplyFilter();
             }
         }
 
@@ -71,6 +84,8 @@ namespace DocStack.MVVM.ViewModel
             _database = new ModelDatabase();
             _allPapers = new ObservableCollection<Paper>();
             FilteredPapers = new ObservableCollection<Paper>();
+            _selectedFilterOption = "None"; // Default filter option
+
 
             LoadPapersCommand = new RelayCommand(o => LoadPapersAsync().ConfigureAwait(false));
             RefreshCommand = new RelayCommand(o => LoadPapersAsync().ConfigureAwait(false));
@@ -96,23 +111,85 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        private void ApplyFilter()
+        {
+            if (_allPapers == null || !_allPapers.Any())
+                return;
+
+            var filteredList = _allPapers.ToList();
+
+            switch (SelectedFilterOption)
+            {
+                case "By Year":
+                    filteredList = _allPapers
+                        .OrderByDescending(p => p.Year)
+                        .ThenBy(p => p.Title)
+                        .ToList();
+                    break;
+
+                case "By Journal":
+                    filteredList = _allPapers
+                        .OrderBy(p => p.Journal)
+                        .ThenBy(p => p.Year)
+                        .ThenBy(p => p.Title)
+                        .ToList();
+                    break;
+
+                case "By Color":
+                    filteredList = _allPapers
+                        .OrderBy(p => p.ColorCode)
+                        .ThenBy(p => p.Title)
+                        .ToList();
+                    break;
+            }
+
+            FilteredPapers = new ObservableCollection<Paper>(filteredList);
+        }
+
+
         private void SearchPapers()
         {
             if (string.IsNullOrWhiteSpace(SearchQuery))
             {
-                FilteredPapers = new ObservableCollection<Paper>(_allPapers);
+                ApplyFilter(); // Apply current filter to all papers
             }
             else
             {
-                FilteredPapers = new ObservableCollection<Paper>(
-                    _allPapers.Where(p =>
-                        ContainsIgnoreCase(p.Title, SearchQuery) ||
-                        ContainsIgnoreCase(p.Authors, SearchQuery) ||
-                        ContainsIgnoreCase(p.Journal, SearchQuery) ||
-                        ContainsIgnoreCase(p.DOI, SearchQuery) ||
-                        ContainsIgnoreCase(p.Year.ToString(), SearchQuery)
-                    )
-                );
+                var searchResults = _allPapers.Where(p =>
+                    ContainsIgnoreCase(p.Title, SearchQuery) ||
+                    ContainsIgnoreCase(p.Authors, SearchQuery) ||
+                    ContainsIgnoreCase(p.Journal, SearchQuery) ||
+                    ContainsIgnoreCase(p.DOI, SearchQuery) ||
+                    ContainsIgnoreCase(p.Year.ToString(), SearchQuery)
+                ).ToList();
+
+                // Apply current filter to search results
+                switch (SelectedFilterOption)
+                {
+                    case "By Year":
+                        searchResults = searchResults
+                            .OrderByDescending(p => p.Year)
+                            .ThenBy(p => p.Title)
+                            .ToList();
+                        break;
+
+                    case "By Journal":
+                        searchResults = searchResults
+                            .OrderBy(p => p.Journal)
+                            .ThenBy(p => p.Year)
+                            .ThenBy(p => p.Title)
+                            .ToList();
+                        break;
+
+                    case "By Color":
+                        searchResults = searchResults
+                            .OrderBy(p => p.ColorCode)
+                            .ThenBy(p => p.Title)
+                            .ToList();
+                        break;
+                }
+
+                FilteredPapers = new ObservableCollection<Paper>(searchResults);
             }
         }
 
@@ -148,6 +225,7 @@ namespace DocStack.MVVM.ViewModel
                 await _database.AddToFavoritesAsync(paper);
             }
         }
+
 
 
 

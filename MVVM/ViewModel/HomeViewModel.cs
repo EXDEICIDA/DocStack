@@ -45,6 +45,18 @@ namespace DocStack.MVVM.ViewModel
         }
 
 
+        private SeriesCollection _chartSeries;
+        public SeriesCollection ChartSeries
+        {
+            get => _chartSeries;
+            set
+            {
+                _chartSeries = value;
+                OnPropertyChanged(nameof(ChartSeries));
+            }
+        }
+
+
         public ICommand PreviousMonthCommand { get; }
         public ICommand NextMonthCommand { get; }
         public ICommand TodayCommand { get; }
@@ -63,6 +75,7 @@ namespace DocStack.MVVM.ViewModel
             PreviousMonthCommand = new RelayCommand(PreviousMonth);
             NextMonthCommand = new RelayCommand(NextMonth);
             TodayCommand = new RelayCommand(GoToToday);
+            InitializeChartSeries();
             UpdateCalendarDays();
             LoadPaperCountAsync(); 
 
@@ -92,12 +105,32 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+
+        private void InitializeChartSeries()
+        {
+            ChartSeries = new SeriesCollection
+        {
+            new PieSeries
+            {
+                Title = "Papers",
+                Values = new ChartValues<int> { PaperCount },
+                DataLabels = true,
+                LabelPoint = point => point.Y.ToString()
+            }
+        };
+        }
+
         private async void LoadPaperCountAsync()
         {
             PaperCount = await _database.GetPaperCountAsync();
+
+            // Update chart when paper count changes
+            if (ChartSeries?.Any() == true)
+            {
+                ((ChartValues<int>)ChartSeries[0].Values)[0] = PaperCount;
+            }
         }
 
-       
         private void PreviousMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, -1);
         private void NextMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, 1);
         private void GoToToday(object obj) => CurrentDate = DateTime.Today;
@@ -107,6 +140,7 @@ namespace DocStack.MVVM.ViewModel
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
 
     public class CalendarDay
     {
