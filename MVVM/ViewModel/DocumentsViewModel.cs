@@ -12,8 +12,6 @@ using DocStack.MVVM.Model;
 using System.IO;
 using Microsoft.Win32;
 
-
-
 namespace DocStack.MVVM.ViewModel
 {
     public class DocumentsViewModel : INotifyPropertyChanged

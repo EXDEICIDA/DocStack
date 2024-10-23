@@ -26,7 +26,22 @@ namespace DocStack.MVVM.ViewModel
         private Paper _selectedPaper;
         private string _searchQuery;
         private string _selectedFilterOption;
+        private bool _isDataGridView = true;
 
+
+
+
+        public bool IsDataGridView
+        {
+            get => _isDataGridView;
+            set
+            {
+                _isDataGridView = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsListView));
+            }
+        }
+        public bool IsListView => !IsDataGridView;
 
         public ObservableCollection<Paper> FilteredPapers
         {
@@ -77,6 +92,7 @@ namespace DocStack.MVVM.ViewModel
         public ICommand SearchCommand { get; }
         public ICommand LocatePDFCommand { get; }
         public ICommand AddExternalPaperCommand { get; }
+        public ICommand SwitchViewCommand { get; }
 
 
 
@@ -101,6 +117,8 @@ namespace DocStack.MVVM.ViewModel
             AddToFavoritesCommand = new RelayCommand(async o => await AddToFavoritesAsync(SelectedPaper), o => SelectedPaper != null);
             LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
             AddExternalPaperCommand = new RelayCommand(o => AddExternalPaperAsync().ConfigureAwait(false));
+            SwitchViewCommand = new RelayCommand(SwitchView);
+
 
 
             SearchCommand = new RelayCommand(o => SearchPapers());
@@ -118,6 +136,14 @@ namespace DocStack.MVVM.ViewModel
             {
                 _allPapers.Add(paper);
                 FilteredPapers.Add(paper);
+            }
+        }
+
+        private void SwitchView(object parameter)
+        {
+            if (parameter is string viewType)
+            {
+                IsDataGridView = viewType == "DataGrid";
             }
         }
 

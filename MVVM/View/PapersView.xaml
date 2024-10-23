@@ -14,6 +14,8 @@
         <viewModel:PapersViewModel />
     </UserControl.DataContext>
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
         <!--  Style for the Scrollbar Thumb  -->
         <Style x:Key="ScrollBarTrackThumb" TargetType="{x:Type Thumb}">
             <Setter Property="Template">
@@ -288,10 +290,12 @@
                 Margin="15,0,0,0"
                 Orientation="Horizontal">
                 <Button
+                    x:Name="ListFormButton"
                     Width="30"
                     Height="30"
                     Margin="0,0,10,0"
                     Padding="0"
+                    Click="ListForm_Click"
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
@@ -300,8 +304,10 @@
                     Style="{StaticResource NormalButtonDesignForObjects}"
                     ToolTip="Filter" />
                 <Button
+                    x:Name="DataGridFormButton"
                     Width="30"
                     Height="30"
+                    Click="Datagridform_Click"
                     Padding="0"
                     VerticalAlignment="Center"
                     Background="Transparent"
@@ -327,6 +333,7 @@
             GridLinesVisibility="None"
             HeadersVisibility="Column"
             IsReadOnly="True"
+            Visibility="{Binding IsDataGridView, Converter={StaticResource BooleanToVisibilityConverter}}"
             ItemsSource="{Binding FilteredPapers}"
             KeyDown="SearchBox_KeyDown"
             RowBackground="#272537"
@@ -481,5 +488,134 @@
                 </Style>
             </DataGrid.ColumnHeaderStyle>
         </DataGrid>
+        <ListView x:Name="PapersListView"
+              Grid.Row="1"
+               
+              Margin="20,0,20,20"
+              ItemsSource="{Binding FilteredPapers}"
+              SelectedItem="{Binding SelectedPaper, Mode=TwoWay}"
+              Background="Transparent"
+              BorderThickness="0"
+               Visibility="{Binding IsListView, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Background" Value="#2F2D43"/>
+                    <Setter Property="Margin" Value="0,0,0,10"/>
+                    <Setter Property="Padding" Value="0"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border x:Name="BorderContainer"
+                                    Background="{TemplateBinding Background}"
+                                    BorderThickness="0"
+                                    CornerRadius="10"
+                                    Margin="{TemplateBinding Margin}"
+                                    Padding="15">
+                                    <Grid>
+                                        <ContentPresenter/>
+                                    </Grid>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="BorderContainer" Property="Background" Value="#3E3D55"/>
+                                    </Trigger>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter TargetName="BorderContainer" Property="Background" Value="#4A4968"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Title -->
+                        <TextBlock Grid.Row="0"
+                             Grid.Column="0"
+                             Text="{Binding Title}"
+                             FontSize="16"
+                             FontWeight="SemiBold"
+                             Foreground="#f8f8f8"
+                             TextWrapping="Wrap"
+                             Margin="0,0,0,8"/>
+
+                        <!-- Authors -->
+                        <TextBlock Grid.Row="1"
+                             Grid.Column="0"
+                             Text="{Binding Authors}"
+                             FontSize="14"
+                             Foreground="#B8B5CB"
+                             TextWrapping="Wrap"
+                             Margin="0,0,0,8"/>
+
+                        <!-- Journal and Year -->
+                        <StackPanel Grid.Row="2"
+                              Grid.Column="0"
+                              Orientation="Horizontal">
+                            <TextBlock Text="{Binding Journal}"
+                                 FontSize="13"
+                                 Foreground="#6E6A7C"/>
+                            <TextBlock Text=" • "
+                                 FontSize="13"
+                                 Foreground="#6E6A7C"
+                                 Margin="5,0"/>
+                            <TextBlock Text="{Binding Year}"
+                                 FontSize="13"
+                                 Foreground="#6E6A7C"/>
+                        </StackPanel>
+
+                        <!-- Action Buttons -->
+                        <StackPanel Grid.Row="0"
+                              Grid.RowSpan="3"
+                              Grid.Column="1"
+                              Orientation="Horizontal"
+                              VerticalAlignment="Center"
+                              Margin="15,0,0,0">
+                            <Button Width="32"
+                                Height="32"
+                                Margin="0,0,5,0"
+                                Command="{Binding DataContext.AddToFavoritesCommand, 
+                                          RelativeSource={RelativeSource AncestorType=ListView}}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource StarButton}">
+                                <fa:FontAwesome Icon="Star"
+                                          FontSize="14"/>
+                            </Button>
+                            <Button Width="32"
+                                Height="32"
+                                Command="{Binding LocatePDFCommand}"
+                                Style="{StaticResource OpenButton}">
+                                <fa:FontAwesome Icon="ChevronRight"
+                                          FontSize="14"/>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+            <ListView.Template>
+                <ControlTemplate TargetType="ListView">
+                    <ScrollViewer Style="{StaticResource CustomScrollViewerStyle}"  HorizontalScrollBarVisibility="Disabled">
+                        <ItemsPresenter/>
+                    </ScrollViewer>
+                </ControlTemplate>
+            </ListView.Template>
+        </ListView>
+
     </Grid>
 </UserControl>

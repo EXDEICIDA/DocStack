@@ -36,5 +36,21 @@ namespace DocStack.MVVM.View
                 viewModel.OnSearchKeyDown(sender, e);
             }
         }
+
+        private void ListForm_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PapersViewModel viewModel)
+            {
+                viewModel.SwitchViewCommand.Execute("ListView");
+            }
+        }
+
+        private void Datagridform_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PapersViewModel viewModel)
+            {
+                viewModel.SwitchViewCommand.Execute("DataGrid");
+            }
+        }
     }
 }
