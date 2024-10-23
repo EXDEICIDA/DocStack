@@ -22,6 +22,7 @@ namespace DocStack.MVVM.ViewModel
         private ObservableCollection<DocumentsModel> _documents;
         private string _searchText; // This is the missing backing field for SearchText
         private ObservableCollection<DocumentsModel> _filteredDocuments;
+        private bool _isDataGridView = true;
 
 
         private DocumentsModel _selectedDocument;
@@ -36,6 +37,19 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+
+        public bool IsDataGridView
+        {
+            get => _isDataGridView;
+            set
+            {
+                _isDataGridView = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsListView));
+            }
+        }
+
+        public bool IsListView => !IsDataGridView;
 
         public string SearchText
         {
@@ -67,6 +81,8 @@ namespace DocStack.MVVM.ViewModel
         public ICommand ShareCommand { get; private set; }
         public ICommand ExportAllCommand { get; private set; }
         public ICommand SearchCommand { get; }
+        public ICommand SwitchViewCommand { get; }
+
 
 
 
@@ -78,6 +94,8 @@ namespace DocStack.MVVM.ViewModel
             ShareCommand = new RelayCommand(ShareFile, CanShareFile);
             ExportAllCommand = new RelayCommand(ExportAll, CanExportAll);
             SearchCommand = new RelayCommand(o => Search());
+            SwitchViewCommand = new RelayCommand(SwitchView);
+
 
 
             _ = RefreshDocumentsAsync();
@@ -225,6 +243,15 @@ namespace DocStack.MVVM.ViewModel
                 Documents.Add(document);
             }
             Search();
+        }
+
+        //A method for swithcing views either datagrid or listview
+        private void SwitchView(object parameter)
+        {
+            if (parameter is string viewType)
+            {
+                IsDataGridView = viewType == "DataGrid";
+            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

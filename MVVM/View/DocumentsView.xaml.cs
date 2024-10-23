@@ -33,6 +33,24 @@ namespace DocStack.MVVM.View
         }
 
 
+        //view switch methods
+        private void ListForm_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is DocumentsViewModel viewModel)
+            {
+                viewModel.SwitchViewCommand.Execute("ListView");
+            }
+        }
+
+        private void Datagridform_Click(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is DocumentsViewModel viewModel)
+            {
+                viewModel.SwitchViewCommand.Execute("DataGrid");
+            }
+        }
+
+
         private async void OpenFileDialog_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog

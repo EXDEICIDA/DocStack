@@ -383,6 +383,15 @@
   <ItemGroup>
     <Resource Include="Resources\Images\document-analysis.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\file-text.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\forward.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\external-link.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets" Condition="Exists('packages\MaterialDesignThemes.5.1.0\build\MaterialDesignThemes.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

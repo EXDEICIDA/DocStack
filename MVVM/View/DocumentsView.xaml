@@ -16,6 +16,8 @@
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
         <!--  Custom ScrollBar Style  -->
         <Style x:Key="CustomScrollBarStyle" TargetType="{x:Type ScrollBar}">
             <Setter Property="Width" Value="8" />
@@ -235,6 +237,7 @@
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
+                    Click="ListForm_Click"
                     Content="☰"
                     Foreground="White"
                     Style="{StaticResource NormalButtonDesignForObjects}"
@@ -247,6 +250,7 @@
                     VerticalAlignment="Center"
                     Background="Transparent"
                     BorderThickness="0"
+                    Click="Datagridform_Click"
                     Content="⊞"
                     FontSize="15"
                     Foreground="White"
@@ -282,7 +286,7 @@
                     RowHeight="40"
                     ScrollViewer.VerticalScrollBarVisibility="Hidden"
                     SelectedItem="{Binding SelectedDocument}"
-                    Visibility="{Binding IsListView, Converter={StaticResource BoolToVis}, ConverterParameter=Inverse}">
+                    Visibility="{Binding IsDataGridView, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <DataGrid.Resources>
                         <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="#3E3D55" />
                         <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="#3E3D55" />
@@ -357,7 +361,7 @@
                                                 <fa:FontAwesome
                                                     Width="25"
                                                     Foreground="#f8f8f8"
-                                                    Icon="ArrowRight" />
+                                                    Icon="ChevronRight" />
                                             </Button.Content>
                                         </Button>
                                         <Button
@@ -409,6 +413,129 @@
                         </Style>
                     </DataGrid.ColumnHeaderStyle>
                 </DataGrid>
+                <ListView
+                    x:Name="DocumentListView"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding Documents}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    SelectedItem="{Binding SelectedDocument}"
+                    Visibility="{Binding IsListView, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <ListView.Template>
+                        <ControlTemplate TargetType="ListView">
+                            <ScrollViewer Style="{StaticResource ModernScrollViewerStyle}">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </ControlTemplate>
+                    </ListView.Template>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="#272537" />
+                            <Setter Property="Margin" Value="0,2" />
+                            <Setter Property="Padding" Value="10" />
+                            <Setter Property="BorderThickness" Value="0" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <Border
+                                            x:Name="Border"
+                                            Background="{TemplateBinding Background}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            CornerRadius="5">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#3E3D55" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="Border" Property="Background" Value="#4A4968" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image
+                                    Grid.Column="0"
+                                    Width="18"
+                                    Height="18"
+                                    Margin="10"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    Source=" pack://application:,,,/Resources/Images/file-text.png" />
+
+                                <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Foreground="#f8f8f8"
+                                        Text="{Binding Name}" />
+                                    <TextBlock
+                                        FontSize="12"
+                                        Foreground="#9997AC"
+                                        Text="{Binding FilePath}"
+                                        TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Margin="0,0,15,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="#9997AC"
+                                    Text="{Binding SizeString}" />
+
+                                <TextBlock
+                                    Grid.Column="3"
+                                    Margin="0,0,15,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="#9997AC"
+                                    Text="{Binding DateAdded}" />
+
+                                <StackPanel
+                                    Grid.Column="4"
+                                    VerticalAlignment="Center"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Width="25"
+                                        Margin="0,0,10,0"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding DataContext.OpenFileCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding}">
+                                        <fa:FontAwesome
+                                            Width="25"
+                                            Foreground="#f8f8f8"
+                                            Icon="ChevronRight" />
+                                    </Button>
+                                    <Button
+                                        Width="25"
+                                        Background="Transparent"
+                                        BorderThickness="0"
+                                        Command="{Binding DataContext.ShareCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                        CommandParameter="{Binding}">
+                                        <fa:FontAwesome
+                                            Width="25"
+                                            Foreground="#f8f8f8"
+                                            Icon="Share" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
                 <ScrollViewer
                     x:Name="CustomScrollViewer"
                     Margin="0,0,5,0"
@@ -439,6 +566,7 @@
                         </ControlTemplate>
                     </ScrollViewer.Template>
                 </ScrollViewer>
+
             </Grid>
 
         </Border>
