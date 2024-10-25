@@ -22,14 +22,13 @@ namespace DocStack.MVVM.ViewModel
         public string Authors { get; set; }
         // To hold the abstract of the paper
         public string ColorCode { get; set; }
-
         public string DOI { get; set; }
         public string FullTextLink { get; set; }
         public string Journal { get; set; }
         public int PaperID { get; set; }
         public string Title { get; set; }
         public int Year { get; set; }  // Changed from string to int
-                                       // Add this property for ColorCode
+      
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -178,6 +177,7 @@ namespace DocStack.MVVM.ViewModel
                 DOI = result["doi"]?.ToString() ?? string.Empty,
                 FullTextLink = result["downloadUrl"]?.ToString() ?? string.Empty,
                 Abstract = result["abstract"]?.ToString() ?? string.Empty
+               
             };
 
             // Safely parse the year
@@ -189,8 +189,8 @@ namespace DocStack.MVVM.ViewModel
             {
                 paper.Year = 0; // Or some default value to indicate unknown year
             }
-
-            SearchResults.Add(paper);
+                   
+              SearchResults.Add(paper);
         }
 
         if (SearchResults.Count == 0)

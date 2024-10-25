@@ -58,24 +58,38 @@
             BorderBrush="#3E3D55"
             BorderThickness="0,0,0,1">
             <DockPanel LastChildFill="True">
-                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
-                    <Button Width="20" Style="{StaticResource FlatButton}">
-                        <fa:ImageAwesome
-                            Width="16"
-                            Height="16"
-                            Foreground="#f8f8f8"
-                            Icon="Table" />
-                    </Button>
+                <StackPanel
+                    Margin="0,0,10,0"
+                    DockPanel.Dock="Left"
+                    Orientation="Horizontal">
+                    <!--  Action Buttons  -->
+
                     <Button
-                        Width="20"
-                        Command="{Binding SearchCommand}"
-                        Style="{StaticResource FlatButton}">
-                        <fa:ImageAwesome
-                            Width="16"
-                            Height="16"
-                            Foreground="#f8f8f8"
-                            Icon="LongArrowDown" />
-                    </Button>
+                        x:Name="ListFormButton"
+                        Width="30"
+                        Height="30"
+                        Margin="0,0,10,0"
+                        Padding="0"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="☰"
+                        Foreground="White"
+                        Style="{StaticResource NormalButtonDesignForObjects}"
+                        ToolTip="Filter" />
+                    <Button
+                        x:Name="DataGridFormButton"
+                        Width="30"
+                        Height="30"
+                        Padding="0"
+                        VerticalAlignment="Center"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="⊞"
+                        Foreground="White"
+                        Style="{StaticResource NormalButtonDesignForObjects}"
+                        ToolTip="Toggle View" />
+
                 </StackPanel>
 
                 <Border
@@ -287,6 +301,41 @@
                                 </MultiBinding>
                             </TextBox.Text>
                         </TextBox>
+
+
+                        <Border
+                            Margin="0,0,0,10"
+                            Padding="10"
+                            Background="#3E3D55"
+                            CornerRadius="5">
+                            <StackPanel>
+                                <TextBlock
+                                    Margin="0,0,0,5"
+                                    FontWeight="SemiBold"
+                                    Foreground="#f8f8f8"
+                                    Text="Tags" />
+                                <ItemsControl ItemsSource="{Binding SelectedPaper.Category}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <WrapPanel />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border
+                                                Margin="0,2,4,2"
+                                                Padding="6,2"
+                                                Background="#272537"
+                                                CornerRadius="3">
+                                                <TextBlock Foreground="#f8f8f8" Text="{Binding}" />
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </Border>
+
+                       
 
 
                         <Border

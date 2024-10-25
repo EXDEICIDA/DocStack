@@ -9,6 +9,7 @@ using DocStack.MVVM.Model;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -20,6 +21,10 @@ namespace DocStack.MVVM.ViewModel
         public ObservableCollection<CalendarDay> Days { get; set; }
         private readonly ModelDatabase _database;
         private int _paperCount;
+        private readonly RecommenderModel _recommender;
+        private ObservableCollection<RecommenderModel.RecommendedPaper> _recommendedPapers;
+        private bool _isLoadingRecommendations;
+        public bool HasNoRecommendations => !IsLoadingRecommendations && (!RecommendedPapers?.Any() ?? true);
         public string CurrentMonthYear => CurrentDate.ToString("MMMM yyyy");
         public DateTime CurrentDate
         {
@@ -32,6 +37,29 @@ namespace DocStack.MVVM.ViewModel
                 UpdateCalendarDays();
             }
         }
+
+        public ObservableCollection<RecommenderModel.RecommendedPaper> RecommendedPapers
+        {
+            get => _recommendedPapers;
+            set
+            {
+                _recommendedPapers = value;
+                OnPropertyChanged(nameof(RecommendedPapers));
+                OnPropertyChanged(nameof(HasNoRecommendations));
+            }
+        }
+
+        public bool IsLoadingRecommendations
+        {
+            get => _isLoadingRecommendations;
+            set
+            {
+                _isLoadingRecommendations = value;
+                OnPropertyChanged(nameof(IsLoadingRecommendations));
+                OnPropertyChanged(nameof(HasNoRecommendations));
+            }
+        }
+
 
         public int PaperCount
         {
@@ -77,7 +105,11 @@ namespace DocStack.MVVM.ViewModel
             TodayCommand = new RelayCommand(GoToToday);
             InitializeChartSeries();
             UpdateCalendarDays();
-            LoadPaperCountAsync(); 
+            // Add to existing constructor
+            _recommender = new RecommenderModel();
+            _recommendedPapers = new ObservableCollection<RecommenderModel.RecommendedPaper>();
+            Task.Run(async () => await InitializeAsync());
+
 
         }
 
@@ -119,18 +151,92 @@ namespace DocStack.MVVM.ViewModel
             }
         };
         }
+        private async Task InitializeAsync()
+        {
+            try
+            {
+                Debug.WriteLine("Starting initialization");
+                await LoadRecommendationsAsync();
+                await LoadPaperCountAsync();
+                Debug.WriteLine("Initialization complete");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in InitializeAsync: {ex.Message}");
+            }
+        }
+        private async Task LoadRecommendationsAsync()
+        {
+            try
+            {
+                IsLoadingRecommendations = true;
+                Debug.WriteLine("Starting to load recommendations");
 
-        private async void LoadPaperCountAsync()
+                // Clear existing recommendations
+                RecommendedPapers.Clear();
+
+                // Get test keywords
+                var keywords = await GetUserKeywordsAsync();
+                Debug.WriteLine($"Using keywords: {string.Join(", ", keywords)}");
+
+                // Get recommendations with increased limit
+                var recommendations = await _recommender.GetRecommendationsAsync(keywords, limit: 10);
+                Debug.WriteLine($"Received {recommendations?.Count ?? 0} recommendations");
+
+                if (recommendations != null && recommendations.Any())
+                {
+                    // Create new collection on UI thread
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        RecommendedPapers = new ObservableCollection<RecommenderModel.RecommendedPaper>(recommendations);
+                        Debug.WriteLine($"Updated UI with {RecommendedPapers.Count} papers");
+                    });
+                }
+                else
+                {
+                    Debug.WriteLine("No recommendations received");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in LoadRecommendationsAsync: {ex.Message}");
+                Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            }
+            finally
+            {
+                IsLoadingRecommendations = false;
+            }
+        }
+
+
+        private async Task<string[]> GetUserKeywordsAsync()
+        {
+            // Return more diverse keywords for testing
+            return new[]
+            {
+                "machine learning",
+                "artificial intelligence",
+                "deep learning",
+                "neural networks",
+                "data science",
+                "quantum computing",
+                "cloud computing",
+                "blockchain technology"
+
+            };
+        }
+
+        // ... rest of your existing HomeViewModel code ...
+
+        private async Task LoadPaperCountAsync()
         {
             PaperCount = await _database.GetPaperCountAsync();
 
-            // Update chart when paper count changes
             if (ChartSeries?.Any() == true)
             {
                 ((ChartValues<int>)ChartSeries[0].Values)[0] = PaperCount;
             }
         }
-
         private void PreviousMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, -1);
         private void NextMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, 1);
         private void GoToToday(object obj) => CurrentDate = DateTime.Today;
