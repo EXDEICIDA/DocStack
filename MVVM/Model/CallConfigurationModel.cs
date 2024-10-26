@@ -16,13 +16,6 @@ namespace DocStack.MVVM.Model
             ConfigureApiKey();
         }
 
-        private void ConfigureApiKey()
-        {
-            DotNetEnv.Env.Load();
-            string apiKey = Environment.GetEnvironmentVariable("CORE_API_KEY");
-            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
-        }
-
         public async Task<JArray> SearchPapersAsync(string searchQuery)
         {
             if (string.IsNullOrWhiteSpace(searchQuery))
@@ -44,6 +37,13 @@ namespace DocStack.MVVM.Model
                 Console.WriteLine($"Error: {e.Message}");
                 return new JArray();
             }
+        }
+
+        private void ConfigureApiKey()
+        {
+            DotNetEnv.Env.Load();
+            string apiKey = Environment.GetEnvironmentVariable("CORE_API_KEY");
+            _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
         }
     }
 }

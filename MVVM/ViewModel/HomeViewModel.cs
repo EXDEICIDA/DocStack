@@ -10,89 +10,36 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Windows;
 
 namespace DocStack.MVVM.ViewModel
 {
+    public class CalendarDay
+    {
+        public DateTime Date { get; set; }
+        public bool IsCurrentMonth { get; set; }
+        public bool IsToday { get; set; }
+    }
+
     public class HomeViewModel : INotifyPropertyChanged
     {
 
-        private DateTime _currentDate = DateTime.Now;
-        public event PropertyChangedEventHandler PropertyChanged;
-        public ObservableCollection<CalendarDay> Days { get; set; }
-        private readonly ModelDatabase _database;
-        private int _paperCount;
-        private readonly RecommenderModel _recommender;
-        private ObservableCollection<RecommenderModel.RecommendedPaper> _recommendedPapers;
-        private bool _isLoadingRecommendations;
-        public bool HasNoRecommendations => !IsLoadingRecommendations && (!RecommendedPapers?.Any() ?? true);
-        public string CurrentMonthYear => CurrentDate.ToString("MMMM yyyy");
-        public DateTime CurrentDate
-        {
-            get => _currentDate;
-            set
-            {
-                _currentDate = value;
-                OnPropertyChanged(nameof(CurrentDate));
-                OnPropertyChanged(nameof(CurrentMonthYear));
-                UpdateCalendarDays();
-            }
-        }
-
-        public ObservableCollection<RecommenderModel.RecommendedPaper> RecommendedPapers
-        {
-            get => _recommendedPapers;
-            set
-            {
-                _recommendedPapers = value;
-                OnPropertyChanged(nameof(RecommendedPapers));
-                OnPropertyChanged(nameof(HasNoRecommendations));
-            }
-        }
-
-        public bool IsLoadingRecommendations
-        {
-            get => _isLoadingRecommendations;
-            set
-            {
-                _isLoadingRecommendations = value;
-                OnPropertyChanged(nameof(IsLoadingRecommendations));
-                OnPropertyChanged(nameof(HasNoRecommendations));
-            }
-        }
-
-
-        public int PaperCount
-        {
-            get => _paperCount;
-            set
-            {
-                _paperCount = value;
-                OnPropertyChanged(nameof(PaperCount));
-                
-            }
-        }
-
-
-        private SeriesCollection _chartSeries;
-        public SeriesCollection ChartSeries
-        {
-            get => _chartSeries;
-            set
-            {
-                _chartSeries = value;
-                OnPropertyChanged(nameof(ChartSeries));
-            }
-        }
-
-
-        public ICommand PreviousMonthCommand { get; }
-        public ICommand NextMonthCommand { get; }
-        public ICommand TodayCommand { get; }
+        private const int KeywordsPerCategory = 3;
+        // Get 3 keywords from each category
+        private const int TotalPapersLimit = 30;
 
         private readonly Calendar _calendar;
+        private readonly ModelDatabase _database;
+        private readonly KeywordManager _keywordManager;
+        private readonly RecommenderModel _recommender;
+        private SeriesCollection _chartSeries;
+        private DateTime _currentDate = DateTime.Now;
+        private bool _isLoadingRecommendations;
 
+        private int _paperCount;
 
-    
+        private ObservableCollection<RecommenderModel.RecommendedPaper> _recommendedPapers;
+
         public HomeViewModel()
         {
             _database = new ModelDatabase();
@@ -108,10 +55,216 @@ namespace DocStack.MVVM.ViewModel
             // Add to existing constructor
             _recommender = new RecommenderModel();
             _recommendedPapers = new ObservableCollection<RecommenderModel.RecommendedPaper>();
+            // Fix: Properly pass the parameter to LocatePDF and CanLocatePDF methods
+            LocatePDFCommand = new RelayCommand(
+                param => LocatePDF(param as RecommenderModel.RecommendedPaper),
+                param => CanLocatePDF(param as RecommenderModel.RecommendedPaper)
+            );
+            _keywordManager = new KeywordManager();
+
             Task.Run(async () => await InitializeAsync());
 
 
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public SeriesCollection ChartSeries
+        {
+            get => _chartSeries;
+            set
+            {
+                _chartSeries = value;
+                OnPropertyChanged(nameof(ChartSeries));
+            }
+        }
+
+        public DateTime CurrentDate
+        {
+            get => _currentDate;
+            set
+            {
+                _currentDate = value;
+                OnPropertyChanged(nameof(CurrentDate));
+                OnPropertyChanged(nameof(CurrentMonthYear));
+                UpdateCalendarDays();
+            }
+        }
+
+        public string CurrentMonthYear => CurrentDate.ToString("MMMM yyyy");
+        public ObservableCollection<CalendarDay> Days { get; set; }
+        public bool HasNoRecommendations => !IsLoadingRecommendations && (!RecommendedPapers?.Any() ?? true);
+        public bool IsLoadingRecommendations
+        {
+            get => _isLoadingRecommendations;
+            set
+            {
+                _isLoadingRecommendations = value;
+                OnPropertyChanged(nameof(IsLoadingRecommendations));
+                OnPropertyChanged(nameof(HasNoRecommendations));
+            }
+        }
+
+        public ICommand LocatePDFCommand { get; }
+
+        public ICommand NextMonthCommand { get; }
+
+        public int PaperCount
+        {
+            get => _paperCount;
+            set
+            {
+                _paperCount = value;
+                OnPropertyChanged(nameof(PaperCount));
+
+            }
+        }
+
+        public ICommand PreviousMonthCommand { get; }
+
+        public ObservableCollection<RecommenderModel.RecommendedPaper> RecommendedPapers
+        {
+            get => _recommendedPapers;
+            set
+            {
+                _recommendedPapers = value;
+                OnPropertyChanged(nameof(RecommendedPapers));
+                OnPropertyChanged(nameof(HasNoRecommendations));
+            }
+        }
+
+        public ICommand TodayCommand { get; }
+
+        // Aim for 30 total papers
+        public void LocatePDF(RecommenderModel.RecommendedPaper paper)
+        {
+            if (paper != null)
+            {
+                string url = null;
+                if (!string.IsNullOrWhiteSpace(paper.FullTextLink))
+                {
+                    url = paper.FullTextLink;
+                }
+                else if (!string.IsNullOrWhiteSpace(paper.Doi))
+                {
+                    url = $"https://doi.org/{paper.Doi}";
+                }
+
+                if (url != null)
+                {
+                    try
+                    {
+                        Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error opening link: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("No direct link or DOI available for this paper.", "Link Unavailable",
+                        MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+            }
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private bool CanLocatePDF(RecommenderModel.RecommendedPaper paper)
+        {
+            return paper != null &&
+                   (!string.IsNullOrWhiteSpace(paper.FullTextLink) ||
+                    !string.IsNullOrWhiteSpace(paper.Doi));
+        }
+        private Task<string[]> GetUserKeywordsAsync()
+        {
+            // Get 3 random keywords from each of the 6 categories (18 total keywords)
+            var keywords = _keywordManager.GetRandomKeywordsFromCategories(KeywordsPerCategory);
+            Debug.WriteLine($"Selected {keywords.Length} keywords: {string.Join(", ", keywords)}");
+            return Task.FromResult(keywords);
+        }
+
+        private void GoToToday(object obj) => CurrentDate = DateTime.Today;
+
+        private async Task InitializeAsync()
+        {
+            try
+            {
+                Debug.WriteLine("Starting initialization");
+                await LoadRecommendationsAsync();
+                await LoadPaperCountAsync();
+                Debug.WriteLine("Initialization complete");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in InitializeAsync: {ex.Message}");
+            }
+        }
+
+        private void InitializeChartSeries()
+        {
+            ChartSeries = new SeriesCollection
+        {
+            new PieSeries
+            {
+                Title = "Papers",
+                Values = new ChartValues<int> { PaperCount },
+                DataLabels = true,
+                LabelPoint = point => point.Y.ToString()
+            }
+        };
+        }
+
+        private async Task LoadPaperCountAsync()
+        {
+            PaperCount = await _database.GetPaperCountAsync();
+
+            if (ChartSeries?.Any() == true)
+            {
+                ((ChartValues<int>)ChartSeries[0].Values)[0] = PaperCount;
+            }
+        }
+
+        private async Task LoadRecommendationsAsync()
+        {
+            try
+            {
+                IsLoadingRecommendations = true;
+                Debug.WriteLine("Starting to load recommendations");
+
+                RecommendedPapers.Clear();
+
+                var keywords = await GetUserKeywordsAsync();
+                Debug.WriteLine($"Using {keywords.Length} keywords");
+
+                var recommendations = await _recommender.GetRecommendationsAsync(keywords, limit: TotalPapersLimit);
+                Debug.WriteLine($"Received {recommendations?.Count ?? 0} recommendations");
+
+                if (recommendations != null && recommendations.Any())
+                {
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        RecommendedPapers = new ObservableCollection<RecommenderModel.RecommendedPaper>(recommendations);
+                        Debug.WriteLine($"Updated UI with {RecommendedPapers.Count} papers");
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error in LoadRecommendationsAsync: {ex.Message}");
+            }
+            finally
+            {
+                IsLoadingRecommendations = false;
+            }
+        }
+
+        private void NextMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, 1);
+
+        private void PreviousMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, -1);
 
         private void UpdateCalendarDays()
         {
@@ -136,122 +289,5 @@ namespace DocStack.MVVM.ViewModel
                 currentDay = currentDay.AddDays(1);
             }
         }
-
-
-        private void InitializeChartSeries()
-        {
-            ChartSeries = new SeriesCollection
-        {
-            new PieSeries
-            {
-                Title = "Papers",
-                Values = new ChartValues<int> { PaperCount },
-                DataLabels = true,
-                LabelPoint = point => point.Y.ToString()
-            }
-        };
-        }
-        private async Task InitializeAsync()
-        {
-            try
-            {
-                Debug.WriteLine("Starting initialization");
-                await LoadRecommendationsAsync();
-                await LoadPaperCountAsync();
-                Debug.WriteLine("Initialization complete");
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in InitializeAsync: {ex.Message}");
-            }
-        }
-        private async Task LoadRecommendationsAsync()
-        {
-            try
-            {
-                IsLoadingRecommendations = true;
-                Debug.WriteLine("Starting to load recommendations");
-
-                // Clear existing recommendations
-                RecommendedPapers.Clear();
-
-                // Get test keywords
-                var keywords = await GetUserKeywordsAsync();
-                Debug.WriteLine($"Using keywords: {string.Join(", ", keywords)}");
-
-                // Get recommendations with increased limit
-                var recommendations = await _recommender.GetRecommendationsAsync(keywords, limit: 10);
-                Debug.WriteLine($"Received {recommendations?.Count ?? 0} recommendations");
-
-                if (recommendations != null && recommendations.Any())
-                {
-                    // Create new collection on UI thread
-                    App.Current.Dispatcher.Invoke(() =>
-                    {
-                        RecommendedPapers = new ObservableCollection<RecommenderModel.RecommendedPaper>(recommendations);
-                        Debug.WriteLine($"Updated UI with {RecommendedPapers.Count} papers");
-                    });
-                }
-                else
-                {
-                    Debug.WriteLine("No recommendations received");
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error in LoadRecommendationsAsync: {ex.Message}");
-                Debug.WriteLine($"Stack trace: {ex.StackTrace}");
-            }
-            finally
-            {
-                IsLoadingRecommendations = false;
-            }
-        }
-
-
-        private async Task<string[]> GetUserKeywordsAsync()
-        {
-            // Return more diverse keywords for testing
-            return new[]
-            {
-                "machine learning",
-                "artificial intelligence",
-                "deep learning",
-                "neural networks",
-                "data science",
-                "quantum computing",
-                "cloud computing",
-                "blockchain technology"
-
-            };
-        }
-
-        // ... rest of your existing HomeViewModel code ...
-
-        private async Task LoadPaperCountAsync()
-        {
-            PaperCount = await _database.GetPaperCountAsync();
-
-            if (ChartSeries?.Any() == true)
-            {
-                ((ChartValues<int>)ChartSeries[0].Values)[0] = PaperCount;
-            }
-        }
-        private void PreviousMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, -1);
-        private void NextMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, 1);
-        private void GoToToday(object obj) => CurrentDate = DateTime.Today;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-    }
-
-
-    public class CalendarDay
-    {
-        public DateTime Date { get; set; }
-        public bool IsCurrentMonth { get; set; }
-        public bool IsToday { get; set; }
     }
 }

@@ -314,7 +314,7 @@
                                     FontWeight="SemiBold"
                                     Foreground="#f8f8f8"
                                     Text="Tags" />
-                                <ItemsControl ItemsSource="{Binding SelectedPaper.Category}">
+                                <ItemsControl ItemsSource="{Binding SelectedPaper}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel />

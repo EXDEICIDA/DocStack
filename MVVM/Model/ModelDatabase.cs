@@ -107,33 +107,6 @@ namespace DocStack.MVVM.Model
             }
         }
 
-        /// <summary>
-        /// Asynchronously updates the color code associated with a favorite paper in the database.
-        /// </summary>
-        /// <param name="doi">The DOI (Digital Object Identifier) of the paper to be updated.</param>
-        /// <param name="colorCode">The new color code to associate with the paper.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        public async Task UpdateFavoritePaperColorAsync(string doi, string colorCode)
-        {
-            using (var connection = new SQLiteConnection(_connectionString))
-            {
-                await connection.OpenAsync();
-
-                string updateQuery = @"UPDATE FavoritePapers 
-                                   SET ColorCode = @ColorCode 
-                                   WHERE DOI = @DOI";
-
-                using (var command = new SQLiteCommand(updateQuery, connection))
-                {
-                    command.Parameters.AddWithValue("@ColorCode", colorCode);
-                    command.Parameters.AddWithValue("@DOI", doi);
-
-                    await command.ExecuteNonQueryAsync();
-                }
-            }
-        }
-
-
         public async Task<List<DocumentsModel>> GetAllDocumentsAsync()
         {
             List<DocumentsModel> documents = new List<DocumentsModel>();
@@ -163,9 +136,6 @@ namespace DocStack.MVVM.Model
 
             return documents;
         }
-
-
-        //A method for getting papers from appers table then using their id and
 
         public async Task<List<Paper>> GetAllFavoritePapersAsync()
         {
@@ -199,6 +169,7 @@ namespace DocStack.MVVM.Model
             return favoritePapers;
         }
 
+        //A method for getting papers from appers table then using their id and
         //Papers view and table mmethods 
         public async Task<List<Paper>> GetAllPapersAsync()
         {
@@ -232,7 +203,6 @@ namespace DocStack.MVVM.Model
             return papers;
         }
 
-
         //A method to get the count of papers from papers table
         public async Task<int> GetPaperCountAsync()
         {
@@ -245,6 +215,32 @@ namespace DocStack.MVVM.Model
                 using (var command = new SQLiteCommand(countQuery, connection))
                 {
                     return Convert.ToInt32(await command.ExecuteScalarAsync());
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously updates the color code associated with a favorite paper in the database.
+        /// </summary>
+        /// <param name="doi">The DOI (Digital Object Identifier) of the paper to be updated.</param>
+        /// <param name="colorCode">The new color code to associate with the paper.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        public async Task UpdateFavoritePaperColorAsync(string doi, string colorCode)
+        {
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                string updateQuery = @"UPDATE FavoritePapers 
+                                   SET ColorCode = @ColorCode 
+                                   WHERE DOI = @DOI";
+
+                using (var command = new SQLiteCommand(updateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@ColorCode", colorCode);
+                    command.Parameters.AddWithValue("@DOI", doi);
+
+                    await command.ExecuteNonQueryAsync();
                 }
             }
         }

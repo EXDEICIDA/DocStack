@@ -1573,4 +1573,49 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+
+    <Style x:Key="ReccomendButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border 
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="4">
+                        <ContentPresenter 
+                        HorizontalAlignment="Center" 
+                        VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#22000000"/>
+                            <Setter Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect 
+                                    BlurRadius="4" 
+                                    ShadowDepth="0" 
+                                    Color="#22000000"/>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <fa:FontAwesome 
+                                        FontSize="14" 
+                                        Foreground="#2d9649" 
+                                        Icon="ChevronRight"/>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
