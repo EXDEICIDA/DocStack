@@ -17,6 +17,48 @@
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:BoolToColorConverter x:Key="BoolToColorConverter" />
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+
+        <!--  Style for the label container  -->
+        <Style x:Key="PaperLabelContainer" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="Margin" Value="0,3,0,5" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <!--  Base style for labels  -->
+        <Style x:Key="PaperLabelBase" TargetType="Border">
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="6,2" />
+            <Setter Property="Margin" Value="0,0,6,0" />
+        </Style>
+
+        <!--  Year label style  -->
+        <Style
+            x:Key="YearLabel"
+            BasedOn="{StaticResource PaperLabelBase}"
+            TargetType="Border">
+            <Setter Property="Background" Value="#2c3e50" />
+        </Style>
+
+        <!-- Keyword label style -->
+        <Style x:Key="KeywordLabel" 
+       BasedOn="{StaticResource PaperLabelBase}" 
+       TargetType="Border">
+            <Setter Property="Background" Value="#34495e" />
+            <Setter Property="MaxWidth" Value="200" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <!-- Added this -->
+            <Setter Property="Margin" Value="0" />
+            <!-- Reset margin since we're handling it in the Grid -->
+        </Style>
+
+
+        <!--  Text style for labels  -->
+        <Style x:Key="LabelText" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="Foreground" Value="#ecf0f1" />
+        </Style>
     </UserControl.Resources>
 
     <UserControl.DataContext>
@@ -501,10 +543,30 @@
                                                     Foreground="#f8f8f8"
                                                     Text="{Binding Title}"
                                                     TextWrapping="Wrap" />
-                                                <TextBlock
-                                                    Margin="0,3,0,0"
-                                                    Foreground="#CCCCCC"
-                                                    Text="{Binding Year}" />
+                                                <Grid Margin="0,3,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <!--  Year Label  -->
+                                                    <Border
+                                                        Grid.Column="0"
+                                                        Margin="0,0,10,0"
+                                                        Style="{StaticResource YearLabel}">
+                                                        <TextBlock Style="{StaticResource LabelText}" Text="{Binding Year}" />
+                                                    </Border>
+
+
+                                                    <!--  Keywords Label  -->
+                                                    <Border Grid.Column="1" Style="{StaticResource KeywordLabel}">
+                                                        <TextBlock
+                                                            Style="{StaticResource LabelText}"
+                                                            Text="{Binding KeywordsDisplay}"
+                                                            TextWrapping="Wrap" />
+                                                    </Border>
+                                                </Grid>
+
                                                 <!--  Abstract with right margin for button  -->
                                                 <TextBlock
                                                     MaxHeight="60"

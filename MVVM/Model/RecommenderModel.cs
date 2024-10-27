@@ -12,6 +12,7 @@ namespace DocStack.MVVM.Model
         private readonly Random _random = new Random();
         private readonly Dictionary<string, List<string>> _categoryKeywords = new Dictionary<string, List<string>>
         {
+            //A preset keywords for recommended papers for uniqueness.
             ["AI & ML"] = new List<string>
             {
                 "machine learning", "artificial intelligence", "deep learning", "neural networks",
@@ -171,7 +172,32 @@ namespace DocStack.MVVM.Model
             public string FullTextLink { get; set; }
             public string Title { get; set; } = string.Empty;
             public int Year { get; set; }
-            public string[] Keywords { get; set; } = Array.Empty<string>();
+            // Private backing field for Keywords
+            private string[] _keywords = Array.Empty<string>();
+
+            // Original Keywords array property
+            public string[] Keywords
+            {
+                get => _keywords;
+                set
+                {
+                    _keywords = value;
+                    KeywordsDisplay = string.Join(", ", value ?? Array.Empty<string>());
+                }
+            }
+
+            // New property for display purposes
+            public string KeywordsDisplay { get; private set; } = string.Empty;
+
+            // Helper method to get keywords with prefix
+            public string GetKeywordsWithPrefix()
+            {
+                return string.IsNullOrEmpty(KeywordsDisplay)
+                    ? string.Empty
+                    : $"Keywords: {KeywordsDisplay}";
+            }
+
+
         }
     }
 }
