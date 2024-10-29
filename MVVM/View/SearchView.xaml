@@ -301,8 +301,6 @@
                                 </MultiBinding>
                             </TextBox.Text>
                         </TextBox>
-
-
                         <Border
                             Margin="0,0,0,10"
                             Padding="10"
@@ -314,7 +312,7 @@
                                     FontWeight="SemiBold"
                                     Foreground="#f8f8f8"
                                     Text="Tags" />
-                                <ItemsControl ItemsSource="{Binding SelectedPaper}">
+                                <ItemsControl ItemsSource="{Binding SelectedPaper.Tags}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <WrapPanel />
@@ -334,8 +332,6 @@
                                 </ItemsControl>
                             </StackPanel>
                         </Border>
-
-                       
 
 
                         <Border

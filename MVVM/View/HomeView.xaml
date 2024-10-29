@@ -40,16 +40,17 @@
             <Setter Property="Background" Value="#2c3e50" />
         </Style>
 
-        <!-- Keyword label style -->
-        <Style x:Key="KeywordLabel" 
-       BasedOn="{StaticResource PaperLabelBase}" 
-       TargetType="Border">
+        <!--  Keyword label style  -->
+        <Style
+            x:Key="KeywordLabel"
+            BasedOn="{StaticResource PaperLabelBase}"
+            TargetType="Border">
             <Setter Property="Background" Value="#34495e" />
             <Setter Property="MaxWidth" Value="200" />
             <Setter Property="HorizontalAlignment" Value="Left" />
-            <!-- Added this -->
+            <!--  Added this  -->
             <Setter Property="Margin" Value="0" />
-            <!-- Reset margin since we're handling it in the Grid -->
+            <!--  Reset margin since we're handling it in the Grid  -->
         </Style>
 
 
@@ -59,6 +60,52 @@
             <Setter Property="FontWeight" Value="Medium" />
             <Setter Property="Foreground" Value="#ecf0f1" />
         </Style>
+
+        <!--  Custom Scrollbar Style  -->
+        <Style x:Key="CustomScrollBarStyle" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Width" Value="8" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid>
+                            <Rectangle
+                                x:Name="TrackBackground"
+                                Fill="{TemplateBinding Background}"
+                                RadiusX="4"
+                                RadiusY="4" />
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="{x:Type Thumb}">
+                                                <Rectangle
+                                                    x:Name="ThumbRectangle"
+                                                    Width="6"
+                                                    HorizontalAlignment="Center"
+                                                    Fill="#BDBDBD"
+                                                    RadiusX="4"
+                                                    RadiusY="4" />
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="ThumbRectangle" Property="Fill" Value="#9E9E9E" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsDragging" Value="True">
+                                                        <Setter TargetName="ThumbRectangle" Property="Fill" Value="#757575" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
     </UserControl.Resources>
 
     <UserControl.DataContext>
@@ -261,163 +308,200 @@
                     <Border
                         Grid.Row="1"
                         Margin="20,5,10,20"
-                        Background="#e74c3c"
-                        CornerRadius="5" />
+                        Background="#2980b9"
+                        CornerRadius="5">
+                        <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <TextBlock
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                FontFamily="{StaticResource RobotoFont}"
+                                FontSize="20"
+                                FontWeight="SemiBold"
+                                Foreground="#f8f8f8"
+                                Text="Access the recent papers" />
+                            <Border
+                                Margin="5"
+                                Padding="15,10"
+                                Background="#FF1E1E1E"
+                                CornerRadius="5">
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <fa:FontAwesome
+                                        Grid.Column="0"
+                                        Margin="0,0,10,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        Foreground="White"
+                                        Icon="FolderOpen" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="My Papers" />
+                                    <Button
+                                        x:Name="OpenMyPapersButton"
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding PapersViewShortcut}"
+                                        Style="{StaticResource RoundedButtonStyle}">
+                                        <fa:FontAwesome
+                                            FontSize="16"
+                                            Foreground="White"
+                                            Icon="ChevronRight" />
+                                    </Button>
+                                </Grid>
+                            </Border>
+
+                            <Border
+                                Margin="5"
+                                Padding="15,10"
+                                Background="#FF1E1E1E"
+                                CornerRadius="5">
+                                <Grid HorizontalAlignment="Stretch">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <fa:FontAwesome
+                                        Grid.Column="0"
+                                        Margin="0,0,10,0"
+                                        VerticalAlignment="Center"
+                                        FontSize="16"
+                                        Foreground="White"
+                                        Icon="Search" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Foreground="White"
+                                        Text="My Papers" />
+                                    <Button
+                                        x:Name="OpenLanguagePopupButton1"
+                                        Grid.Column="2"
+                                        HorizontalAlignment="Right"
+                                        Command="{Binding SearchViewShortcut}"
+                                        Style="{StaticResource RoundedButtonStyle}">
+                                        <fa:FontAwesome
+                                            FontSize="16"
+                                            Foreground="White"
+                                            Icon="ChevronRight" />
+                                    </Button>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
                 </Grid>
 
                 <!--  Right column (unchanged)  -->
                 <Border
+                    xmlns:fa="http://schemas.fontawesome.io/icons/"
                     Grid.Column="1"
                     Margin="10,10,10,20"
-                    Background="#c0392b"
+                    Background="#49494d"
                     CornerRadius="5">
-                    <StackPanel>
-                        <Border
-                            Margin="10"
-                            Padding="15,10"
-                            Background="#FF1E1E1E"
-                            CornerRadius="5">
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <fa:FontAwesome
-                                    Grid.Column="0"
-                                    Margin="0,0,10,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="16"
-                                    Foreground="White"
-                                    Icon="FolderOpen" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center"
-                                    Foreground="White"
-                                    Text="My Papers" />
-                                <Button
-                                    x:Name="OpenMyPapersButton"
-                                    Grid.Column="2"
-                                    HorizontalAlignment="Right"
-                                    Command="{Binding PapersViewShortcut}"
-                                    Style="{StaticResource RoundedButtonStyle}">
-                                    <fa:FontAwesome
-                                        FontSize="16"
-                                        Foreground="White"
-                                        Icon="ChevronRight" />
-                                </Button>
-                            </Grid>
-                        </Border>
-                        <Border
-                            Margin="10"
-                            Padding="15,10"
-                            Background="#FF1E1E1E"
-                            CornerRadius="5">
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <fa:FontAwesome
-                                    Grid.Column="0"
-                                    Margin="0,0,10,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="16"
-                                    Foreground="White"
-                                    Icon="Search" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center"
-                                    Foreground="White"
-                                    Text="My Papers" />
-                                <Button
-                                    x:Name="OpenLanguagePopupButton1"
-                                    Grid.Column="2"
-                                    HorizontalAlignment="Right"
-                                    Command="{Binding SearchViewShortcut}"
-                                    Style="{StaticResource RoundedButtonStyle}">
-                                    <fa:FontAwesome
-                                        FontSize="16"
-                                        Foreground="White"
-                                        Icon="ChevronRight" />
-                                </Button>
-                            </Grid>
-                        </Border>
+                    <DockPanel LastChildFill="True">
+                        <TextBlock
+                            Margin="15,15,15,10"
+                            DockPanel.Dock="Top"
+                            FontFamily="{StaticResource RobotoFont}"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Foreground="White"
+                            Text="Recent Documents" />
 
-                        <Border
-                            Margin="10"
-                            Padding="15,10"
-                            Background="#FF1E1E1E"
-                            CornerRadius="5">
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <fa:FontAwesome
-                                    Grid.Column="0"
-                                    Margin="0,0,10,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="16"
-                                    Foreground="White"
-                                    Icon="FolderOpen" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center"
-                                    Foreground="White"
-                                    Text="My Papers" />
-                                <Button
-                                    x:Name="SearchDocuments"
-                                    Grid.Column="2"
-                                    HorizontalAlignment="Right"
-                                    Command="{Binding OpenLanguagePopupCommand}"
-                                    Style="{StaticResource RoundedButtonStyle}">
-                                    <fa:FontAwesome
-                                        FontSize="16"
-                                        Foreground="White"
-                                        Icon="ChevronRight" />
-                                </Button>
-                            </Grid>
-                        </Border>
-                        <Border
-                            Margin="10"
-                            Padding="15,10"
-                            Background="#FF1E1E1E"
-                            CornerRadius="5">
-                            <Grid HorizontalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <fa:FontAwesome
-                                    Grid.Column="0"
-                                    Margin="0,0,10,0"
-                                    VerticalAlignment="Center"
-                                    FontSize="16"
-                                    Foreground="White"
-                                    Icon="FolderOpen" />
-                                <TextBlock
-                                    Grid.Column="1"
-                                    VerticalAlignment="Center"
-                                    Foreground="White"
-                                    Text="My Papers" />
-                                <Button
-                                    x:Name="OpenLanguagePopupButton3"
-                                    Grid.Column="2"
-                                    HorizontalAlignment="Right"
-                                    Command="{Binding OpenLanguagePopupCommand}"
-                                    Style="{StaticResource RoundedButtonStyle}">
-                                    <fa:FontAwesome
-                                        FontSize="16"
-                                        Foreground="White"
-                                        Icon="ChevronRight" />
-                                </Button>
-                            </Grid>
-                        </Border>
-                    </StackPanel>
+                        <ScrollViewer
+                            Margin="0,0,10,15"
+                            HorizontalScrollBarVisibility="Disabled"
+                            PanningMode="VerticalOnly"
+                            Style="{StaticResource CustomScrollViewerStyle}"
+                            VerticalScrollBarVisibility="Auto">
+
+                            <ListView
+                                Margin="10,0,0,0"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                ItemsSource="{Binding RecentDocuments}"
+                                ScrollViewer.CanContentScroll="False"
+                                ScrollViewer.IsDeferredScrollingEnabled="True"
+                                VirtualizingPanel.IsVirtualizing="True"
+                                VirtualizingPanel.ScrollUnit="Pixel">
+
+                                <ListView.Template>
+                                    <ControlTemplate>
+                                        <ItemsPresenter />
+                                    </ControlTemplate>
+                                </ListView.Template>
+
+                                <ListView.ItemContainerStyle>
+                                    <Style TargetType="ListViewItem">
+                                        <Setter Property="Margin" Value="0,0,0,10" />
+                                        <Setter Property="Padding" Value="0" />
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ListViewItem">
+                                                    <Border
+                                                        Margin="5"
+                                                        Padding="15,10"
+                                                        Background="#FF1E1E1E"
+                                                        CornerRadius="5">
+                                                        <ContentPresenter />
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.ItemContainerStyle>
+
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid HorizontalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <!--  File Icon  -->
+                                            <Image
+                                                Grid.Column="0"
+                                                Width="18"
+                                                Height="18"
+                                                Margin="5"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Source="pack://application:,,,/Resources/Images/file-text.png" />
+
+                                            <!--  Document Name  -->
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                VerticalAlignment="Center"
+                                                Foreground="White"
+                                                Text="{Binding Name}"
+                                                TextTrimming="CharacterEllipsis" />
+
+                                            <!--  Open Button  -->
+                                            <Button
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Right"
+                                                CommandParameter="Binding"
+                                                Style="{StaticResource RoundedButtonStyle}">
+                                                <fa:FontAwesome
+                                                    FontSize="16"
+                                                    Foreground="White"
+                                                    Icon="ChevronRight" />
+                                            </Button>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </ScrollViewer>
+                    </DockPanel>
                 </Border>
             </Grid>
         </Grid>
@@ -488,19 +572,25 @@
                 <ScrollViewer
                     Grid.Row="1"
                     Margin="10"
+                    ScrollViewer.CanContentScroll="True"
                     Style="{StaticResource ModernScrollViewerStyle}"
+                    VirtualizingPanel.ScrollUnit="Pixel"
                     Visibility="{Binding IsLoadingRecommendations, Converter={StaticResource InverseBoolToVisibilityConverter}}">
 
-                    <ItemsControl ItemsSource="{Binding RecommendedPapers}">
+                    <ItemsControl
+                        ItemsSource="{Binding RecommendedPapers}"
+                        ScrollViewer.CanContentScroll="True"
+                        VirtualizingPanel.IsVirtualizing="True">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <StackPanel Margin="0,10,0,0" />
+                                <VirtualizingStackPanel Margin="0,10,0,0" VirtualizingPanel.VirtualizationMode="Recycling" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
 
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Grid MinHeight="120">
+                                <!--  Set a fixed height for each item  -->
+                                <Grid Height="140" MinHeight="140">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="20" />
                                         <ColumnDefinition Width="*" />
@@ -511,9 +601,9 @@
                                         <!--  Vertical Line  -->
                                         <Rectangle
                                             Width="2"
-                                            Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid}}"
+                                            Height="140"
                                             HorizontalAlignment="Center"
-                                            VerticalAlignment="Stretch"
+                                            VerticalAlignment="Top"
                                             Fill="#f8f8f8"
                                             Opacity="0.5" />
 
@@ -536,9 +626,9 @@
                                         Background="#FF1E1E1E"
                                         CornerRadius="5">
                                         <Grid>
-                                            <!--  Title and Year can use full width  -->
                                             <StackPanel>
                                                 <TextBlock
+                                                    MaxHeight="40"
                                                     FontWeight="Bold"
                                                     Foreground="#f8f8f8"
                                                     Text="{Binding Title}"
@@ -549,7 +639,6 @@
                                                         <ColumnDefinition Width="*" />
                                                     </Grid.ColumnDefinitions>
 
-                                                    <!--  Year Label  -->
                                                     <Border
                                                         Grid.Column="0"
                                                         Margin="0,0,10,0"
@@ -557,8 +646,6 @@
                                                         <TextBlock Style="{StaticResource LabelText}" Text="{Binding Year}" />
                                                     </Border>
 
-
-                                                    <!--  Keywords Label  -->
                                                     <Border Grid.Column="1" Style="{StaticResource KeywordLabel}">
                                                         <TextBlock
                                                             Style="{StaticResource LabelText}"
@@ -567,9 +654,8 @@
                                                     </Border>
                                                 </Grid>
 
-                                                <!--  Abstract with right margin for button  -->
                                                 <TextBlock
-                                                    MaxHeight="60"
+                                                    MaxHeight="50"
                                                     Margin="0,0,40,0"
                                                     Foreground="#AAAAAA"
                                                     Text="{Binding Abstract}"
@@ -577,7 +663,6 @@
                                                     TextWrapping="Wrap" />
                                             </StackPanel>
 
-                                            <!--  Open  Reccomended Paper Button  -->
                                             <Button
                                                 x:Name="OpenPaper"
                                                 Width="25"

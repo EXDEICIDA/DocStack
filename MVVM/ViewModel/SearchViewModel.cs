@@ -28,7 +28,18 @@ namespace DocStack.MVVM.ViewModel
         public int PaperID { get; set; }
         public string Title { get; set; }
         public int Year { get; set; }  // Changed from string to int
-      
+                                       // ObservableCollection to hold tags
+        private ObservableCollection<string> _tags = new ObservableCollection<string>();
+        public ObservableCollection<string> Tags
+        {
+            get => _tags;
+            set
+            {
+                _tags = value;
+                OnPropertyChanged();
+            }
+        }
+
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -176,8 +187,10 @@ namespace DocStack.MVVM.ViewModel
                 Journal = result["publisher"]?.ToString() ?? "Unknown",
                 DOI = result["doi"]?.ToString() ?? string.Empty,
                 FullTextLink = result["downloadUrl"]?.ToString() ?? string.Empty,
-                Abstract = result["abstract"]?.ToString() ?? string.Empty
-               
+                Abstract = result["abstract"]?.ToString() ?? string.Empty,
+                Tags = new ObservableCollection<string>(result["tags"]?.Select(tag => tag.ToString()) ?? new List<string>())
+
+
             };
 
             // Safely parse the year

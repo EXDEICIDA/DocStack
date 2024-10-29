@@ -137,6 +137,42 @@ namespace DocStack.MVVM.Model
             return documents;
         }
 
+        /*A method  for documents table 
+         * returns latest 10 item for usage in the view 
+         */
+        public async Task<List<DocumentsModel>> GetRecentDocumentsAsync(int limit = 10)
+        {
+            var documents = new List<DocumentsModel>();
+            using (var connection = new SQLiteConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+                string query = @"SELECT Id, document_name, file_path, file_size, date_added 
+                        FROM Documents 
+                        ORDER BY date_added DESC 
+                        LIMIT @limit";
+
+                using (var command = new SQLiteCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@limit", limit);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            documents.Add(new DocumentsModel
+                            {
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                FilePath = reader.GetString(2),
+                                Size = reader.GetInt64(3),
+                                DateAdded = reader.GetString(4)
+                            });
+                        }
+                    }
+                }
+            }
+            return documents;
+        }
+
         public async Task<List<Paper>> GetAllFavoritePapersAsync()
         {
             List<Paper> favoritePapers = new List<Paper>();

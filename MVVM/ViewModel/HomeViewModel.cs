@@ -35,6 +35,18 @@ namespace DocStack.MVVM.ViewModel
         private SeriesCollection _chartSeries;
         private DateTime _currentDate = DateTime.Now;
         private bool _isLoadingRecommendations;
+        private ObservableCollection<DocumentsModel> _recentDocuments;
+
+        // Add to properties
+        public ObservableCollection<DocumentsModel> RecentDocuments
+        {
+            get => _recentDocuments;
+            set
+            {
+                _recentDocuments = value;
+                OnPropertyChanged(nameof(RecentDocuments));
+            }
+        }
 
         private int _paperCount;
 
@@ -55,6 +67,8 @@ namespace DocStack.MVVM.ViewModel
             // Add to existing constructor
             _recommender = new RecommenderModel();
             _recommendedPapers = new ObservableCollection<RecommenderModel.RecommendedPaper>();
+            _recentDocuments = new ObservableCollection<DocumentsModel>();
+
             // Fix: Properly pass the parameter to LocatePDF and CanLocatePDF methods
             LocatePDFCommand = new RelayCommand(
                 param => LocatePDF(param as RecommenderModel.RecommendedPaper),
@@ -167,6 +181,26 @@ namespace DocStack.MVVM.ViewModel
                 }
             }
         }
+        // Add this method
+        private async Task LoadRecentDocumentsAsync()
+        {
+            try
+            {
+                var documents = await _database.GetRecentDocumentsAsync(10);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    RecentDocuments.Clear();
+                    foreach (var doc in documents)
+                    {
+                        RecentDocuments.Add(doc);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading recent documents: {ex.Message}");
+            }
+        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -194,8 +228,11 @@ namespace DocStack.MVVM.ViewModel
             try
             {
                 Debug.WriteLine("Starting initialization");
-                await LoadRecommendationsAsync();
-                await LoadPaperCountAsync();
+                await Task.WhenAll(
+                    LoadRecommendationsAsync(),
+                    LoadPaperCountAsync(),
+                    LoadRecentDocumentsAsync()
+                );
                 Debug.WriteLine("Initialization complete");
             }
             catch (Exception ex)
