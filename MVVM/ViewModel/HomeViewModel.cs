@@ -75,6 +75,8 @@ namespace DocStack.MVVM.ViewModel
                 param => CanLocatePDF(param as RecommenderModel.RecommendedPaper)
             );
             _keywordManager = new KeywordManager();
+            OpenDocumentCommand = new RelayCommand(OpenDocument);
+
 
             Task.Run(async () => await InitializeAsync());
 
@@ -91,6 +93,31 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged(nameof(ChartSeries));
             }
         }
+
+        private void OpenDocument(object parameter)
+        {
+            if (parameter is DocumentsModel document)
+            {
+                try
+                {
+                    var startInfo = new ProcessStartInfo(document.FilePath)
+                    {
+                        UseShellExecute = true
+                    };
+                    Process.Start(startInfo);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Error opening document: {ex.Message}",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
+            }
+        }
+
 
         public DateTime CurrentDate
         {
@@ -121,6 +148,8 @@ namespace DocStack.MVVM.ViewModel
         public ICommand LocatePDFCommand { get; }
 
         public ICommand NextMonthCommand { get; }
+        public ICommand OpenDocumentCommand { get; private set; }
+
 
         public int PaperCount
         {

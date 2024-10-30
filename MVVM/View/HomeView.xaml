@@ -399,37 +399,37 @@
 
                 <!--  Right column (unchanged)  -->
                 <Border
-                    xmlns:fa="http://schemas.fontawesome.io/icons/"
-                    Grid.Column="1"
-                    Margin="10,10,10,20"
-                    Background="#49494d"
-                    CornerRadius="5">
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
+    Grid.Column="1"
+    Margin="10,10,10,20"
+    Background="#49494d"
+    CornerRadius="5">
                     <DockPanel LastChildFill="True">
                         <TextBlock
-                            Margin="15,15,15,10"
-                            DockPanel.Dock="Top"
-                            FontFamily="{StaticResource RobotoFont}"
-                            FontSize="18"
-                            FontWeight="SemiBold"
-                            Foreground="White"
-                            Text="Recent Documents" />
+            Margin="15,15,15,10"
+            DockPanel.Dock="Top"
+            FontFamily="{StaticResource RobotoFont}"
+            FontSize="18"
+            FontWeight="SemiBold"
+            Foreground="White"
+            Text="Recent Documents" />
 
                         <ScrollViewer
-                            Margin="0,0,10,15"
-                            HorizontalScrollBarVisibility="Disabled"
-                            PanningMode="VerticalOnly"
-                            Style="{StaticResource CustomScrollViewerStyle}"
-                            VerticalScrollBarVisibility="Auto">
+            Margin="0,0,10,15"
+            HorizontalScrollBarVisibility="Disabled"
+            PanningMode="VerticalOnly"
+            Style="{StaticResource CustomScrollViewerStyle}"
+            VerticalScrollBarVisibility="Auto">
 
                             <ListView
-                                Margin="10,0,0,0"
-                                Background="Transparent"
-                                BorderThickness="0"
-                                ItemsSource="{Binding RecentDocuments}"
-                                ScrollViewer.CanContentScroll="False"
-                                ScrollViewer.IsDeferredScrollingEnabled="True"
-                                VirtualizingPanel.IsVirtualizing="True"
-                                VirtualizingPanel.ScrollUnit="Pixel">
+                Margin="10,0,0,0"
+                Background="Transparent"
+                BorderThickness="0"
+                ItemsSource="{Binding RecentDocuments}"
+                ScrollViewer.CanContentScroll="False"
+                ScrollViewer.IsDeferredScrollingEnabled="True"
+                VirtualizingPanel.IsVirtualizing="True"
+                VirtualizingPanel.ScrollUnit="Pixel">
 
                                 <ListView.Template>
                                     <ControlTemplate>
@@ -446,10 +446,10 @@
                                             <Setter.Value>
                                                 <ControlTemplate TargetType="ListViewItem">
                                                     <Border
-                                                        Margin="5"
-                                                        Padding="15,10"
-                                                        Background="#FF1E1E1E"
-                                                        CornerRadius="5">
+                                        Margin="5"
+                                        Padding="15,10"
+                                        Background="#FF1E1E1E"
+                                        CornerRadius="5">
                                                         <ContentPresenter />
                                                     </Border>
                                                 </ControlTemplate>
@@ -467,34 +467,32 @@
                                                 <ColumnDefinition Width="Auto" />
                                             </Grid.ColumnDefinitions>
 
-                                            <!--  File Icon  -->
                                             <Image
-                                                Grid.Column="0"
-                                                Width="18"
-                                                Height="18"
-                                                Margin="5"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Source="pack://application:,,,/Resources/Images/file-text.png" />
+                                Grid.Column="0"
+                                Width="18"
+                                Height="18"
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Source="pack://application:,,,/Resources/Images/file-text.png" />
 
-                                            <!--  Document Name  -->
                                             <TextBlock
-                                                Grid.Column="1"
-                                                VerticalAlignment="Center"
-                                                Foreground="White"
-                                                Text="{Binding Name}"
-                                                TextTrimming="CharacterEllipsis" />
+                                Grid.Column="1"
+                                VerticalAlignment="Center"
+                                Foreground="White"
+                                Text="{Binding Name}"
+                                TextTrimming="CharacterEllipsis" />
 
-                                            <!--  Open Button  -->
                                             <Button
-                                                Grid.Column="2"
-                                                HorizontalAlignment="Right"
-                                                CommandParameter="Binding"
-                                                Style="{StaticResource RoundedButtonStyle}">
+                                Grid.Column="2"
+                                HorizontalAlignment="Right"
+                                Command="{Binding DataContext.OpenDocumentCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                CommandParameter="{Binding}"
+                                Style="{StaticResource RoundedButtonStyle}">
                                                 <fa:FontAwesome
-                                                    FontSize="16"
-                                                    Foreground="White"
-                                                    Icon="ChevronRight" />
+                                    FontSize="16"
+                                    Foreground="White"
+                                    Icon="ChevronRight" />
                                             </Button>
                                         </Grid>
                                     </DataTemplate>
