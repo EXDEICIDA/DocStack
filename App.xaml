@@ -13,6 +13,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/MenuButtonTheme.xaml" />
                 <ResourceDictionary Source="Theme/ComboBox.xaml"/>
+                <ResourceDictionary Source="Theme/scrollbar.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
           
 

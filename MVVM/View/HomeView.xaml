@@ -148,7 +148,7 @@
                                     <fa:FontAwesome
                                         FontSize="16"
                                         Foreground="White"
-                                        Icon="ChevronLeft" />
+                                        Icon="ChevronLeft"  />
                                 </Button>
                                 <TextBlock
                                     Margin="10,0"

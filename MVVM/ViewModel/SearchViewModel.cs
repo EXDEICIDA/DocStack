@@ -29,17 +29,7 @@ namespace DocStack.MVVM.ViewModel
         public string Title { get; set; }
         public int Year { get; set; }  // Changed from string to int
                                        // ObservableCollection to hold tags
-        private ObservableCollection<string> _tags = new ObservableCollection<string>();
-        public ObservableCollection<string> Tags
-        {
-            get => _tags;
-            set
-            {
-                _tags = value;
-                OnPropertyChanged();
-            }
-        }
-
+      
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -55,6 +45,8 @@ namespace DocStack.MVVM.ViewModel
         private string _searchQuery;
         private ObservableCollection<Paper> _searchResults;
         private Paper _selectedPaper;
+        private bool _isDataGridView = true;
+
         public SearchViewModel()
         {
             _callConfigurationModel = new CallConfigurationModel();
@@ -63,6 +55,8 @@ namespace DocStack.MVVM.ViewModel
 
             SearchCommand = new RelayCommand(param => SearchPapers(), param => CanSearch());
             LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
+            SwitchViewCommand = new RelayCommand(SwitchView);
+
             AddPaperCommand = new RelayCommand(async param => await AddPaper(), param => CanAddPaper());
 
         }
@@ -84,6 +78,7 @@ namespace DocStack.MVVM.ViewModel
         public ICommand LocatePDFCommand { get; }
 
         public ICommand SearchCommand { get; }
+        public ICommand SwitchViewCommand { get; }
 
         public string SearchQuery
         {
@@ -95,6 +90,18 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        public bool IsDataGridView
+        {
+            get => _isDataGridView;
+            set
+            {
+                _isDataGridView = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(IsListView));
+            }
+        }
+
+        public bool IsListView => !IsDataGridView;
 
 
         public ObservableCollection<Paper> SearchResults
@@ -172,10 +179,18 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+        private void SwitchView(object parameter)
+        {
+            if (parameter is string viewType)
+            {
+                IsDataGridView = viewType == "DataGrid";
+            }
+        }
+
         private async void SearchPapers()
         {
-    try
-    {
+          try
+            {
         var results = await _callConfigurationModel.SearchPapersAsync(SearchQuery);
         SearchResults.Clear();
         foreach (var result in results)
@@ -187,8 +202,8 @@ namespace DocStack.MVVM.ViewModel
                 Journal = result["publisher"]?.ToString() ?? "Unknown",
                 DOI = result["doi"]?.ToString() ?? string.Empty,
                 FullTextLink = result["downloadUrl"]?.ToString() ?? string.Empty,
-                Abstract = result["abstract"]?.ToString() ?? string.Empty,
-                Tags = new ObservableCollection<string>(result["tags"]?.Select(tag => tag.ToString()) ?? new List<string>())
+                Abstract = result["abstract"]?.ToString() ?? string.Empty
+               
 
 
             };
