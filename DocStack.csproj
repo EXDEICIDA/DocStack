@@ -234,7 +234,6 @@
     </ApplicationDefinition>
     <Compile Include="Converters\ColorConverter.cs" />
     <Compile Include="Converters\InverseBoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\WindowWidthToRotationConverter.cs" />
     <Compile Include="MVVM\Model\RecommenderModel.cs" />
     <Compile Include="MVVM\Model\StatsModel.cs" />
     <Compile Include="SplashScreen.xaml.cs">
@@ -283,6 +282,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SplashScreen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme\ColorResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

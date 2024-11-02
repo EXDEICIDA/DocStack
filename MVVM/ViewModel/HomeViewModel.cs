@@ -13,6 +13,8 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
 using System.Collections.Generic;
+using System.Windows.Markup;
+using System.Windows.Controls;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -30,62 +32,22 @@ namespace DocStack.MVVM.ViewModel
         // Get 3 keywords from each category
         private const int TotalPapersLimit = 30;
 
-        private readonly Calendar _calendar;
+        private readonly System.Globalization.Calendar _calendar; // Specify the full namespace
         private readonly ModelDatabase _database;
         private readonly KeywordManager _keywordManager;
         private readonly RecommenderModel _recommender;
+        private readonly StatsModel _statsModel;
         private SeriesCollection _chartSeries;
+        private SeriesCollection _citationSeries;
+        private SeriesCollection _combinedSeries;
         private DateTime _currentDate = DateTime.Now;
+        private List<string> _fieldLabels;
         private bool _isLoadingRecommendations;
-        private ObservableCollection<DocumentsModel> _recentDocuments;
-
+        private int _paperCount;
         // Add to properties
         private SeriesCollection _paperCountSeries;
-        private SeriesCollection _citationSeries;
-        private List<string> _fieldLabels;
-        private readonly StatsModel _statsModel;
-        public Func<double, string> NumberFormatter => value => value.ToString("N0");
 
-        public SeriesCollection PaperCountSeries
-        {
-            get => _paperCountSeries;
-            set
-            {
-                _paperCountSeries = value;
-                OnPropertyChanged(nameof(PaperCountSeries));
-            }
-        }
-
-        public SeriesCollection CitationSeries
-        {
-            get => _citationSeries;
-            set
-            {
-                _citationSeries = value;
-                OnPropertyChanged(nameof(CitationSeries));
-            }
-        }
-
-        public List<string> FieldLabels
-        {
-            get => _fieldLabels;
-            set
-            {
-                _fieldLabels = value;
-                OnPropertyChanged(nameof(FieldLabels));
-            }
-        }
-        public ObservableCollection<DocumentsModel> RecentDocuments
-        {
-            get => _recentDocuments;
-            set
-            {
-                _recentDocuments = value;
-                OnPropertyChanged(nameof(RecentDocuments));
-            }
-        }
-      
-        private int _paperCount;
+        private ObservableCollection<DocumentsModel> _recentDocuments;
 
         private ObservableCollection<RecommenderModel.RecommendedPaper> _recommendedPapers;
 
@@ -93,7 +55,7 @@ namespace DocStack.MVVM.ViewModel
         {
             _database = new ModelDatabase();
 
-            _calendar = CultureInfo.CurrentCulture.Calendar;
+            _calendar = CultureInfo.CurrentCulture.Calendar; // Use the correct Calendar
             Days = new ObservableCollection<CalendarDay>();
 
             PreviousMonthCommand = new RelayCommand(PreviousMonth);
@@ -121,6 +83,7 @@ namespace DocStack.MVVM.ViewModel
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public SeriesCollection ChartSeries
         {
             get => _chartSeries;
@@ -130,45 +93,24 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged(nameof(ChartSeries));
             }
         }
-        private async Task LoadFieldStatsAsync()
-        {
-            try
-            {
-                var stats = await _statsModel.GetFieldStatsAsync();
 
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    PaperCountSeries = _statsModel.CreatePaperCountChart(stats);
-                    CitationSeries = _statsModel.CreateCitationChart(stats);
-                    FieldLabels = stats.Select(s => s.Field).ToList();
-                });
-            }
-            catch (Exception ex)
+        public SeriesCollection CitationSeries
+        {
+            get => _citationSeries;
+            set
             {
-                Debug.WriteLine($"Error loading field stats: {ex.Message}");
+                _citationSeries = value;
+                OnPropertyChanged(nameof(CitationSeries));
             }
         }
-        private void OpenDocument(object parameter)
+
+        public SeriesCollection CombinedSeries
         {
-            if (parameter is DocumentsModel document)
+            get => _combinedSeries;
+            set
             {
-                try
-                {
-                    var startInfo = new ProcessStartInfo(document.FilePath)
-                    {
-                        UseShellExecute = true
-                    };
-                    Process.Start(startInfo);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(
-                        $"Error opening document: {ex.Message}",
-                        "Error",
-                        MessageBoxButton.OK,
-                        MessageBoxImage.Error
-                    );
-                }
+                _combinedSeries = value;
+                OnPropertyChanged(nameof(CombinedSeries));
             }
         }
 
@@ -185,8 +127,21 @@ namespace DocStack.MVVM.ViewModel
         }
 
         public string CurrentMonthYear => CurrentDate.ToString("MMMM yyyy");
+
         public ObservableCollection<CalendarDay> Days { get; set; }
+
+        public List<string> FieldLabels
+        {
+            get => _fieldLabels;
+            set
+            {
+                _fieldLabels = value;
+                OnPropertyChanged(nameof(FieldLabels));
+            }
+        }
+
         public bool HasNoRecommendations => !IsLoadingRecommendations && (!RecommendedPapers?.Any() ?? true);
+
         public bool IsLoadingRecommendations
         {
             get => _isLoadingRecommendations;
@@ -201,8 +156,14 @@ namespace DocStack.MVVM.ViewModel
         public ICommand LocatePDFCommand { get; }
 
         public ICommand NextMonthCommand { get; }
-        public ICommand OpenDocumentCommand { get; private set; }
 
+        public Func<double, string> NumberFormatter => value =>
+                                                                                                                                        value >= 1000000 ? $"{value / 1000000:N1}M" :
+        value >= 1000 ? $"{value / 1000:N1}K" :
+        value.ToString("N0");
+       // public Func<double, string> NumberFormatter => value => value.ToString("N0");
+
+        public ICommand OpenDocumentCommand { get; private set; }
 
         public int PaperCount
         {
@@ -215,8 +176,28 @@ namespace DocStack.MVVM.ViewModel
             }
         }
 
+
+
+        public SeriesCollection PaperCountSeries
+        {
+            get => _paperCountSeries;
+            set
+            {
+                _paperCountSeries = value;
+                OnPropertyChanged(nameof(PaperCountSeries));
+            }
+        }
         public ICommand PreviousMonthCommand { get; }
 
+        public ObservableCollection<DocumentsModel> RecentDocuments
+        {
+            get => _recentDocuments;
+            set
+            {
+                _recentDocuments = value;
+                OnPropertyChanged(nameof(RecentDocuments));
+            }
+        }
         public ObservableCollection<RecommenderModel.RecommendedPaper> RecommendedPapers
         {
             get => _recommendedPapers;
@@ -263,26 +244,6 @@ namespace DocStack.MVVM.ViewModel
                 }
             }
         }
-        // Add this method
-        private async Task LoadRecentDocumentsAsync()
-        {
-            try
-            {
-                var documents = await _database.GetRecentDocumentsAsync(10);
-                App.Current.Dispatcher.Invoke(() =>
-                {
-                    RecentDocuments.Clear();
-                    foreach (var doc in documents)
-                    {
-                        RecentDocuments.Add(doc);
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error loading recent documents: {ex.Message}");
-            }
-        }
 
         protected virtual void OnPropertyChanged(string propertyName)
         {
@@ -295,6 +256,7 @@ namespace DocStack.MVVM.ViewModel
                    (!string.IsNullOrWhiteSpace(paper.FullTextLink) ||
                     !string.IsNullOrWhiteSpace(paper.Doi));
         }
+
         private Task<string[]> GetUserKeywordsAsync()
         {
             // Get 3 random keywords from each of the 6 categories (18 total keywords)
@@ -337,6 +299,23 @@ namespace DocStack.MVVM.ViewModel
         };
         }
 
+        private async Task LoadFieldStatsAsync()
+        {
+            try
+            {
+                var stats = await _statsModel.GetFieldStatsAsync();
+
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    CombinedSeries = _statsModel.CreateCombinedChart(stats);
+                    FieldLabels = stats.Select(s => s.Field).ToList();
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading field stats: {ex.Message}");
+            }
+        }
         private async Task LoadPaperCountAsync()
         {
             PaperCount = await _database.GetPaperCountAsync();
@@ -344,6 +323,27 @@ namespace DocStack.MVVM.ViewModel
             if (ChartSeries?.Any() == true)
             {
                 ((ChartValues<int>)ChartSeries[0].Values)[0] = PaperCount;
+            }
+        }
+
+        // Add this method
+        private async Task LoadRecentDocumentsAsync()
+        {
+            try
+            {
+                var documents = await _database.GetRecentDocumentsAsync(10);
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    RecentDocuments.Clear();
+                    foreach (var doc in documents)
+                    {
+                        RecentDocuments.Add(doc);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading recent documents: {ex.Message}");
             }
         }
 
@@ -383,6 +383,29 @@ namespace DocStack.MVVM.ViewModel
 
         private void NextMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, 1);
 
+        private void OpenDocument(object parameter)
+        {
+            if (parameter is DocumentsModel document)
+            {
+                try
+                {
+                    var startInfo = new ProcessStartInfo(document.FilePath)
+                    {
+                        UseShellExecute = true
+                    };
+                    Process.Start(startInfo);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"Error opening document: {ex.Message}",
+                        "Error",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error
+                    );
+                }
+            }
+        }
         private void PreviousMonth(object obj) => CurrentDate = _calendar.AddMonths(CurrentDate, -1);
 
         private void UpdateCalendarDays()

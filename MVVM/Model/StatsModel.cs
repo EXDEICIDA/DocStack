@@ -6,25 +6,70 @@ using System.Text.Json;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System.Linq;
+using System.Windows.Media;
 
 namespace DocStack.MVVM.Model
 {
     public class StatsModel
     {
-        private readonly HttpClient _client;
         private const string BaseUrl = "https://api.openalex.org";
-
-        public class FieldStats
-        {
-            public string Field { get; set; }
-            public int PaperCount { get; set; }
-            public int CitationCount { get; set; }
-        }
-
+        private readonly HttpClient _client;
         public StatsModel()
         {
             _client = new HttpClient();
             _client.DefaultRequestHeaders.Add("User-Agent", "DocStack");
+        }
+
+        public SeriesCollection CreateCitationChart(List<FieldStats> stats)
+        {
+            return new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Citation Count",
+                    Values = new ChartValues<int>(stats.Select(s => s.CitationCount)),
+                    DataLabels = true,
+                    Fill = System.Windows.Media.Brushes.MediumSeaGreen
+                }
+            };
+        }
+
+        public SeriesCollection CreateCombinedChart(List<FieldStats> stats)
+        {
+            return new SeriesCollection
+        {
+            new ColumnSeries
+            {
+                Title = "Paper Count",
+                Values = new ChartValues<int>(stats.Select(s => s.PaperCount)),
+                Fill = (SolidColorBrush)new BrushConverter().ConvertFrom("#4361EE"),
+                DataLabels = false,
+                MaxColumnWidth = 50,
+                ColumnPadding = 5
+            },
+            new ColumnSeries
+            {
+                Title = "Citation Count",
+                Values = new ChartValues<int>(stats.Select(s => s.CitationCount)),
+                Fill = (SolidColorBrush)new BrushConverter().ConvertFrom("#3CAEA3"),
+                DataLabels = false,
+                MaxColumnWidth = 50,
+                ColumnPadding = 5
+            }
+        };
+        }
+        public SeriesCollection CreatePaperCountChart(List<FieldStats> stats)
+        {
+            return new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Paper Count",
+                    Values = new ChartValues<int>(stats.Select(s => s.PaperCount)),
+                    DataLabels = true,
+                    Fill = System.Windows.Media.Brushes.DodgerBlue
+                }
+            };
         }
 
         public async Task<List<FieldStats>> GetFieldStatsAsync()
@@ -77,32 +122,11 @@ namespace DocStack.MVVM.Model
             return stats;
         }
 
-        public SeriesCollection CreatePaperCountChart(List<FieldStats> stats)
+        public class FieldStats
         {
-            return new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Paper Count",
-                    Values = new ChartValues<int>(stats.Select(s => s.PaperCount)),
-                    DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.DodgerBlue
-                }
-            };
-        }
-
-        public SeriesCollection CreateCitationChart(List<FieldStats> stats)
-        {
-            return new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title = "Citation Count",
-                    Values = new ChartValues<int>(stats.Select(s => s.CitationCount)),
-                    DataLabels = true,
-                    Fill = System.Windows.Media.Brushes.MediumSeaGreen
-                }
-            };
+            public int CitationCount { get; set; }
+            public string Field { get; set; }
+            public int PaperCount { get; set; }
         }
     }
 }
