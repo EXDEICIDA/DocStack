@@ -93,6 +93,28 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged(nameof(ChartSeries));
             }
         }
+        private bool _isLoadingStats;
+        private string _loadingMessage;
+
+        public bool IsLoadingStats
+        {
+            get => _isLoadingStats;
+            set
+            {
+                _isLoadingStats = value;
+                OnPropertyChanged(nameof(IsLoadingStats));
+            }
+        }
+
+        public string LoadingMessage
+        {
+            get => _loadingMessage;
+            set
+            {
+                _loadingMessage = value;
+                OnPropertyChanged(nameof(LoadingMessage));
+            }
+        }
 
         public SeriesCollection CitationSeries
         {
@@ -303,17 +325,36 @@ namespace DocStack.MVVM.ViewModel
         {
             try
             {
+                IsLoadingStats = true;
+                LoadingMessage = "Loading field statistics...";
+
                 var stats = await _statsModel.GetFieldStatsAsync();
 
-                App.Current.Dispatcher.Invoke(() =>
+                if (stats?.Any() == true)
                 {
-                    CombinedSeries = _statsModel.CreateCombinedChart(stats);
-                    FieldLabels = stats.Select(s => s.Field).ToList();
-                });
+                    App.Current.Dispatcher.Invoke(() =>
+                    {
+                        FieldLabels = stats.Select(s => s.Field).ToList();
+                        CombinedSeries = _statsModel.CreateCombinedChart(stats);
+                    });
+                }
+                else
+                {
+                    LoadingMessage = "No field statistics available";
+                }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error loading field stats: {ex.Message}");
+                LoadingMessage = "Error loading statistics. Will retry automatically...";
+
+                // Retry after 5 seconds
+                await Task.Delay(5000);
+                await LoadFieldStatsAsync();
+            }
+            finally
+            {
+                IsLoadingStats = false;
             }
         }
         private async Task LoadPaperCountAsync()
