@@ -90,6 +90,7 @@ namespace DocStack.MVVM.ViewModel
         public ICommand RefreshCommand { get; }
         public ICommand AddToFavoritesCommand { get; }
         public ICommand SearchCommand { get; }
+
         public ICommand LocatePDFCommand { get; }
         public ICommand AddExternalPaperCommand { get; }
         public ICommand SwitchViewCommand { get; }
@@ -115,9 +116,9 @@ namespace DocStack.MVVM.ViewModel
             RefreshCommand = new RelayCommand(o => LoadPapersAsync().ConfigureAwait(false));
             AddPaperCommand = new RelayCommand(o => AddPaperAsync((Paper)o).ConfigureAwait(false));
             AddToFavoritesCommand = new RelayCommand(async o => await AddToFavoritesAsync(SelectedPaper), o => SelectedPaper != null);
-            LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
             AddExternalPaperCommand = new RelayCommand(o => AddExternalPaperAsync().ConfigureAwait(false));
             SwitchViewCommand = new RelayCommand(SwitchView);
+            LocatePDFCommand = new RelayCommand(param => LocatePDF(), param => CanLocatePDF());
 
 
 
@@ -386,20 +387,17 @@ namespace DocStack.MVVM.ViewModel
                     !string.IsNullOrWhiteSpace(SelectedPaper.DOI));
         }
 
-        //A private method for locating full text soruce
-        private void LocatePDF()
+        //A private method for locating full text source
+        public void LocatePDF()
         {
             if (SelectedPaper != null)
             {
-                string url = null;
-                if (!string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink))
-                {
-                    url = SelectedPaper.FullTextLink;
-                }
-                else if (!string.IsNullOrWhiteSpace(SelectedPaper.DOI))
-                {
-                    url = $"https://doi.org/{SelectedPaper.DOI}";
-                }
+                string url = !string.IsNullOrWhiteSpace(SelectedPaper.FullTextLink)
+                             ? SelectedPaper.FullTextLink
+                             : !string.IsNullOrWhiteSpace(SelectedPaper.DOI)
+                               ? $"https://doi.org/{SelectedPaper.DOI}"
+                               : null;
+
                 if (url != null)
                 {
                     Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
@@ -410,5 +408,6 @@ namespace DocStack.MVVM.ViewModel
                 }
             }
         }
+
     }
 }

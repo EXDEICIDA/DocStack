@@ -597,12 +597,12 @@
                                           FontSize="14"/>
                             </Button>
                             <Button Width="32"
-                                Height="32"
-                                Command="{Binding LocatePDFCommand}"
-                                Style="{StaticResource OpenButton}">
-                                <fa:FontAwesome Icon="ChevronRight"
-                                          FontSize="14"/>
+        Height="32"
+        Click="LocatePDFButton_Click"
+        Style="{StaticResource OpenButton}">
+                                <fa:FontAwesome Icon="ChevronRight" FontSize="14"/>
                             </Button>
+
                         </StackPanel>
                     </Grid>
                 </DataTemplate>

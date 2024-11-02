@@ -14,9 +14,10 @@
                 <ResourceDictionary Source="Theme/MenuButtonTheme.xaml" />
                 <ResourceDictionary Source="Theme/ComboBox.xaml"/>
                 <ResourceDictionary Source="Theme/scrollbar.xaml"></ResourceDictionary>
+                
             </ResourceDictionary.MergedDictionaries>
-          
 
+            <SolidColorBrush x:Key="SecondaryBackgroundColor" Color="#F5F5F5"/>
             <!--  Data templates for binding the app views  -->
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
                 <view:HomeView />

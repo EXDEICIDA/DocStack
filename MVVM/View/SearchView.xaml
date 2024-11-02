@@ -433,39 +433,7 @@
                                 </MultiBinding>
                             </TextBox.Text>
                         </TextBox>
-                        <Border
-                            Margin="0,0,0,10"
-                            Padding="10"
-                            Background="#3E3D55"
-                            CornerRadius="5">
-                            <StackPanel>
-                                <TextBlock
-                                    Margin="0,0,0,5"
-                                    FontWeight="SemiBold"
-                                    Foreground="#f8f8f8"
-                                    Text="Tags" />
-                                <ItemsControl ItemsSource="{Binding SelectedPaper}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border
-                                                Margin="0,2,4,2"
-                                                Padding="6,2"
-                                                Background="#272537"
-                                                CornerRadius="3">
-                                                <TextBlock Foreground="#f8f8f8" Text="{Binding}" />
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </StackPanel>
-                        </Border>
-
-
+                       
                         <Border
                             Margin="0,10,0,0"
                             Padding="15,10"

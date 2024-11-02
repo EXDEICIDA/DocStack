@@ -37,6 +37,16 @@ namespace DocStack.MVVM.View
             }
         }
 
+        private void LocatePDFButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Ensure the ViewModel is accessible
+            if (DataContext is PapersViewModel viewModel)
+            {
+                viewModel.LocatePDF();
+            }
+        }
+
+
         private void ListForm_Click(object sender, RoutedEventArgs e)
         {
             if (DataContext is PapersViewModel viewModel)

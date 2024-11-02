@@ -11,6 +11,8 @@ using LiveCharts.Wpf;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Media;
+using System.Collections.Generic;
 
 namespace DocStack.MVVM.ViewModel
 {
@@ -38,6 +40,41 @@ namespace DocStack.MVVM.ViewModel
         private ObservableCollection<DocumentsModel> _recentDocuments;
 
         // Add to properties
+        private SeriesCollection _paperCountSeries;
+        private SeriesCollection _citationSeries;
+        private List<string> _fieldLabels;
+        private readonly StatsModel _statsModel;
+        public Func<double, string> NumberFormatter => value => value.ToString("N0");
+
+        public SeriesCollection PaperCountSeries
+        {
+            get => _paperCountSeries;
+            set
+            {
+                _paperCountSeries = value;
+                OnPropertyChanged(nameof(PaperCountSeries));
+            }
+        }
+
+        public SeriesCollection CitationSeries
+        {
+            get => _citationSeries;
+            set
+            {
+                _citationSeries = value;
+                OnPropertyChanged(nameof(CitationSeries));
+            }
+        }
+
+        public List<string> FieldLabels
+        {
+            get => _fieldLabels;
+            set
+            {
+                _fieldLabels = value;
+                OnPropertyChanged(nameof(FieldLabels));
+            }
+        }
         public ObservableCollection<DocumentsModel> RecentDocuments
         {
             get => _recentDocuments;
@@ -47,7 +84,7 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged(nameof(RecentDocuments));
             }
         }
-
+      
         private int _paperCount;
 
         private ObservableCollection<RecommenderModel.RecommendedPaper> _recommendedPapers;
@@ -76,8 +113,8 @@ namespace DocStack.MVVM.ViewModel
             );
             _keywordManager = new KeywordManager();
             OpenDocumentCommand = new RelayCommand(OpenDocument);
-
-
+            _statsModel = new StatsModel();
+            Task.Run(async () => await LoadFieldStatsAsync());
             Task.Run(async () => await InitializeAsync());
 
 
@@ -93,7 +130,24 @@ namespace DocStack.MVVM.ViewModel
                 OnPropertyChanged(nameof(ChartSeries));
             }
         }
+        private async Task LoadFieldStatsAsync()
+        {
+            try
+            {
+                var stats = await _statsModel.GetFieldStatsAsync();
 
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    PaperCountSeries = _statsModel.CreatePaperCountChart(stats);
+                    CitationSeries = _statsModel.CreateCitationChart(stats);
+                    FieldLabels = stats.Select(s => s.Field).ToList();
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error loading field stats: {ex.Message}");
+            }
+        }
         private void OpenDocument(object parameter)
         {
             if (parameter is DocumentsModel document)
@@ -117,7 +171,6 @@ namespace DocStack.MVVM.ViewModel
                 }
             }
         }
-
 
         public DateTime CurrentDate
         {
